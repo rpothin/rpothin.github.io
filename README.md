@@ -1,73 +1,81 @@
-# React + TypeScript + Vite
+# rpothin.github.io
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A VS Code–themed developer blog built with Vite, React, TypeScript, and Tailwind CSS. All content is written in Markdown and rendered statically with Shiki syntax highlighting.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **VS Code UI** – Activity Bar, Sidebar Explorer, Tab Bar, and Status Bar
+- **Dark / Light theme** – Toggle with localStorage persistence
+- **Shiki syntax highlighting** – Same engine VS Code uses, rendered at build time
+- **Client-side search** – Powered by Lunr.js with a pre-built JSON index
+- **Static output** – Fast CDN-friendly pages with minimal JavaScript
 
-## React Compiler
+## Tech Stack
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+| Layer | Tool |
+|-------|------|
+| Framework | Vite + React + TypeScript |
+| Styling | Tailwind CSS v4 with VS Code theme variables |
+| Markdown | markdown-it + @shikijs/markdown-it |
+| Search | Lunr.js (pre-built index) |
+| Routing | React Router (HashRouter) |
+| Hosting | GitHub Pages via GitHub Actions |
 
-## Expanding the ESLint configuration
+## Getting Started
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+```bash
+# Install dependencies
+npm ci
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+# Build content (file tree, search index, rendered HTML)
+npm run build:content
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+# Start development server
+npm run dev
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+# Production build
+npm run build
+
+# Preview production build
+npm run preview
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Adding Content
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+1. Create a `.md` file under `content/posts/` with YAML frontmatter:
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```markdown
+---
+title: My New Post
+date: 2026-03-01
+tags: [example, tutorial]
+description: A short description of the post
+---
+
+# My New Post
+
+Post content here…
 ```
+
+2. Run `npm run build:content` (or `npm run build` which runs it automatically).
+
+## Project Structure
+
+```
+├── content/              # Markdown source files
+│   ├── about.md
+│   └── posts/
+├── scripts/
+│   └── build-content.ts  # Generates file-tree, search index, rendered HTML
+├── src/
+│   ├── components/       # ActivityBar, Sidebar, FileExplorer, etc.
+│   ├── hooks/            # useTheme, useSearch
+│   ├── pages/            # HomePage, PostPage, AboutPage
+│   └── types.ts
+├── .devcontainer/        # Codespaces configuration
+└── .github/workflows/    # CI/CD pipeline
+```
+
+## License
+
+[MIT](LICENSE)

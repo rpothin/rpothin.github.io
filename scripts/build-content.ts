@@ -1,20 +1,20 @@
-import fs from 'node:fs';
-import path from 'node:path';
-import matter from 'gray-matter';
-import MarkdownIt from 'markdown-it';
-import { fromHighlighter } from '@shikijs/markdown-it/core';
-import { createHighlighterCore } from 'shiki/core';
-import { createOnigurumaEngine } from 'shiki/engine/oniguruma';
-import lunr from 'lunr';
+import fs from "node:fs";
+import path from "node:path";
+import matter from "gray-matter";
+import MarkdownIt from "markdown-it";
+import { fromHighlighter } from "@shikijs/markdown-it/core";
+import { createHighlighterCore } from "shiki/core";
+import { createOnigurumaEngine } from "shiki/engine/oniguruma";
+import lunr from "lunr";
 
-const CONTENT_DIR = path.resolve('content');
-const PUBLIC_DIR = path.resolve('public');
-const OUTPUT_CONTENT_DIR = path.join(PUBLIC_DIR, 'content');
+const CONTENT_DIR = path.resolve("content");
+const PUBLIC_DIR = path.resolve("public");
+const OUTPUT_CONTENT_DIR = path.join(PUBLIC_DIR, "content");
 
 interface TreeNode {
   name: string;
   path: string;
-  type: 'file' | 'folder';
+  type: "file" | "folder";
   children?: TreeNode[];
 }
 
@@ -29,21 +29,25 @@ interface PostMeta {
 interface DocEntry {
   id: string;
   title: string;
+  description: string;
   content: string;
   tags: string;
 }
 
 function stripHtml(html: string): string {
-  return html.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
+  return html
+    .replace(/<[^>]*>/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
 }
 
-function collectMarkdownFiles(dir: string, basePath = ''): string[] {
+function collectMarkdownFiles(dir: string, basePath = ""): string[] {
   const files: string[] = [];
   for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
     const rel = path.join(basePath, entry.name);
     if (entry.isDirectory()) {
       files.push(...collectMarkdownFiles(path.join(dir, entry.name), rel));
-    } else if (entry.name.endsWith('.md')) {
+    } else if (entry.name.endsWith(".md")) {
       files.push(rel);
     }
   }
@@ -54,13 +58,13 @@ function buildFileTree(files: string[]): TreeNode[] {
   const root: TreeNode[] = [];
 
   for (const filePath of files) {
-    const parts = filePath.replace(/\.md$/, '').split(path.sep);
+    const parts = filePath.replace(/\.md$/, "").split(path.sep);
     let current = root;
 
     for (let i = 0; i < parts.length; i++) {
       const part = parts[i];
       const isFile = i === parts.length - 1;
-      const currentPath = parts.slice(0, i + 1).join('/');
+      const currentPath = parts.slice(0, i + 1).join("/");
 
       const existing = current.find((n) => n.name === part);
       if (existing) {
@@ -71,7 +75,7 @@ function buildFileTree(files: string[]): TreeNode[] {
         const node: TreeNode = {
           name: part,
           path: currentPath,
-          type: isFile ? 'file' : 'folder',
+          type: isFile ? "file" : "folder",
         };
         if (!isFile) {
           node.children = [];
@@ -91,31 +95,31 @@ async function main() {
   // Initialize Shiki highlighter
   const highlighter = await createHighlighterCore({
     themes: [
-      import('shiki/themes/vitesse-dark.mjs'),
-      import('shiki/themes/vitesse-light.mjs'),
+      import("shiki/themes/vitesse-dark.mjs"),
+      import("shiki/themes/vitesse-light.mjs"),
     ],
     langs: [
-      import('shiki/langs/typescript.mjs'),
-      import('shiki/langs/javascript.mjs'),
-      import('shiki/langs/css.mjs'),
-      import('shiki/langs/yaml.mjs'),
-      import('shiki/langs/json.mjs'),
-      import('shiki/langs/html.mjs'),
-      import('shiki/langs/markdown.mjs'),
-      import('shiki/langs/bash.mjs'),
+      import("shiki/langs/typescript.mjs"),
+      import("shiki/langs/javascript.mjs"),
+      import("shiki/langs/css.mjs"),
+      import("shiki/langs/yaml.mjs"),
+      import("shiki/langs/json.mjs"),
+      import("shiki/langs/html.mjs"),
+      import("shiki/langs/markdown.mjs"),
+      import("shiki/langs/bash.mjs"),
     ],
-    engine: createOnigurumaEngine(import('shiki/wasm')),
+    engine: createOnigurumaEngine(import("shiki/wasm")),
   });
 
   const md = MarkdownIt({ html: true });
   md.use(
     fromHighlighter(highlighter as Parameters<typeof fromHighlighter>[0], {
       themes: {
-        dark: 'vitesse-dark',
-        light: 'vitesse-light',
+        dark: "vitesse-dark",
+        light: "vitesse-light",
       },
       defaultColor: false,
-    })
+    }),
   );
 
   const markdownFiles = collectMarkdownFiles(CONTENT_DIR);
@@ -127,28 +131,28 @@ async function main() {
 
   for (const relPath of markdownFiles) {
     const fullPath = path.join(CONTENT_DIR, relPath);
-    const raw = fs.readFileSync(fullPath, 'utf-8');
+    const raw = fs.readFileSync(fullPath, "utf-8");
     const { data: frontmatter, content } = matter(raw);
 
     const html = md.render(content);
-    const slug = relPath.replace(/\.md$/, '');
+    const slug = relPath.replace(/\.md$/, "");
 
     // Write HTML output
     const outputPath = path.join(OUTPUT_CONTENT_DIR, `${slug}.html`);
     fs.mkdirSync(path.dirname(outputPath), { recursive: true });
-    fs.writeFileSync(outputPath, html, 'utf-8');
+    fs.writeFileSync(outputPath, html, "utf-8");
 
     // Collect post metadata (only for posts/ directory)
-    if (relPath.startsWith('posts/') || relPath.startsWith('posts\\')) {
-      const postSlug = slug.replace(/^posts\//, '');
+    if (relPath.startsWith("posts/") || relPath.startsWith("posts\\")) {
+      const postSlug = slug.replace(/^posts\//, "");
       postsMeta.push({
         slug: postSlug,
         title: (frontmatter.title as string) || postSlug,
         date: frontmatter.date
-          ? new Date(frontmatter.date as string).toISOString().split('T')[0]
-          : '',
+          ? new Date(frontmatter.date as string).toISOString().split("T")[0]
+          : "",
         tags: (frontmatter.tags as string[]) || [],
-        description: (frontmatter.description as string) || '',
+        description: (frontmatter.description as string) || "",
       });
     }
 
@@ -156,8 +160,9 @@ async function main() {
     searchDocs.push({
       id: slug,
       title: (frontmatter.title as string) || slug,
+      description: (frontmatter.description as string) || "",
       content: stripHtml(html),
-      tags: ((frontmatter.tags as string[]) || []).join(' '),
+      tags: ((frontmatter.tags as string[]) || []).join(" "),
     });
   }
 
@@ -169,10 +174,11 @@ async function main() {
 
   // Build Lunr search index
   const searchIndex = lunr(function () {
-    this.ref('id');
-    this.field('title', { boost: 10 });
-    this.field('content');
-    this.field('tags', { boost: 5 });
+    this.ref("id");
+    this.field("title", { boost: 10 });
+    this.field("description", { boost: 7 });
+    this.field("content");
+    this.field("tags", { boost: 5 });
 
     for (const doc of searchDocs) {
       this.add(doc);
@@ -181,19 +187,19 @@ async function main() {
 
   // Write output files
   fs.writeFileSync(
-    path.join(PUBLIC_DIR, 'file-tree.json'),
+    path.join(PUBLIC_DIR, "file-tree.json"),
     JSON.stringify(fileTree, null, 2),
-    'utf-8'
+    "utf-8",
   );
   fs.writeFileSync(
-    path.join(PUBLIC_DIR, 'search-index.json'),
+    path.join(PUBLIC_DIR, "search-index.json"),
     JSON.stringify(searchIndex),
-    'utf-8'
+    "utf-8",
   );
   fs.writeFileSync(
-    path.join(PUBLIC_DIR, 'posts-meta.json'),
+    path.join(PUBLIC_DIR, "posts-meta.json"),
     JSON.stringify(postsMeta, null, 2),
-    'utf-8'
+    "utf-8",
   );
 
   console.log(`✅ Built ${markdownFiles.length} content files`);
@@ -203,6 +209,6 @@ async function main() {
 }
 
 main().catch((err) => {
-  console.error('Build failed:', err);
+  console.error("Build failed:", err);
   process.exit(1);
 });

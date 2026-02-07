@@ -1,9 +1,9 @@
-import { useState, useEffect, useCallback, useRef } from 'react';
-import lunr from 'lunr';
-import type { PostMeta, SearchResult } from '../types';
+import { useState, useEffect, useCallback, useRef } from "react";
+import lunr from "lunr";
+import type { PostMeta, SearchResult } from "../types";
 
 export function useSearch() {
-  const [query, setQuery] = useState('');
+  const [query, setQuery] = useState("");
   const [results, setResults] = useState<SearchResult[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const indexRef = useRef<lunr.Index | null>(null);
@@ -14,8 +14,8 @@ export function useSearch() {
     async function load() {
       try {
         const [indexRes, metaRes] = await Promise.all([
-          fetch('/search-index.json'),
-          fetch('/posts-meta.json'),
+          fetch("/search-index.json"),
+          fetch("/posts-meta.json"),
         ]);
         const indexData = await indexRes.json();
         const metaData: PostMeta[] = await metaRes.json();
@@ -29,7 +29,7 @@ export function useSearch() {
         }
         allMetaRef.current = map;
       } catch (e) {
-        console.error('Failed to load search index:', e);
+        console.error("Failed to load search index:", e);
       } finally {
         setIsLoading(false);
       }
@@ -48,12 +48,23 @@ export function useSearch() {
       const mapped: SearchResult[] = lunrResults
         .map((r) => {
           const meta = allMetaRef.current.get(r.ref);
+          // Handle About page with proper title/description
+          if (r.ref === "about") {
+            return {
+              ref: r.ref,
+              score: r.score,
+              title: "About",
+              description: "Learn more about me",
+              date: "",
+              tags: [],
+            };
+          }
           return {
             ref: r.ref,
             score: r.score,
             title: meta?.title || r.ref,
-            description: meta?.description || '',
-            date: meta?.date || '',
+            description: meta?.description || "",
+            date: meta?.date || "",
             tags: meta?.tags || [],
           };
         })

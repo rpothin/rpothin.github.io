@@ -95,7 +95,8 @@ function AppLayout() {
       }
     };
 
-    // Run on mount to handle any edge cases
+    // Run on mount to sync with current viewport state in case it changed between
+    // initialization and mount (e.g., if window was resized during React hydration)
     handleResize(mediaQuery);
 
     // Subscribe to changes
@@ -107,7 +108,10 @@ function AppLayout() {
   useEffect(() => {
     if (typeof window === "undefined") return;
 
-    const isMobile = window.innerWidth < MOBILE_BREAKPOINT_PX;
+    // Use matchMedia to determine layout consistently with the resize handler
+    const isMobile = window.matchMedia(
+      `(max-width: ${MOBILE_BREAKPOINT_PX - 1}px)`,
+    ).matches;
     const storageKey = isMobile ? STORAGE_KEY_MOBILE : STORAGE_KEY_DESKTOP;
     localStorage.setItem(storageKey, String(sidebarVisible));
   }, [sidebarVisible]);

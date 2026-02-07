@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import {
   HashRouter,
   Routes,
@@ -22,6 +22,13 @@ interface PageMeta {
   readingTime: number;
 }
 
+// Mobile breakpoint: screens narrower than this are considered mobile
+const MOBILE_BREAKPOINT_PX = 768;
+
+// localStorage keys for persisting sidebar visibility preference
+const STORAGE_KEY_MOBILE = "vscode-sidebar-visible-mobile";
+const STORAGE_KEY_DESKTOP = "vscode-sidebar-visible-desktop";
+
 const WELCOME_TAB: Tab = {
   id: "welcome",
   title: "Welcome",
@@ -40,7 +47,23 @@ function AppLayout() {
   const [sidebarView, setSidebarView] = useState<"explorer" | "search">(
     "explorer",
   );
-  const [sidebarVisible, setSidebarVisible] = useState(true);
+  // Initialize sidebar visibility based on responsive logic (see useEffect below)
+  const [sidebarVisible, setSidebarVisible] = useState(() => {
+    // Guard against SSR
+    if (typeof window === "undefined") return true;
+
+    const isMobile = window.innerWidth < MOBILE_BREAKPOINT_PX;
+    const storageKey = isMobile ? STORAGE_KEY_MOBILE : STORAGE_KEY_DESKTOP;
+    const stored = localStorage.getItem(storageKey);
+
+    // If we have a stored preference for this layout, use it
+    if (stored !== null) {
+      return stored === "true";
+    }
+
+    // Default: hidden on mobile, visible on desktop
+    return !isMobile;
+  });
   const [pageMeta, setPageMeta] = useState<PageMeta>({
     title: "Welcome",
     path: "",
@@ -49,6 +72,49 @@ function AppLayout() {
   const [tabs, setTabs] = useState<Tab[]>([WELCOME_TAB]);
   const navigate = useNavigate();
   const location = useLocation();
+
+  // Handle responsive sidebar behavior on viewport resize/orientation change
+  useEffect(() => {
+    // Guard against SSR
+    if (typeof window === "undefined") return;
+
+    const mediaQuery = window.matchMedia(
+      `(max-width: ${MOBILE_BREAKPOINT_PX - 1}px)`,
+    );
+
+    const handleResize = (e: MediaQueryListEvent | MediaQueryList) => {
+      const isMobile = e.matches;
+
+      if (isMobile) {
+        // Transitioning to mobile: auto-close sidebar for better UX
+        setSidebarVisible(false);
+      } else {
+        // Transitioning to desktop: restore user preference or default to visible
+        const stored = localStorage.getItem(STORAGE_KEY_DESKTOP);
+        setSidebarVisible(stored !== null ? stored === "true" : true);
+      }
+    };
+
+    // Run on mount to sync with current viewport state in case it changed between
+    // initialization and mount (e.g., if window was resized during React hydration)
+    handleResize(mediaQuery);
+
+    // Subscribe to changes
+    mediaQuery.addEventListener("change", handleResize);
+    return () => mediaQuery.removeEventListener("change", handleResize);
+  }, []);
+
+  // Persist sidebar visibility to localStorage when it changes
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    // Use matchMedia to determine layout consistently with the resize handler
+    const isMobile = window.matchMedia(
+      `(max-width: ${MOBILE_BREAKPOINT_PX - 1}px)`,
+    ).matches;
+    const storageKey = isMobile ? STORAGE_KEY_MOBILE : STORAGE_KEY_DESKTOP;
+    localStorage.setItem(storageKey, String(sidebarVisible));
+  }, [sidebarVisible]);
 
   const activeTabId = routeToTabId(location.pathname);
 

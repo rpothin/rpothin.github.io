@@ -9,9 +9,29 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet" />
     <title>Raphael Pothin - Developer Blog</title>
+    <!-- Cloudflare Web Analytics -->
+    <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "YOUR_TOKEN_HERE"}'></script>
+    <!-- End Cloudflare Web Analytics -->
   </head>
   <body>
     <div id="root"></div>
+    <script>
+      // GitHub Pages SPA redirect handler
+      // Check if we're being redirected from 404.html
+      (function() {
+        const query = window.location.search;
+        if (query) {
+          const params = new URLSearchParams(query);
+          const path = params.get('p');
+          if (path) {
+            const search = params.get('q');
+            const url = path + (search ? '?' + search : '');
+            // Replace the URL to restore the original path
+            window.history.replaceState(null, '', url);
+          }
+        }
+      })();
+    </script>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

@@ -21,3 +21,7 @@ This blog is built as a static site using:
 - **GitHub Pages** for hosting
 
 All content is written in Markdown and rendered at build time.
+
+## Privacy & Analytics
+
+This site uses [Cloudflare Web Analytics](https://www.cloudflare.com/web-analytics/) to understand visitor traffic. Cloudflare Web Analytics is privacy-focused and does not use cookies or track personal data. It provides aggregate insights like page views and referrers without collecting personally identifiable information.

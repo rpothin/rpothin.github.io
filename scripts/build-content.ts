@@ -41,6 +41,13 @@ function stripHtml(html: string): string {
     .trim();
 }
 
+function injectCopyButtons(html: string): string {
+  const copyButtonHtml =
+    "<button class=\"copy-button\" type=\"button\" title=\"Copy code\" onclick='(function(btn){var pre=btn.parentElement;var code=pre?pre.querySelector(\"code\"):null;var text=code?code.textContent||\"\":\"\";if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(text).then(function(){btn.textContent=\"Copied!\";setTimeout(function(){btn.textContent=\"Copy\";},2000);});}})(this)'>Copy</button>";
+
+  return html.replace(/<pre(\b[^>]*)><code/gi, `<pre$1>${copyButtonHtml}<code`);
+}
+
 function collectMarkdownFiles(dir: string, basePath = ""): string[] {
   const files: string[] = [];
   for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
@@ -134,7 +141,7 @@ async function main() {
     const raw = fs.readFileSync(fullPath, "utf-8");
     const { data: frontmatter, content } = matter(raw);
 
-    const html = md.render(content);
+    const html = injectCopyButtons(md.render(content));
     const slug = relPath.replace(/\.md$/, "");
 
     // Write HTML output

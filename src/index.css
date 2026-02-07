@@ -121,11 +121,33 @@ code, pre {
 }
 
 .markdown-body pre {
+  position: relative;
   padding: 1em;
   overflow-x: auto;
   border-radius: 4px;
   line-height: 1.5;
   margin: 1em 0;
+}
+
+.markdown-body .copy-button {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  padding: 3px 10px;
+  font-size: 12px;
+  cursor: pointer;
+  border: 1px solid var(--vscode-tab-inactiveForeground);
+  border-radius: 4px;
+  background: var(--vscode-input-background);
+  color: var(--vscode-input-foreground);
+  z-index: 10;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.markdown-body .copy-button:hover {
+  border-color: var(--vscode-statusBar-background);
 }
 
 .markdown-body pre code {

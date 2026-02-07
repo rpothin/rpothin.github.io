@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, useCallback } from "react";
+import { useLayoutEffect, useRef, useState, useCallback } from "react";
 import { createPortal } from "react-dom";
 
 interface MarkdownRendererProps {
@@ -73,14 +73,18 @@ function CopyButton({ codeEl }: { codeEl: HTMLElement }) {
 export function MarkdownRenderer({ html }: MarkdownRendererProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [codeBlocks, setCodeBlocks] = useState<
-    { el: HTMLElement; key: string }[]
+    { codeEl: HTMLElement; mountPoint: HTMLElement; key: string }[]
   >([]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (!containerRef.current) return;
 
     const pres = containerRef.current.querySelectorAll("pre");
-    const blocks: { el: HTMLElement; key: string }[] = [];
+    const blocks: {
+      codeEl: HTMLElement;
+      mountPoint: HTMLElement;
+      key: string;
+    }[] = [];
 
     pres.forEach((pre, i) => {
       pre.style.position = "relative";
@@ -91,11 +95,15 @@ export function MarkdownRenderer({ html }: MarkdownRendererProps) {
         if (!mountPoint) {
           mountPoint = document.createElement("div");
           mountPoint.className = "copy-mount";
-          mountPoint.style.cssText =
-            "position:absolute;top:0;right:0;z-index:10;";
           pre.appendChild(mountPoint);
         }
-        blocks.push({ el: code, key: `code-${i}` });
+        mountPoint.style.cssText =
+          "position:absolute;top:8px;right:8px;z-index:10;";
+        blocks.push({
+          codeEl: code as HTMLElement,
+          mountPoint,
+          key: `code-${i}`,
+        });
       }
     });
 
@@ -110,12 +118,9 @@ export function MarkdownRenderer({ html }: MarkdownRendererProps) {
         dangerouslySetInnerHTML={{ __html: html }}
       />
       {/* Render copy buttons using portals */}
-      {codeBlocks.map(({ el, key }) => {
-        const pre = el.closest("pre");
-        const mountPoint = pre?.querySelector(".copy-mount");
-        if (!mountPoint) return null;
-        return createPortal(<CopyButton key={key} codeEl={el} />, mountPoint);
-      })}
+      {codeBlocks.map(({ codeEl, mountPoint, key }) =>
+        createPortal(<CopyButton codeEl={codeEl} />, mountPoint, key),
+      )}
     </>
   );
 }

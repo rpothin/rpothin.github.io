@@ -24,4 +24,4 @@ All content is written in Markdown and rendered at build time.
 
 ## Privacy & Analytics
 
-This site uses [Cloudflare Web Analytics](https://www.cloudflare.com/web-analytics/) to understand visitor traffic. Cloudflare Web Analytics is privacy-focused and does not use cookies or track personal data. It provides aggregate insights like page views and referrers without collecting personally identifiable information.
+This site uses [Cloudflare Web Analytics](https://www.cloudflare.com/web-analytics/) to understand visitor traffic. Cloudflare Web Analytics is designed to be privacy-focused and operates without cookies by default, providing aggregate insights like page views and referrers. Learn more at [Cloudflare's privacy documentation](https://developers.cloudflare.com/analytics/web-analytics/understanding-web-analytics/).

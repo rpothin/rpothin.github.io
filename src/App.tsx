@@ -73,19 +73,6 @@ function AppLayout() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  // Handle hash-based URLs for backward compatibility
-  useEffect(() => {
-    const hash = window.location.hash;
-    if (hash && hash.startsWith("#/")) {
-      // Extract the path after #/
-      const cleanPath = hash.slice(1);
-      // Replace the hash URL with a clean path
-      window.history.replaceState(null, "", cleanPath);
-      // Navigate to the clean path
-      navigate(cleanPath, { replace: true });
-    }
-  }, [navigate]);
-
   // Handle responsive sidebar behavior on viewport resize/orientation change
   useEffect(() => {
     // Guard against SSR

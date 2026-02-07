@@ -45,7 +45,7 @@
 }
 
 body {
-  font-family: 'Segoe UI', system-ui, sans-serif;
+  font-family: "Segoe UI", system-ui, sans-serif;
   background: var(--vscode-editor-background);
   color: var(--vscode-editor-foreground);
   margin: 0;
@@ -55,8 +55,9 @@ body {
   height: 100vh;
 }
 
-code, pre {
-  font-family: 'Fira Code', 'Cascadia Code', 'Consolas', monospace;
+code,
+pre {
+  font-family: "Fira Code", "Cascadia Code", "Consolas", monospace;
 }
 
 /* Markdown body styles */
@@ -96,7 +97,8 @@ code, pre {
   text-decoration: underline;
 }
 
-.markdown-body ul, .markdown-body ol {
+.markdown-body ul,
+.markdown-body ol {
   padding-left: 2em;
   margin: 0.5em 0;
 }
@@ -162,7 +164,8 @@ code, pre {
   margin: 1em 0;
 }
 
-.markdown-body th, .markdown-body td {
+.markdown-body th,
+.markdown-body td {
   border: 1px solid var(--vscode-badge-background);
   padding: 0.5em 1em;
   text-align: left;

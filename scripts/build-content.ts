@@ -43,7 +43,7 @@ function stripHtml(html: string): string {
 
 function injectCopyButtons(html: string): string {
   const copyButtonHtml =
-    "<button class=\"copy-button\" type=\"button\" title=\"Copy code\" onclick='(function(btn){var pre=btn.parentElement;var code=pre?pre.querySelector(\"code\"):null;var text=code?code.textContent||\"\":\"\";if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(text).then(function(){btn.textContent=\"Copied!\";setTimeout(function(){btn.textContent=\"Copy\";},2000);});}})(this)'>Copy</button>";
+    '<button class="copy-button" type="button" title="Copy code" onclick=\'(function(btn){var pre=btn.parentElement;var code=pre?pre.querySelector("code"):null;var text=code?code.textContent||"":"";if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(text).then(function(){btn.textContent="Copied!";setTimeout(function(){btn.textContent="Copy";},2000);});}})(this)\'>Copy</button>';
 
   return html.replace(/<pre(\b[^>]*)><code/gi, `<pre$1>${copyButtonHtml}<code`);
 }

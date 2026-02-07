@@ -16,7 +16,9 @@ export function MarkdownRenderer({ html }: MarkdownRendererProps) {
       const code = pre.querySelector("code");
       if (!code) return;
 
-      let button = pre.querySelector(".copy-button") as HTMLButtonElement | null;
+      let button = pre.querySelector(
+        ".copy-button",
+      ) as HTMLButtonElement | null;
       if (!button) {
         button = document.createElement("button");
         button.className = "copy-button";

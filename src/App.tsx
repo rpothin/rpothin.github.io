@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback } from "react";
 import {
   HashRouter,
   Routes,
@@ -47,9 +47,10 @@ function AppLayout() {
     readingTime: 0,
   });
   const [tabs, setTabs] = useState<Tab[]>([WELCOME_TAB]);
-  const [activeTabId, setActiveTabId] = useState("welcome");
   const navigate = useNavigate();
   const location = useLocation();
+
+  const activeTabId = routeToTabId(location.pathname);
 
   const currentPath =
     location.pathname === "/about"
@@ -57,12 +58,6 @@ function AppLayout() {
       : location.pathname.startsWith("/posts/")
         ? `posts/${location.pathname.replace("/posts/", "")}`
         : "";
-
-  // Sync tabs with navigation
-  useEffect(() => {
-    const tabId = routeToTabId(location.pathname);
-    setActiveTabId(tabId);
-  }, [location.pathname]);
 
   const handleMeta = useCallback((meta: PageMeta) => {
     setPageMeta(meta);
@@ -87,7 +82,6 @@ function AppLayout() {
       }
       return [...prev, { id: tabId, title: meta.title, path: route }];
     });
-    setActiveTabId(tabId);
   }, []);
 
   const handleSelectTab = useCallback(

@@ -1,113 +1,61 @@
-import { useLayoutEffect, useRef, useState, useCallback } from "react";
-import { createPortal } from "react-dom";
+import { useLayoutEffect, useRef } from "react";
 
 interface MarkdownRendererProps {
   html: string;
 }
 
-function CopyButton({ codeEl }: { codeEl: HTMLElement }) {
-  const [copied, setCopied] = useState(false);
-
-  const handleCopy = useCallback(() => {
-    navigator.clipboard.writeText(codeEl.textContent || "").then(() => {
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    });
-  }, [codeEl]);
-
-  return (
-    <button
-      onClick={handleCopy}
-      style={{
-        position: "absolute",
-        top: 8,
-        right: 8,
-        padding: "3px 10px",
-        fontSize: 12,
-        cursor: "pointer",
-        border: "1px solid var(--vscode-tab-inactiveForeground)",
-        borderRadius: 4,
-        background: "var(--vscode-input-background)",
-        color: "var(--vscode-input-foreground)",
-        zIndex: 10,
-        display: "flex",
-        alignItems: "center",
-        gap: 4,
-      }}
-      title="Copy code"
-    >
-      {copied ? (
-        <>
-          <svg
-            width="14"
-            height="14"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-          >
-            <path d="M20 6L9 17l-5-5" />
-          </svg>
-          Copied!
-        </>
-      ) : (
-        <>
-          <svg
-            width="14"
-            height="14"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-          >
-            <rect x="9" y="9" width="13" height="13" rx="2" />
-            <path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1" />
-          </svg>
-          Copy
-        </>
-      )}
-    </button>
-  );
-}
-
 export function MarkdownRenderer({ html }: MarkdownRendererProps) {
   const containerRef = useRef<HTMLDivElement>(null);
-  const [codeBlocks, setCodeBlocks] = useState<
-    { codeEl: HTMLElement; mountPoint: HTMLElement; key: string }[]
-  >([]);
 
   useLayoutEffect(() => {
     if (!containerRef.current) return;
 
     const pres = containerRef.current.querySelectorAll("pre");
-    const blocks: {
-      codeEl: HTMLElement;
-      mountPoint: HTMLElement;
-      key: string;
-    }[] = [];
-
-    pres.forEach((pre, i) => {
+    pres.forEach((pre) => {
       pre.style.position = "relative";
       const code = pre.querySelector("code");
-      if (code) {
-        // Create a mount point for the React copy button
-        let mountPoint = pre.querySelector(".copy-mount") as HTMLElement | null;
-        if (!mountPoint) {
-          mountPoint = document.createElement("div");
-          mountPoint.className = "copy-mount";
-          pre.appendChild(mountPoint);
-        }
-        mountPoint.style.cssText =
-          "position:absolute;top:8px;right:8px;z-index:10;";
-        blocks.push({
-          codeEl: code as HTMLElement,
-          mountPoint,
-          key: `code-${i}`,
-        });
-      }
-    });
+      if (!code) return;
 
-    setCodeBlocks(blocks);
+      let button = pre.querySelector(".copy-button") as HTMLButtonElement | null;
+      if (!button) {
+        button = document.createElement("button");
+        button.className = "copy-button";
+        button.type = "button";
+        button.title = "Copy code";
+        button.textContent = "Copy";
+        pre.insertBefore(button, pre.firstChild);
+      }
+
+      if (button.dataset.copyBound === "true") return;
+      button.dataset.copyBound = "true";
+
+      button.addEventListener("click", () => {
+        const text = code.textContent || "";
+        if (navigator.clipboard?.writeText) {
+          navigator.clipboard.writeText(text).then(() => {
+            button!.textContent = "Copied!";
+            setTimeout(() => {
+              button!.textContent = "Copy";
+            }, 2000);
+          });
+          return;
+        }
+
+        const textarea = document.createElement("textarea");
+        textarea.value = text;
+        textarea.setAttribute("readonly", "");
+        textarea.style.position = "absolute";
+        textarea.style.left = "-9999px";
+        pre.appendChild(textarea);
+        textarea.select();
+        document.execCommand("copy");
+        pre.removeChild(textarea);
+        button!.textContent = "Copied!";
+        setTimeout(() => {
+          button!.textContent = "Copy";
+        }, 2000);
+      });
+    });
   }, [html]);
 
   return (
@@ -117,10 +65,6 @@ export function MarkdownRenderer({ html }: MarkdownRendererProps) {
         className="markdown-body"
         dangerouslySetInnerHTML={{ __html: html }}
       />
-      {/* Render copy buttons using portals */}
-      {codeBlocks.map(({ codeEl, mountPoint, key }) =>
-        createPortal(<CopyButton codeEl={codeEl} />, mountPoint, key),
-      )}
     </>
   );
 }

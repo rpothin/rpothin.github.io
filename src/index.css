@@ -1,0 +1,198 @@
+@import "tailwindcss";
+
+:root {
+  --vscode-editor-background: #1e1e1e;
+  --vscode-editor-foreground: #d4d4d4;
+  --vscode-sideBar-background: #252526;
+  --vscode-activityBar-background: #333333;
+  --vscode-activityBar-foreground: #ffffff;
+  --vscode-statusBar-background: #007acc;
+  --vscode-statusBar-foreground: #ffffff;
+  --vscode-tab-activeBackground: #1e1e1e;
+  --vscode-tab-inactiveBackground: #2d2d2d;
+  --vscode-tab-activeForeground: #ffffff;
+  --vscode-tab-inactiveForeground: #969696;
+  --vscode-input-background: #3c3c3c;
+  --vscode-input-foreground: #cccccc;
+  --vscode-list-hoverBackground: #2a2d2e;
+  --vscode-list-activeSelectionBackground: #094771;
+  --vscode-list-activeSelectionForeground: #ffffff;
+  --vscode-badge-background: #4d4d4d;
+  --vscode-badge-foreground: #ffffff;
+  --vscode-titleBar-activeBackground: #3c3c3c;
+}
+
+[data-theme="light"] {
+  --vscode-editor-background: #ffffff;
+  --vscode-editor-foreground: #1e1e1e;
+  --vscode-sideBar-background: #f3f3f3;
+  --vscode-activityBar-background: #e8e8e8;
+  --vscode-activityBar-foreground: #424242;
+  --vscode-statusBar-background: #007acc;
+  --vscode-statusBar-foreground: #ffffff;
+  --vscode-tab-activeBackground: #ffffff;
+  --vscode-tab-inactiveBackground: #ececec;
+  --vscode-tab-activeForeground: #333333;
+  --vscode-tab-inactiveForeground: #8e8e8e;
+  --vscode-input-background: #ffffff;
+  --vscode-input-foreground: #616161;
+  --vscode-list-hoverBackground: #e8e8e8;
+  --vscode-list-activeSelectionBackground: #0060c0;
+  --vscode-list-activeSelectionForeground: #ffffff;
+  --vscode-badge-background: #c4c4c4;
+  --vscode-badge-foreground: #333333;
+  --vscode-titleBar-activeBackground: #dddddd;
+}
+
+body {
+  font-family: "Segoe UI", system-ui, sans-serif;
+  background: var(--vscode-editor-background);
+  color: var(--vscode-editor-foreground);
+  margin: 0;
+}
+
+#root {
+  height: 100vh;
+}
+
+code,
+pre {
+  font-family: "Fira Code", "Cascadia Code", "Consolas", monospace;
+}
+
+/* Markdown body styles */
+.markdown-body h1 {
+  font-size: 2em;
+  font-weight: 600;
+  margin: 0.67em 0;
+  padding-bottom: 0.3em;
+  border-bottom: 1px solid var(--vscode-badge-background);
+}
+
+.markdown-body h2 {
+  font-size: 1.5em;
+  font-weight: 600;
+  margin: 1em 0 0.5em;
+  padding-bottom: 0.3em;
+  border-bottom: 1px solid var(--vscode-badge-background);
+}
+
+.markdown-body h3 {
+  font-size: 1.25em;
+  font-weight: 600;
+  margin: 1em 0 0.5em;
+}
+
+.markdown-body p {
+  margin: 0.5em 0;
+  line-height: 1.7;
+}
+
+.markdown-body a {
+  color: #3794ff;
+  text-decoration: none;
+}
+
+.markdown-body a:hover {
+  text-decoration: underline;
+}
+
+.markdown-body ul,
+.markdown-body ol {
+  padding-left: 2em;
+  margin: 0.5em 0;
+}
+
+.markdown-body li {
+  margin: 0.25em 0;
+  line-height: 1.7;
+}
+
+.markdown-body blockquote {
+  margin: 0.5em 0;
+  padding: 0.5em 1em;
+  border-left: 4px solid var(--vscode-statusBar-background);
+  background: var(--vscode-sideBar-background);
+}
+
+.markdown-body code {
+  padding: 0.2em 0.4em;
+  font-size: 85%;
+  background: var(--vscode-input-background);
+  border-radius: 3px;
+}
+
+.markdown-body pre {
+  position: relative;
+  padding: 1em;
+  overflow-x: auto;
+  border-radius: 4px;
+  line-height: 1.5;
+  margin: 1em 0;
+}
+
+.markdown-body .copy-button {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  padding: 3px 10px;
+  font-size: 12px;
+  cursor: pointer;
+  border: 1px solid var(--vscode-tab-inactiveForeground);
+  border-radius: 4px;
+  background: var(--vscode-input-background);
+  color: var(--vscode-input-foreground);
+  z-index: 10;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.markdown-body .copy-button:hover {
+  border-color: var(--vscode-statusBar-background);
+}
+
+.markdown-body pre code {
+  padding: 0;
+  background: transparent;
+  font-size: 0.9em;
+}
+
+.markdown-body table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 1em 0;
+}
+
+.markdown-body th,
+.markdown-body td {
+  border: 1px solid var(--vscode-badge-background);
+  padding: 0.5em 1em;
+  text-align: left;
+}
+
+.markdown-body th {
+  background: var(--vscode-sideBar-background);
+  font-weight: 600;
+}
+
+.markdown-body img {
+  max-width: 100%;
+}
+
+.markdown-body strong {
+  font-weight: 600;
+}
+
+/* Shiki dual theme support */
+.shiki,
+.shiki span {
+  color: var(--shiki-dark) !important;
+  background-color: var(--shiki-dark-bg) !important;
+}
+
+[data-theme="light"] .shiki,
+[data-theme="light"] .shiki span {
+  color: var(--shiki-light) !important;
+  background-color: var(--shiki-light-bg) !important;
+}

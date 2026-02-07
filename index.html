@@ -4,13 +4,23 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Raphael Pothin's developer blog about Power Platform, GitHub, and open source" />
+    <meta
+      name="description"
+      content="Raphael Pothin's developer blog about Power Platform, GitHub, and open source"
+    />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
     <title>Raphael Pothin - Developer Blog</title>
     <!-- Cloudflare Web Analytics -->
-    <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "YOUR_TOKEN_HERE"}'></script>
+    <script
+      defer
+      src="https://static.cloudflareinsights.com/beacon.min.js"
+      data-cf-beacon='{"token": "8eca68669141408280ac5239a48bdd24"}'
+    ></script>
     <!-- End Cloudflare Web Analytics -->
   </head>
   <body>
@@ -18,16 +28,16 @@
     <script>
       // GitHub Pages SPA redirect handler
       // Check if we're being redirected from 404.html
-      (function() {
+      (function () {
         const query = window.location.search;
         if (query) {
           const params = new URLSearchParams(query);
-          const path = params.get('p');
+          const path = params.get("p");
           if (path) {
-            const search = params.get('q');
-            const url = path + (search ? '?' + search : '');
+            const search = params.get("q");
+            const url = path + (search ? "?" + search : "");
             // Replace the URL to restore the original path
-            window.history.replaceState(null, '', url);
+            window.history.replaceState(null, "", url);
           }
         }
       })();

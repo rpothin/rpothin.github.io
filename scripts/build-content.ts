@@ -129,6 +129,25 @@ async function main() {
     }),
   );
 
+  // Open external links in a new tab with safe rel attributes
+  const defaultLinkOpen =
+    md.renderer.rules.link_open ||
+    function (tokens, idx, options, _env, self) {
+      return self.renderToken(tokens, idx, options);
+    };
+
+  md.renderer.rules.link_open = function (tokens, idx, options, env, self) {
+    const token = tokens[idx];
+    const href = token.attrGet("href");
+
+    if (href && /^https?:\/\//i.test(href)) {
+      token.attrSet("target", "_blank");
+      token.attrSet("rel", "noopener noreferrer");
+    }
+
+    return defaultLinkOpen(tokens, idx, options, env, self);
+  };
+
   const markdownFiles = collectMarkdownFiles(CONTENT_DIR);
   const postsMeta: PostMeta[] = [];
   const searchDocs: DocEntry[] = [];

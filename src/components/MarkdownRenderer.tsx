@@ -1,11 +1,34 @@
-import { useLayoutEffect, useRef } from "react";
+import { useLayoutEffect, useMemo, useRef } from "react";
 
 interface MarkdownRendererProps {
   html: string;
 }
 
+/**
+ * Processes an HTML string so that every external link (http/https pointing to
+ * a different origin) gets `target="_blank" rel="noopener noreferrer"`.
+ *
+ * This runs *before* React sets innerHTML, so the links are correct from the
+ * first paint — no layout-effect DOM patching required.
+ */
+function openExternalLinksInNewTab(raw: string): string {
+  // Match opening <a …> tags that contain an href starting with http(s).
+  return raw.replace(
+    /<a\s([^>]*href\s*=\s*"https?:\/\/[^"]*"[^>]*)>/gi,
+    (fullMatch, attrs: string) => {
+      // Don't touch links that already declare a target.
+      if (/\btarget\s*=/i.test(attrs)) return fullMatch;
+
+      return `<a ${attrs} target="_blank" rel="noopener noreferrer">`;
+    },
+  );
+}
+
 export function MarkdownRenderer({ html }: MarkdownRendererProps) {
   const containerRef = useRef<HTMLDivElement>(null);
+
+  // Process HTML string before rendering — adds target/rel to external links.
+  const processedHtml = useMemo(() => openExternalLinksInNewTab(html), [html]);
 
   useLayoutEffect(() => {
     if (!containerRef.current) return;
@@ -58,14 +81,14 @@ export function MarkdownRenderer({ html }: MarkdownRendererProps) {
         }, 2000);
       });
     });
-  }, [html]);
+  }, [processedHtml]);
 
   return (
     <>
       <div
         ref={containerRef}
         className="markdown-body"
-        dangerouslySetInnerHTML={{ __html: html }}
+        dangerouslySetInnerHTML={{ __html: processedHtml }}
       />
     </>
   );

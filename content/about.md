@@ -8,11 +8,15 @@ description: About Raphael Pothin, author of this personal website and blog
 Hi 👋🏼 I’m Raphael Pothin.
 Welcome to my personal website and blog!
 
+---
+
 ## My journey accross the world
 
 1. Born in Reunion, a beautiful French island in the Indian Ocean
 2. Moved to Lyon, France for my studies in an engineering school and start my career
 3. Moved to Montreal, Canada to start my family and continue my professional journey in the tech industry
+
+---
 
 ## My professional background
 
@@ -32,10 +36,24 @@ In parallel of this experience, I also started my Dynamics 365 / Power Platform 
 
 From a job perspective, I then left my first employer in the finance industry for another one with a more global scope and where I am part of the team responsible for the governance and management of the Power Platform and Fabric (aka Power BI) platforms in the broader Microsoft ecosystem.
 
+---
+
 ## What next?
 
 In parallel of my Power Platform focus at work and in my community contributions, I have slowly but surely started to pivot towards AI and how it would redefine my work as a software engineer.
 
 After months of questioning and reflection, I have put myself on a path to participate in the redefinition of software engineering in the AI including the enhancement of the experience of the AI agents that are now part of our daily life to maximize their usefulness and minimize their risks.
 
-...
+I will not forget where I am coming from - Power Platform and the broader Microsoft ecosystem - but I don't feel I am currently in the position of ignoring the shift that AI is bringing to the software engineering world and I want to be equiped to be part of this shift and to help others to be part of it as well.
+
+---
+
+## Where to find me?
+
+- [My GitHub profile](https://github.com/rpothin)
+- [My LinkedIn profile](https://www.linkedin.com/in/raphael-pothin-642bb657/)
+- [My MVP profile](https://mvp.microsoft.com/en-US/MVP/profile/f724ed87-7976-eb11-a812-000d3a8dfe0d)
+
+---
+
+Join me in this journey by following my blog and my social media accounts, and feel free to reach out to me if you want to discuss about AI, software engineering, Power Platform or anything else technology related!

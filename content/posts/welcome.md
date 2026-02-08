@@ -17,6 +17,18 @@ As developers, we spend most of our time in code editors. This blog brings that 
 - **File Explorer**: Navigate posts like files in an IDE
 - **Dark/Light Mode**: Just like your editor preferences
 
+## A bit more about the tech stack behind the scenes
+
+This blog is built as a static site using:
+
+- **Vite** + **React** + **TypeScript** for the framework
+- **Tailwind CSS** with VS Code theme variables for styling
+- **Shiki** for syntax highlighting (same engine as VS Code)
+- **Lunr.js** for client-side full-text search
+- **GitHub Pages** for hosting
+
+All content is written in Markdown and rendered at build time.
+
 ## Code Example
 
 Here's a TypeScript example to show off the syntax highlighting:
@@ -30,7 +42,7 @@ interface BlogPost {
 }
 
 async function fetchPosts(): Promise<BlogPost[]> {
-  const response = await fetch('/api/posts');
+  const response = await fetch("/api/posts");
   return response.json();
 }
 
@@ -44,7 +56,7 @@ And some CSS:
 .vscode-theme {
   --background: #1e1e1e;
   --foreground: #d4d4d4;
-  font-family: 'Cascadia Code', monospace;
+  font-family: "Cascadia Code", monospace;
 }
 ```
 

@@ -34,4 +34,8 @@ From a job perspective, I then left my first employer in the finance industry fo
 
 ## What next?
 
-AI is fundamentally transforming the way we work and redefining how software engineers ...
+In parallel of my Power Platform focus at work and in my community contributions, I have slowly but surely started to pivot towards AI and how it would redefine my work as a software engineer.
+
+After months of questioning and reflection, I have put myself on a path to participate in the redefinition of software engineering in the AI including the enhancement of the experience of the AI agents that are now part of our daily life to maximize their usefulness and minimize their risks.
+
+...

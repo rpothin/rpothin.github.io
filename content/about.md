@@ -3,10 +3,6 @@ title: About
 description: About Raphael Pothin and this blog
 ---
 
-# About
-
-Welcome to my developer blog! This site is built with a VS Code-inspired theme to feel familiar to developers.
-
 ## About Me
 
 I'm Raphael Pothin, a developer passionate about Power Platform, GitHub, and open source.

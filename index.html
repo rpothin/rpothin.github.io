@@ -4,14 +4,67 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Raphael Pothin's developer blog about Power Platform, GitHub, and open source" />
+    <meta
+      name="description"
+      content="Raphael Pothin's developer blog about Power Platform, GitHub, and open source"
+    />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
     <title>Raphael Pothin - Developer Blog</title>
+    <!-- Cloudflare Web Analytics -->
+    <script
+      defer
+      src="https://static.cloudflareinsights.com/beacon.min.js"
+      data-cf-beacon='{"token": "8eca68669141408280ac5239a48bdd24"}'
+    ></script>
+    <!-- End Cloudflare Web Analytics -->
   </head>
   <body>
     <div id="root"></div>
+    <script>
+      // Hash-based URL backward compatibility handler
+      // Runs early (before React) to avoid flicker
+      (function () {
+        const hash = window.location.hash;
+        if (hash && hash.startsWith("#/")) {
+          // Extract the path after #/
+          const cleanPath = hash.slice(1); // e.g., "#/about" -> "/about"
+          const search = window.location.search || "";
+          // Replace the hash URL with a clean path
+          window.history.replaceState(null, "", cleanPath + search);
+        }
+      })();
+
+      // GitHub Pages SPA redirect handler
+      // Check if we're being redirected from 404.html
+      (function () {
+        const query = window.location.search;
+        if (query) {
+          const params = new URLSearchParams(query);
+          const path = params.get("p");
+          if (path) {
+            // Validate path: must start with "/" and not "//" (avoid protocol-relative URLs)
+            if (
+              typeof path === "string" &&
+              path.startsWith("/") &&
+              !path.startsWith("//")
+            ) {
+              // Skip if it's just "/" with no query (already at home)
+              const search = params.get("q");
+              if (path !== "/" || search) {
+                const url = path + (search ? "?" + search : "");
+                // Replace the URL to restore the original path
+                window.history.replaceState(null, "", url);
+              }
+            }
+          }
+        }
+      })();
+    </script>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

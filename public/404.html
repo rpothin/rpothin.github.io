@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Redirecting...</title>
+    <script>
+      // GitHub Pages SPA redirect handler
+      // Store the requested path and query string
+      const path = window.location.pathname;
+      const search = window.location.search || '';
+      
+      // Redirect to the home page with the path encoded as a query parameter
+      // This will be read by the app and used to restore the correct route
+      const redirect = '/?p=' + encodeURIComponent(path) + (search ? '&q=' + encodeURIComponent(search.slice(1)) : '');
+      window.location.replace(redirect);
+    </script>
+  </head>
+  <body>
+    <!-- GitHub Pages SPA fallback -->
+  </body>
+</html>

@@ -14,6 +14,7 @@ I'm Raphael Pothin, a developer passionate about Power Platform, GitHub, and ope
 ## About This Blog
 
 This blog is built as a static site using:
+
 - **Vite** + **React** + **TypeScript** for the framework
 - **Tailwind CSS** with VS Code theme variables for styling
 - **Shiki** for syntax highlighting (same engine as VS Code)

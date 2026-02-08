@@ -63,18 +63,16 @@ export function HomePage({ onMeta }: HomePageProps) {
                 style={{ color: "#3794ff" }}
               >
                 <span>👤</span>
-                <span>About the Author</span>
+                <span>About me</span>
               </Link>
-              <a
-                href="https://github.com/rpothin"
-                target="_blank"
-                rel="noopener noreferrer"
+              <Link
+                to="/privacy"
                 className="flex items-center gap-2 text-sm no-underline hover:underline"
                 style={{ color: "#3794ff" }}
               >
-                <span>🔗</span>
-                <span>GitHub Profile</span>
-              </a>
+                <span>🛡️</span>
+                <span>Privacy &amp; Analytics</span>
+              </Link>
             </div>
           </div>
 

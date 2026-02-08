@@ -14,6 +14,7 @@ import { StatusBar } from "./components/StatusBar";
 import { HomePage } from "./pages/HomePage";
 import { PostPage } from "./pages/PostPage";
 import { AboutPage } from "./pages/AboutPage";
+import { PrivacyPage } from "./pages/PrivacyPage";
 import { useTheme } from "./hooks/useTheme";
 
 interface PageMeta {
@@ -37,6 +38,7 @@ const WELCOME_TAB: Tab = {
 
 function routeToTabId(pathname: string): string {
   if (pathname === "/about") return "about";
+  if (pathname === "/privacy") return "privacy";
   if (pathname.startsWith("/posts/"))
     return `posts/${pathname.replace("/posts/", "")}`;
   return "welcome";
@@ -121,9 +123,11 @@ function AppLayout() {
   const currentPath =
     location.pathname === "/about"
       ? "about"
-      : location.pathname.startsWith("/posts/")
-        ? `posts/${location.pathname.replace("/posts/", "")}`
-        : "";
+      : location.pathname === "/privacy"
+        ? "privacy"
+        : location.pathname.startsWith("/posts/")
+          ? `posts/${location.pathname.replace("/posts/", "")}`
+          : "";
 
   const handleMeta = useCallback((meta: PageMeta) => {
     setPageMeta(meta);
@@ -210,6 +214,7 @@ function AppLayout() {
         activeView={sidebarView}
         onViewChange={setSidebarView}
         onAbout={() => navigate("/about")}
+        onPrivacy={() => navigate("/privacy")}
         theme={theme}
         onToggleTheme={toggleTheme}
         sidebarVisible={sidebarVisible}
@@ -233,6 +238,10 @@ function AppLayout() {
           <Routes>
             <Route path="/" element={<HomePage onMeta={handleMeta} />} />
             <Route path="/about" element={<AboutPage onMeta={handleMeta} />} />
+            <Route
+              path="/privacy"
+              element={<PrivacyPage onMeta={handleMeta} />}
+            />
             <Route
               path="/posts/:slug"
               element={<PostPage onMeta={handleMeta} />}

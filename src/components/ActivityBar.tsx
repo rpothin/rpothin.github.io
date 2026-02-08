@@ -2,6 +2,7 @@ interface ActivityBarProps {
   activeView: "explorer" | "search";
   onViewChange: (view: "explorer" | "search") => void;
   onAbout: () => void;
+  onPrivacy: () => void;
   theme: "dark" | "light";
   onToggleTheme: () => void;
   sidebarVisible: boolean;
@@ -12,6 +13,7 @@ export function ActivityBar({
   activeView,
   onViewChange,
   onAbout,
+  onPrivacy,
   theme,
   onToggleTheme,
   sidebarVisible,
@@ -100,6 +102,25 @@ export function ActivityBar({
             }}
           />
         </button>
+
+        <button
+          onClick={onPrivacy}
+          className="w-full flex items-center justify-center py-3 hover:opacity-80"
+          title="Privacy & Analytics"
+        >
+          <svg
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.5"
+          >
+            <path d="M12 2l7 4v6c0 5-3 9-7 10-4-1-7-5-7-10V6l7-4z" />
+            <path d="M8 12l2.5 2.5L16 9" />
+          </svg>
+        </button>
+
         <button
           onClick={onToggleTheme}
           className="w-full flex items-center justify-center py-3 hover:opacity-80"

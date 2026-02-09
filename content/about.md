@@ -1,51 +1,74 @@
 ---
 title: About Me
-description: About Raphael Pothin — Power Platform governance, engineering enablement, and practical AI agent workflows
+description: About Raphael Pothin — Power Platform governance, security and developer experience focused Microsoft MVP exploring AI native software engineering
 ---
 
 # About Me
 
-Hi, I’m Raphael Pothin.
+Hi, I'm Raphael Pothin 👋🏼
 
-I work at the intersection of **platform governance**, **developer experience**, and increasingly **AI in software engineering**—especially what happens when **AI agents** become part of daily delivery.
+I am a **Microsoft MVP** focused on **Power Platform governance, security, and developer experience**, slowly but surely transitioning into **AI native software engineering** and **AI Coding Agent Experience**.
 
-This site is where I share what I’m learning as I build, test, and refine practical approaches that teams can actually use.
+This site is where I document my explorations and learnings — first for myself, then to contribute back to the community and **reduce the cost of learning** for others.
 
-## What you’ll find here
+## Who this site is for
 
-I write for **Power Platform admins**, **software engineers**, and **technical engineering leaders**—especially if you care about scaling delivery without losing control.
+I write primarily for **Power Platform technical professionals** — admins, architects, and developers navigating governance, security, and delivery at scale.
 
-You can expect:
+I'm also expanding to reach **software engineers** and **engineering leaders** looking to get the best out of AI in software engineering — because many of the challenges I've tackled in the Power Platform space seem close to the ones emerging in the AI space: adoption, accessibility, engineering rigor, and governance.
 
-- **Practical governance** for Power Platform / Dynamics 365 / Fabric (Power BI): guardrails that enable rather than block
-- **ALM and software delivery** lessons (patterns, pitfalls, “this worked / this didn’t”)
-- **AI engineering experiments**: how I use AI to augment real workflows (and what I’ve stopped doing)
-- Occasional **reference implementations**, templates, and small open-source utilities
+## What I focus on
 
-My goal is simple: **reduce the cost of learning** by sharing the details I wish I had earlier.
+I explore **emerging topics that are not yet well documented, understood, or widely adopted** — but that could bring real value to enterprises.
 
-## Why listen to me?
+Concretely, that means:
 
-A few quick trust signals (and then we get back to the interesting part):
+- **Power Platform governance and security**: guardrails and patterns that enable rather than block, from ALM to threat detection
+- **Platform engineering for Power Platform**: applying infrastructure-as-code and developer experience principles to low-code platforms
+- **AI native software engineering**: how AI agents change the way we build software, and how to adopt them with engineering rigor
 
-- I’m a **Microsoft MVP (Business Applications)**
-- I’ve worked from hands-on delivery in **Dynamics/Power Platform** to **ALM + governance** roles where reliability and scale matter
-- I enjoy contributing through **talks, writing, and open-source**
+## What makes this content different
 
-## A bit of my story
+I've always felt at the edge of what my peers were focusing on — and that's by design.
 
-I was born in **Réunion** (a French island in the Indian Ocean), studied and started my career in **Lyon (France)**, and later moved to **Montreal (Canada)**—where I’m building both a life and a long-term path in tech.
+- I was exploring **ALM and DevOps for Power Platform** with only a few others long before Microsoft shipped the Pipelines feature
+- I started working on **Power Platform security patterns** when solution providers like Zenity weren't yet mainstream
+- More recently, I've been one of the first to explore how the **Power Platform Terraform provider** could bring platform engineering principles to the ecosystem
 
-Over time, my work shifted from building features to asking bigger questions like:
+My approach is **experimentation-driven**: I balance innovation with practical learnings that can be applied in real-world enterprise contexts. I've always stayed open-minded about what's happening across the broader IT industry and tried to bring those practices back to the Power Platform space when they could add value.
 
-> How do we scale a platform safely?  
-> How do we make developers faster without breaking production?  
-> And now: how does AI change the answer to both?
+Coming into the AI space, I bring that same lens — my experience making low-code/no-code more accessible and better adopted by software engineers and enterprises translates directly to the challenges of adopting AI with rigor and confidence.
 
-## Want to connect?
+## Why trust me?
 
-If you’d like to chat about **AI-enabled engineering**, **ALM / delivery**, **platform governance**, or **Power Platform / Dynamics 365**, feel free to reach out.
+A few proof points:
 
-[![GitHub](https://img.shields.io/badge/GitHub-rpothin-181717?style=flat-square&logo=github&logoColor=white)](https://github.com/rpothin)
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-Raphael%20Pothin-0A66C2?style=flat-square&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/raphael-pothin-642bb657/)
-[![Microsoft MVP](https://img.shields.io/badge/Microsoft-MVP-737373?style=flat-square&logo=microsoft&logoColor=white)](https://mvp.microsoft.com/en-US/MVP/profile/f724ed87-7976-eb11-a812-000d3a8dfe0d)
+- [**Microsoft MVP (Business Applications)**](https://mvp.microsoft.com/en-US/MVP/profile/f724ed87-7976-eb11-a812-000d3a8dfe0d) since March 2021
+- A track record of community contributions: [talks at conferences](https://github.com/rpothin/Presentations) across multiple countries, blog posts (on the [Medium](https://medium.com/rapha%C3%ABl-pothin) platform before finally creating my own space here), and open-source projects
+
+## My path
+
+My career has followed an arc from delivery to platform thinking:
+
+1. **CRM Consultant** — Learned enterprise software delivery fundamentals fast, lucky to be surrounded by peers and mentors who set a strong foundation
+2. **Technical Product Owner** — Led a small team within a human-sized organization, shaping product direction hands-on
+3. **Power Platform "SRE"** — Joined a larger institution as a technical lead but repositioned to build tooling and patterns that helped delivery teams move faster and with more confidence
+4. **Now** — Pursuing platform engineering for Power Platform and AI native software engineering, convinced both can transform how enterprises build software — if approached with the right mindset and practices
+
+## Currently exploring
+
+- **Terraform + Power Platform**: applying platform engineering principles to enhance governance, security, and developer experience
+- **AI native software engineering**: unlocking the true potential of AI coding agents without compromising on engineering rigor and governance
+
+## Connect & get started
+
+If you're new here, **start with my [posts](/posts)** — they're where the substance lives.
+
+If you'd like to chat about **Power Platform governance**, **AI native software engineering**, **platform engineering**, or **security**, feel free to reach out.
+
+<p align="center">
+    <a href="https://github.com/rpothin" alt="GitHub Badge" style="display:inline-block; margin:0 8px;">
+        <img src="https://img.shields.io/badge/GitHub-%23121011.svg?logo=github&logoColor=white" /></a>
+    <a href="https://www.linkedin.com/in/raphael-pothin-642bb657/?locale=en_US" alt="LinkedIn Badge" style="display:inline-block; margin:0 8px;">
+        <img src="https://custom-icon-badges.demolab.com/badge/LinkedIn-0A66C2?logo=linkedin-white&logoColor=fff" /></a>
+</p>

@@ -15,7 +15,7 @@ This site is where I document my explorations and learnings — first for myself
 
 I write primarily for **Power Platform technical professionals** — admins, architects, and developers navigating governance, security, and delivery at scale.
 
-I'm also expanding to reach **software engineers** and **engineering leaders** looking to get the best out of AI in software engineering — because many of the challenges I've tackled in the Power Platform space seem close to the ones emerging in the AI space: adoption, accessibility, engineering rigor, and governance.
+I'm also expanding to reach **software engineers** and **engineering leaders** looking to get the best out of AI in software engineering — because many of the challenges we went through in the Power Platform space seem close to the ones emerging in the AI space: adoption, accessibility, engineering rigor, and governance.
 
 ## What I focus on
 
@@ -52,7 +52,7 @@ My career has followed an arc from delivery to platform thinking:
 
 1. **CRM Consultant** — Learned enterprise software delivery fundamentals fast, lucky to be surrounded by peers and mentors who set a strong foundation
 2. **Technical Product Owner** — Led a small team within a human-sized organization, shaping product direction hands-on
-3. **Power Platform "SRE"** — Joined a larger institution as a technical lead but repositioned to build tooling and patterns that helped delivery teams move faster and with more confidence
+3. **Power Platform "SRE"** — Joined a larger institution as a technical lead but shifted to build tooling and patterns that helped delivery teams move faster and with more confidence
 4. **Now** — Pursuing platform engineering for Power Platform and AI native software engineering, convinced both can transform how enterprises build software — if approached with the right mindset and practices
 
 ## Currently exploring

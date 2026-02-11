@@ -11,10 +11,10 @@ Welcome — and thanks for being here.
 
 This is the first post on my new, VS Code-themed software engineer blog, and it marks a pretty meaningful transition for me:
 
-- **From Medium to my own website + blog**
+- **From [Medium](https://medium.com/rapha%C3%ABl-pothin) to my own website + blog**
 - **From a Power Platform–centered focus to AI-native software engineering**
 
-I started blogging on Medium in **December 2019**. Over the last five years I published **32 posts** — not a huge number, but I’m genuinely proud of them. They represent real learning, real time spent digging into details, and (the best part) real impact on the community.
+I started blogging on Medium in **December 2019**. Over the last five years I published **32 posts** — not a huge number, but I’m genuinely proud of them. They represent real learning, real time spent digging into details, and (the best part) having been able to help people along the way.
 
 Through that entire journey, my goals have stayed consistent:
 
@@ -23,7 +23,7 @@ Through that entire journey, my goals have stayed consistent:
 
 ## Why a VS Code Theme?
 
-As software engineers, we spend a big chunk of our lives in editors. I wanted this site to feel like the environment where the work actually happens:
+As software engineers, we spend a big chunk of our lives in editors (when it is not in terminals). I wanted this site to feel like the environment where the work actually happens:
 
 - **Syntax Highlighting**: Powered by Shiki, the same engine VS Code uses
 - **File Explorer**: Navigate posts like files in an IDE

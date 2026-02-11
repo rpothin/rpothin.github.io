@@ -103,6 +103,36 @@ pre {
   margin: 0.5em 0;
 }
 
+.markdown-body ul {
+  list-style-type: disc;
+  list-style-position: outside;
+}
+
+.markdown-body ol {
+  list-style-type: decimal;
+  list-style-position: outside;
+}
+
+.markdown-body ul ul {
+  list-style-type: circle;
+}
+
+.markdown-body ul ul ul {
+  list-style-type: square;
+}
+
+.markdown-body ol ol {
+  list-style-type: lower-alpha;
+}
+
+.markdown-body ol ol ol {
+  list-style-type: lower-roman;
+}
+
+.markdown-body li::marker {
+  color: var(--vscode-editor-foreground);
+}
+
 .markdown-body li {
   margin: 0.25em 0;
   line-height: 1.7;

@@ -46,7 +46,7 @@ When reviewing metrics, I also filter out obvious noise when possible (for examp
 
 I use this information to answer questions like “which posts are worth expanding?”—not “who are you?”.
 
-## What I’m trying to avoid
+## What I’m not doing
 
 - No advertising pixels
 - No selling of personal data
@@ -71,4 +71,4 @@ My intent is simple: whether or not you send DNT, I’m only using analytics in 
 
 ## Questions
 
-If you have questions or spot something suspicious, don't hesitate to open an issue on the repo: [https://github.com/rpothin/rpothin.github.io](https://github.com/rpothin/rpothin.github.io)
+If you have questions or spot something suspicious, don't hesitate to open an issue in the repo backing this site: [https://github.com/rpothin/rpothin.github.io](https://github.com/rpothin/rpothin.github.io)

@@ -24,13 +24,18 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: '20'
-          cache: 'npm'
+          node-version: "20"
+          cache: "npm"
 
       - run: npm ci
 
       - name: Build content
         run: npx tsx scripts/build-content.ts
+
+      - name: Validate RSS feed
+        run: npx tsx scripts/validate-rss.ts
+        env:
+          SITE_URL: https://rpothin.github.io
 
       - name: Lint
         run: npm run lint

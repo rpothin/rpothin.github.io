@@ -11,6 +11,29 @@ const CONTENT_DIR = path.resolve("content");
 const PUBLIC_DIR = path.resolve("public");
 const OUTPUT_CONTENT_DIR = path.join(PUBLIC_DIR, "content");
 
+const RSS_OUTPUT_PATH = path.join(PUBLIC_DIR, "rss.xml");
+const RSS_ITEM_LIMIT = 20;
+const DEFAULT_SITE_URL = "https://rpothin.github.io";
+
+function readDotEnvValue(key: string): string | null {
+  const envPath = path.resolve(".env");
+  if (!fs.existsSync(envPath)) return null;
+  const raw = fs.readFileSync(envPath, "utf-8");
+  for (const line of raw.split(/\r?\n/)) {
+    const trimmed = line.trim();
+    if (!trimmed || trimmed.startsWith("#")) continue;
+    const match = trimmed.match(/^([A-Za-z_][A-Za-z0-9_]*)\s*=\s*(.*)$/);
+    if (!match) continue;
+    const k = match[1];
+    if (k !== key) continue;
+    let v = match[2] ?? "";
+    // strip surrounding quotes
+    v = v.replace(/^\s*['"]/, "").replace(/['"]\s*$/, "");
+    return v.trim();
+  }
+  return null;
+}
+
 interface TreeNode {
   name: string;
   path: string;
@@ -39,6 +62,37 @@ function stripHtml(html: string): string {
     .replace(/<[^>]*>/g, " ")
     .replace(/\s+/g, " ")
     .trim();
+}
+
+function normalizeSiteUrl(input: string): string {
+  const trimmed = input.trim().replace(/\/+$/, "");
+  return trimmed;
+}
+
+function xmlEscape(text: string): string {
+  return text
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&apos;");
+}
+
+function toRssPubDate(yyyyMmDd: string): string | null {
+  const value = (yyyyMmDd || "").trim();
+  if (!value) return null;
+  const d = new Date(`${value}T00:00:00.000Z`);
+  if (Number.isNaN(d.getTime())) return null;
+  return d.toUTCString();
+}
+
+function truncateText(text: string, maxLen: number): string {
+  const t = (text || "").replace(/\s+/g, " ").trim();
+  if (t.length <= maxLen) return t;
+  const slice = t.slice(0, Math.max(0, maxLen - 1));
+  const lastSpace = slice.lastIndexOf(" ");
+  const cut = lastSpace > 40 ? slice.slice(0, lastSpace) : slice;
+  return `${cut}…`;
 }
 
 function injectCopyButtons(html: string): string {
@@ -99,6 +153,17 @@ function buildFileTree(files: string[]): TreeNode[] {
 }
 
 async function main() {
+  const envSiteUrl =
+    (process.env.SITE_URL && process.env.SITE_URL.trim().length > 0
+      ? process.env.SITE_URL
+      : null) ?? readDotEnvValue("SITE_URL");
+  const siteUrl = normalizeSiteUrl(envSiteUrl || DEFAULT_SITE_URL);
+  if (!/^https?:\/\//i.test(siteUrl)) {
+    console.warn(
+      `⚠️ SITE_URL looks unusual (expected http(s)://...). Using as-is: ${siteUrl}`,
+    );
+  }
+
   // Initialize Shiki highlighter
   const highlighter = await createHighlighterCore({
     themes: [
@@ -151,6 +216,7 @@ async function main() {
   const markdownFiles = collectMarkdownFiles(CONTENT_DIR);
   const postsMeta: PostMeta[] = [];
   const searchDocs: DocEntry[] = [];
+  const postPlainTextBySlug = new Map<string, string>();
 
   // Ensure output directories exist
   fs.mkdirSync(OUTPUT_CONTENT_DIR, { recursive: true });
@@ -171,6 +237,7 @@ async function main() {
     // Collect post metadata (only for posts/ directory)
     if (relPath.startsWith("posts/") || relPath.startsWith("posts\\")) {
       const postSlug = slug.replace(/^posts\//, "");
+      postPlainTextBySlug.set(postSlug, stripHtml(html));
       postsMeta.push({
         slug: postSlug,
         title: (frontmatter.title as string) || postSlug,
@@ -194,6 +261,61 @@ async function main() {
 
   // Sort posts by date descending
   postsMeta.sort((a, b) => b.date.localeCompare(a.date));
+
+  // Generate RSS feed (posts only)
+  const channelTitle = "Raphael Pothin - Developer Blog";
+  const channelLink = `${siteUrl}/`;
+  const channelDescription =
+    "Raphael Pothin's developer blog about Power Platform, GitHub, and open source";
+  const lastBuildDate = new Date().toUTCString();
+
+  const rssItemsXml = postsMeta
+    .slice(0, RSS_ITEM_LIMIT)
+    .map((post) => {
+      const postUrl = `${siteUrl}/posts/${encodeURIComponent(post.slug)}`;
+      const pubDate = toRssPubDate(post.date);
+      const plainText = postPlainTextBySlug.get(post.slug) || "";
+      const summarySource =
+        post.description && post.description.trim().length > 0
+          ? post.description
+          : truncateText(plainText, 240);
+
+      const categories = (post.tags || [])
+        .filter((t) => typeof t === "string" && t.trim().length > 0)
+        .map((t) => `      <category>${xmlEscape(t.trim())}</category>`)
+        .join("\n");
+
+      return [
+        "    <item>",
+        `      <title>${xmlEscape(post.title || post.slug)}</title>`,
+        `      <link>${xmlEscape(postUrl)}</link>`,
+        `      <guid isPermaLink="true">${xmlEscape(postUrl)}</guid>`,
+        pubDate ? `      <pubDate>${xmlEscape(pubDate)}</pubDate>` : null,
+        `      <description>${xmlEscape(summarySource)}</description>`,
+        categories || null,
+        "    </item>",
+      ]
+        .filter((line): line is string => Boolean(line))
+        .join("\n");
+    })
+    .join("\n");
+
+  const rssXml = [
+    '<?xml version="1.0" encoding="UTF-8"?>',
+    '<rss version="2.0">',
+    "  <channel>",
+    `    <title>${xmlEscape(channelTitle)}</title>`,
+    `    <link>${xmlEscape(channelLink)}</link>`,
+    `    <description>${xmlEscape(channelDescription)}</description>`,
+    "    <language>en</language>",
+    `    <lastBuildDate>${xmlEscape(lastBuildDate)}</lastBuildDate>`,
+    rssItemsXml,
+    "  </channel>",
+    "</rss>",
+    "",
+  ].join("\n");
+
+  fs.writeFileSync(RSS_OUTPUT_PATH, rssXml, "utf-8");
 
   // Build file tree
   const fileTree = buildFileTree(markdownFiles);
@@ -232,6 +354,9 @@ async function main() {
   console.log(`✅ Generated file-tree.json`);
   console.log(`✅ Generated search-index.json`);
   console.log(`✅ Generated posts-meta.json with ${postsMeta.length} posts`);
+  console.log(
+    `✅ Generated rss.xml with ${Math.min(postsMeta.length, RSS_ITEM_LIMIT)} posts`,
+  );
 }
 
 main().catch((err) => {

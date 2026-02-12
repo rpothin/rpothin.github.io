@@ -57,6 +57,14 @@ export function HomePage({ onMeta }: HomePageProps) {
                 <span>📄</span>
                 <span>Read the Welcome Post</span>
               </Link>
+              <a
+                href="/rss.xml"
+                className="flex items-center gap-2 text-sm no-underline hover:underline"
+                style={{ color: "#3794ff" }}
+              >
+                <span>📰</span>
+                <span>Subscribe via RSS</span>
+              </a>
               <Link
                 to="/about"
                 className="flex items-center gap-2 text-sm no-underline hover:underline"

@@ -12,6 +12,9 @@ dist
 dist-ssr
 *.local
 
+# Local environment
+.env
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
@@ -28,3 +31,6 @@ public/file-tree.json
 public/search-index.json
 public/posts-meta.json
 public/content/
+
+# Generated RSS feed
+public/rss.xml

@@ -59,6 +59,22 @@ Post content here…
 
 2. Run `npm run build:content` (or `npm run build` which runs it automatically).
 
+## RSS Feed
+
+This blog publishes an **RSS 2.0** feed at:
+
+- `/rss.xml`
+
+The feed is generated during the content build step (`scripts/build-content.ts`) and includes the **20 most recent posts**, using the post frontmatter `description` as the item summary.
+
+### Canonical URLs
+
+RSS requires absolute URLs. You can set the base site URL via the `SITE_URL` environment variable.
+
+- Copy `.env.example` to `.env` and adjust `SITE_URL` as needed.
+
+If `SITE_URL` is not set, the generator falls back to `https://rpothin.github.io`.
+
 ## Project Structure
 
 ```

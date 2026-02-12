@@ -12,14 +12,14 @@ A VS Code–themed developer blog built with Vite, React, TypeScript, and Tailwi
 
 ## Tech Stack
 
-| Layer | Tool |
-|-------|------|
-| Framework | Vite + React + TypeScript |
-| Styling | Tailwind CSS v4 with VS Code theme variables |
-| Markdown | markdown-it + @shikijs/markdown-it |
-| Search | Lunr.js (pre-built index) |
-| Routing | React Router (HashRouter) |
-| Hosting | GitHub Pages via GitHub Actions |
+| Layer     | Tool                                         |
+| --------- | -------------------------------------------- |
+| Framework | Vite + React + TypeScript                    |
+| Styling   | Tailwind CSS v4 with VS Code theme variables |
+| Markdown  | markdown-it + @shikijs/markdown-it           |
+| Search    | Lunr.js (pre-built index)                    |
+| Routing   | React Router (HashRouter)                    |
+| Hosting   | GitHub Pages via GitHub Actions              |
 
 ## Getting Started
 

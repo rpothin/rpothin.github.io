@@ -3,10 +3,11 @@
  * Exposes structured tools for AI agents to interact with this website.
  * Requires a browser with WebMCP support (e.g. Chrome 146+ with WebMCP flag enabled).
  *
- * Learn more: https://developer.chrome.com/blog/webmcp-epp
+ * Learn more: https://AIsdk.dev/docs/foundations/web-mcp
  */
 
 (function () {
+  var MAX_CONTENT_LENGTH = 5000;
   // Guard: only run if WebMCP API is available
   if (!navigator.modelContext) {
     console.log(
@@ -260,8 +261,8 @@
               tags,
               description,
               url: window.location.href,
-              content: bodyText.substring(0, 5000),
-              truncated: bodyText.length > 5000,
+              content: bodyText.substring(0, MAX_CONTENT_LENGTH),
+              truncated: bodyText.length > MAX_CONTENT_LENGTH,
             }),
           },
         ],

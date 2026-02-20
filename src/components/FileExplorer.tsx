@@ -249,7 +249,7 @@ export function FileExplorer({ currentPath }: FileExplorerProps) {
               </div>
             ) : (
               archiveEntries.map((entry) => {
-                const isActive = currentPath === `archive/${entry.path}`;
+                const isActive = currentPath === entry.path;
                 const title = slugToTitle(
                   entry.name.includes("/")
                     ? entry.name.split("/").pop()!
@@ -280,7 +280,7 @@ export function FileExplorer({ currentPath }: FileExplorerProps) {
                     onMouseLeave={(e) => {
                       if (!isActive) e.currentTarget.style.backgroundColor = "";
                     }}
-                    onClick={() => navigate(`/archive/${entry.path}`)}
+                    onClick={() => navigate(`/${entry.path}`)}
                   >
                     <div className="flex items-center gap-1.5">
                       <span className="flex-shrink-0 text-xs">📄</span>

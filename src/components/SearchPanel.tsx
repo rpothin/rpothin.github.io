@@ -11,6 +11,8 @@ export function SearchPanel() {
     } else if (ref.startsWith("posts/")) {
       const slug = ref.replace("posts/", "");
       navigate(`/posts/${slug}`);
+    } else if (ref.startsWith("archive/")) {
+      navigate(`/${ref}`);
     }
   };
 

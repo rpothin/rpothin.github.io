@@ -20,6 +20,9 @@
   --vscode-badge-background: #4d4d4d;
   --vscode-badge-foreground: #ffffff;
   --vscode-titleBar-activeBackground: #3c3c3c;
+  --vscode-sideBarSectionHeader-background: transparent;
+  --vscode-sideBarSectionHeader-foreground: #bbbbbb;
+  --vscode-sideBarSectionHeader-border: #cccccc33;
 }
 
 [data-theme="light"] {
@@ -42,6 +45,9 @@
   --vscode-badge-background: #c4c4c4;
   --vscode-badge-foreground: #333333;
   --vscode-titleBar-activeBackground: #dddddd;
+  --vscode-sideBarSectionHeader-background: transparent;
+  --vscode-sideBarSectionHeader-foreground: #616161;
+  --vscode-sideBarSectionHeader-border: #61616130;
 }
 
 body {

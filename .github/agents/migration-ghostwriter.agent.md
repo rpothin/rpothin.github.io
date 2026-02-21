@@ -1,7 +1,7 @@
 ---
 description: "Use when converting Medium-extracted blog posts from temp/ into well-formatted archived posts under content/archive/. Handles frontmatter generation, broken image removal, cross-link fixing, series placement, code block annotation, and tag/description inference."
-tools: ["read", "edit", "search", "vscode_askQuestions", "todo"]
-model: "Claude Sonnet 4"
+tools: [vscode/askQuestions, read, agent/askQuestions, edit, search, todo]
+model: Claude Sonnet 4.6 (copilot)
 argument-hint: "Provide paths to one or more temp/ posts to convert, or describe which batch to process"
 ---
 

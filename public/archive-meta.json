@@ -1,5 +1,69 @@
 [
   {
+    "slug": "automate-the-integration-between-dynamics-365-sales-and-teams",
+    "title": "Automate the integration between Dynamics 365 Sales and Teams",
+    "date": "2020-10-24",
+    "tags": [
+      "power-automate",
+      "microsoft-teams",
+      "dynamics-365",
+      "microsoft-graph",
+      "power-platform"
+    ],
+    "description": "A walkthrough of an open-source starter kit that automates the Dynamics 365 Sales and Microsoft Teams integration, covering automatic channel and tab creation across the lead-to-opportunity lifecycle, along with lessons learned and current limitations."
+  },
+  {
+    "slug": "my-resume-built-with-the-power-platform",
+    "title": "My resume built with the Power Platform",
+    "date": "2020-06-12",
+    "tags": [
+      "power-platform",
+      "power-apps",
+      "power-bi",
+      "power-virtual-agents",
+      "canvas-apps"
+    ],
+    "description": "A fun personal project exploring every component of the Power Platform — Common Data Service, model-driven app, canvas apps for phone and tablet, Power BI report, and a Power Virtual Agents bot — all to build and present a resume in a novel way."
+  },
+  {
+    "slug": "public-preview-of-the-human-resources-app-in-teams",
+    "title": "Public Preview of the Human Resources app in Teams",
+    "date": "2020-05-23",
+    "tags": [
+      "dynamics-365",
+      "microsoft-teams",
+      "human-resources",
+      "power-platform"
+    ],
+    "description": "A quick look at the public preview of the Human Resources app in Microsoft Teams, highlighting available features, missing capabilities like time-off balance forecasting, and known bot errors users may encounter."
+  },
+  {
+    "slug": "using-power-automate-in-your-teams-creation-process",
+    "title": "Using Power Automate in your Teams creation process",
+    "date": "2020-04-24",
+    "tags": [
+      "power-automate",
+      "microsoft-teams",
+      "microsoft-graph",
+      "power-platform",
+      "custom-connectors"
+    ],
+    "description": "Explores three Power Automate-based approaches to automating Microsoft Teams creation — cloning a template team, creating a team from scratch via an Office 365 group, and using the beta Microsoft Graph endpoint — as part of a governed self-service Teams request process."
+  },
+  {
+    "slug": "create-a-custom-connector-for-microsoft-graph",
+    "title": "Create a custom connector for Microsoft Graph",
+    "date": "2020-03-24",
+    "tags": [
+      "power-platform",
+      "microsoft-graph",
+      "custom-connectors",
+      "azure-ad",
+      "power-automate"
+    ],
+    "description": "A step-by-step guide to building a Microsoft Graph custom connector in Power Apps or Power Automate, covering Azure AD app registration with OAuth 2.0, connector security configuration, and adding a first action using the Teams creation API as a live example."
+  },
+  {
     "slug": "integrate-help-panes-in-your-alm-process",
     "title": "Integrate Help Panes in your ALM process",
     "date": "2019-12-23",

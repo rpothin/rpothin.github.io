@@ -23,6 +23,12 @@
   --vscode-sideBarSectionHeader-background: transparent;
   --vscode-sideBarSectionHeader-foreground: #bbbbbb;
   --vscode-sideBarSectionHeader-border: #cccccc33;
+
+  --scrollbar-size: 8px;
+  --scrollbar-thumb: rgba(121, 121, 121, 0.4);
+  --scrollbar-thumb-hover: rgba(121, 121, 121, 0.7);
+  --scrollbar-thumb-active: rgba(191, 191, 191, 0.5);
+  --scrollbar-track: transparent;
 }
 
 [data-theme="light"] {
@@ -48,7 +54,54 @@
   --vscode-sideBarSectionHeader-background: transparent;
   --vscode-sideBarSectionHeader-foreground: #616161;
   --vscode-sideBarSectionHeader-border: #61616130;
+
+  --scrollbar-thumb: rgba(100, 100, 100, 0.4);
+  --scrollbar-thumb-hover: rgba(100, 100, 100, 0.7);
+  --scrollbar-thumb-active: rgba(0, 0, 0, 0.5);
+  --scrollbar-track: transparent;
 }
+
+/* ── Scrollbar ── */
+
+/* Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+}
+
+/* WebKit / Chromium */
+::-webkit-scrollbar {
+  width: var(--scrollbar-size);
+  height: var(--scrollbar-size);
+}
+
+::-webkit-scrollbar-track {
+  background: var(--scrollbar-track);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--scrollbar-thumb);
+  border-radius: 10px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+  transition: background 0.15s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--scrollbar-thumb-hover);
+  background-clip: content-box;
+}
+
+::-webkit-scrollbar-thumb:active {
+  background: var(--scrollbar-thumb-active);
+  background-clip: content-box;
+}
+
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+/* ── Body ── */
 
 body {
   font-family: "Segoe UI", system-ui, sans-serif;

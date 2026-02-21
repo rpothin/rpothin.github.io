@@ -1,5 +1,31 @@
 [
   {
+    "slug": "integrate-help-panes-in-your-alm-process",
+    "title": "Integrate Help Panes in your ALM process",
+    "date": "2019-12-23",
+    "tags": [
+      "dynamics-365",
+      "help-panes",
+      "alm",
+      "model-driven-apps",
+      "power-platform"
+    ],
+    "description": "Explains how to integrate Dynamics 365 Help Pane configurations into solutions so they can travel through your ALM pipeline alongside feature development, covering both adding existing Help Pages and creating new ones directly from a solution."
+  },
+  {
+    "slug": "configure-help-panes-in-dynamics-365",
+    "title": "Configure Help Panes in Dynamics 365",
+    "date": "2019-12-11",
+    "tags": [
+      "dynamics-365",
+      "help-panes",
+      "model-driven-apps",
+      "power-apps",
+      "customization"
+    ],
+    "description": "A deep dive into configuring Help Panes in Dynamics 365 model-driven apps, covering how to enable the feature, the full range of formatting and insertion options available in the editor, and how coach marks and balloons can be used to build interactive in-app guidance."
+  },
+  {
     "slug": "help-button-options-in-dynamics-365",
     "title": "Help button options in Dynamics 365",
     "date": "2019-12-04",

@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import type { PostMeta, TreeNode } from "../types";
+import type { PostMeta } from "../types";
 
 interface FileExplorerProps {
   currentPath: string;
@@ -79,32 +79,9 @@ function SectionHeader({
   );
 }
 
-/** Flatten a tree of archive nodes into a simple list of file entries. */
-function flattenArchiveFiles(nodes: TreeNode[]): TreeNode[] {
-  const result: TreeNode[] = [];
-  for (const node of nodes) {
-    if (node.type === "file") {
-      result.push(node);
-    } else if (node.children) {
-      result.push(...flattenArchiveFiles(node.children));
-    }
-  }
-  return result;
-}
-
-/** Humanise a kebab-case slug into a readable title. */
-function slugToTitle(slug: string): string {
-  // Strip leading number prefix (e.g. "01-azure-ad-conditional-access" → "azure ad conditional access")
-  const stripped = slug.replace(/^\d+-/, "");
-  return stripped
-    .split("-")
-    .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
-    .join(" ");
-}
-
 export function FileExplorer({ currentPath }: FileExplorerProps) {
   const [posts, setPosts] = useState<PostMeta[]>([]);
-  const [archiveEntries, setArchiveEntries] = useState<TreeNode[]>([]);
+  const [archiveEntries, setArchiveEntries] = useState<PostMeta[]>([]);
   const [postsExpanded, setPostsExpanded] = useState(true);
   const [archiveExpanded, setArchiveExpanded] = useState(false);
   const navigate = useNavigate();
@@ -115,16 +92,9 @@ export function FileExplorer({ currentPath }: FileExplorerProps) {
       .then(setPosts)
       .catch(console.error);
 
-    fetch("/file-tree.json")
+    fetch("/archive-meta.json")
       .then((r) => r.json())
-      .then((tree: TreeNode[]) => {
-        const archiveNode = tree.find(
-          (n) => n.name === "archive" && n.type === "folder",
-        );
-        if (archiveNode?.children) {
-          setArchiveEntries(flattenArchiveFiles(archiveNode.children));
-        }
-      })
+      .then(setArchiveEntries)
       .catch(console.error);
   }, []);
 
@@ -249,22 +219,18 @@ export function FileExplorer({ currentPath }: FileExplorerProps) {
               </div>
             ) : (
               archiveEntries.map((entry) => {
-                const isActive = currentPath === entry.path;
-                const title = slugToTitle(
-                  entry.name.includes("/")
-                    ? entry.name.split("/").pop()!
-                    : entry.name,
-                );
+                const archivePath = `archive/${entry.slug}`;
+                const isActive = currentPath === archivePath;
 
                 return (
                   <button
-                    key={entry.path}
+                    key={entry.slug}
                     className="w-full text-left cursor-pointer block"
                     style={{
                       paddingLeft: "20px",
                       paddingRight: "8px",
-                      paddingTop: "4px",
-                      paddingBottom: "4px",
+                      paddingTop: "6px",
+                      paddingBottom: "6px",
                       backgroundColor: isActive
                         ? "var(--vscode-list-activeSelectionBackground)"
                         : undefined,
@@ -280,11 +246,36 @@ export function FileExplorer({ currentPath }: FileExplorerProps) {
                     onMouseLeave={(e) => {
                       if (!isActive) e.currentTarget.style.backgroundColor = "";
                     }}
-                    onClick={() => navigate(`/${entry.path}`)}
+                    onClick={() => navigate(`/archive/${entry.slug}`)}
                   >
-                    <div className="flex items-center gap-1.5">
+                    <div className="flex items-center gap-1.5 mb-0.5">
                       <span className="flex-shrink-0 text-xs">📄</span>
-                      <span className="text-sm truncate">{title}</span>
+                      <span className="text-sm truncate font-medium">
+                        {entry.title}
+                      </span>
+                    </div>
+                    <div
+                      className="flex items-center gap-2 text-xs ml-5"
+                      style={{
+                        color: isActive
+                          ? "var(--vscode-list-activeSelectionForeground)"
+                          : "var(--vscode-tab-inactiveForeground)",
+                        opacity: isActive ? 0.85 : 1,
+                      }}
+                    >
+                      {entry.date && (
+                        <span>
+                          {new Date(entry.date).toLocaleDateString("en-US", {
+                            month: "short",
+                            day: "numeric",
+                            year: "numeric",
+                          })}
+                        </span>
+                      )}
+                      <span>·</span>
+                      <span>
+                        {estimateReadingTime(entry.description)} min read
+                      </span>
                     </div>
                   </button>
                 );

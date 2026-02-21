@@ -7,6 +7,7 @@ archived: true
 originalUrl: "https://medium.com/rapha%C3%ABl-pothin/help-button-options-in-dynamics-365"
 ---
 
+> [!NOTE]
 > **Archive notice:** This post was originally published on Medium. It is preserved here as part of my writing history. Some content may be outdated.
 
 ## The Default Help Page

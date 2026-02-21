@@ -34,6 +34,7 @@ archived: true
 originalUrl: "https://medium.com/rapha%C3%ABl-pothin/<original-slug>"
 ---
 
+> [!NOTE]
 > **Archive notice:** This post was originally published on Medium. It is preserved here as part of my writing history. Some content may be outdated.
 
 <cleaned body>

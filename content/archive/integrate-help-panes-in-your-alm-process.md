@@ -7,6 +7,7 @@ archived: true
 originalUrl: "https://medium.com/rapha%C3%ABl-pothin/integrate-help-panes-in-your-alm-process"
 ---
 
+> [!NOTE]
 > **Archive notice:** This post was originally published on Medium. It is preserved here as part of my writing history. Some content may be outdated.
 
 ## Introduction

@@ -7,6 +7,7 @@ archived: true
 originalUrl: "https://medium.com/rapha%C3%ABl-pothin/configure-help-panes-in-dynamics-365-67cbec2d6955"
 ---
 
+> [!NOTE]
 > **Archive notice:** This post was originally published on Medium. It is preserved here as part of my writing history. Some content may be outdated.
 
 ## Introduction

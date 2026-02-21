@@ -67,9 +67,27 @@ Strip these lines from the body entirely (they are now in frontmatter):
 - Remove lines matching `![Image description: "..."]` or similar `![...]` patterns with no URL.
 - **Critical**: After removing an image, review the surrounding text for dangling references like "as shown in the image above", "see the illustration below", "the screenshot shows...", etc. Rewrite those sentences to make sense without the image — either remove the reference or rephrase to describe the concept inline.
 
-### 4. Code Block Language Hints
+### 4. Code Block Classification and Language Hints
 
-Add language annotations to bare ` ``` ` blocks where the language is identifiable:
+Before adding language annotations, first **classify** each bare ` ``` ` block:
+
+**Is it actually code?** A block is code if it contains syntax from a programming or markup language, a command-line instruction, a configuration file, or a structured data format (JSON, YAML, XML, etc.).
+
+**Is it formatted prose?** Medium authors often abuse code blocks as a visual callout — for option lists, notes, warnings, or inline instructions. These blocks typically contain plain English sentences, bullet-style lists with no code syntax, or labels like "Notes:", "Warning:", "Example:". **Convert these to proper Markdown instead of annotating them as code:**
+
+| Prose block type           | Convert to                                                   |
+| -------------------------- | ------------------------------------------------------------ |
+| Warning / important note   | `> [!WARNING]\n> ...` GitHub alert                           |
+| Informational note / aside | `> [!NOTE]\n> ...` GitHub alert                              |
+| Tip or best practice       | `> [!TIP]\n> ...` GitHub alert                               |
+| Critical prerequisite      | `> [!IMPORTANT]\n> ...` GitHub alert                         |
+| Dangerous/irreversible     | `> [!CAUTION]\n> ...` GitHub alert                           |
+| List of options or values  | Regular Markdown bullet list, under a short lead-in sentence |
+| Example narration          | Plain paragraph                                              |
+
+Available alert types: `NOTE` (blue), `TIP` (green), `IMPORTANT` (purple), `WARNING` (amber), `CAUTION` (red).
+
+For blocks that **are** code, add language annotations where the language is identifiable:
 
 - PowerShell, Bash, TypeScript, JavaScript, JSON, YAML, CSS, HTML, C#, XML, OData, PowerFx, Markdown
 - If the language is genuinely ambiguous, leave the block unannotated rather than guessing wrong.

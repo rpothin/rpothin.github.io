@@ -1,0 +1,15 @@
+[
+  {
+    "slug": "help-button-options-in-dynamics-365",
+    "title": "Help button options in Dynamics 365",
+    "date": "2019-12-04",
+    "tags": [
+      "dynamics-365",
+      "customization",
+      "user-experience",
+      "help-panes",
+      "power-platform"
+    ],
+    "description": "An overview of the help button options available in Dynamics 365, covering the default Microsoft documentation link, global and entity-specific custom help pages with URL parameters, and the Help Panes preview feature for building interactive in-app guidance."
+  }
+]

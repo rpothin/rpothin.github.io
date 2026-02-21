@@ -1,6 +1,6 @@
 ---
-description: "Use when converting Medium-extracted blog posts from temp/ into well-formatted archived posts under content/archive/. Handles frontmatter generation, broken image removal, cross-link fixing, series placement, code block annotation, and tag/description inference."
-tools: [vscode/askQuestions, read, agent/askQuestions, edit, search, todo]
+description: "Use when converting Medium-extracted blog posts from temp/ into well-formatted archived posts under content/archive/. Handles frontmatter generation, broken image removal, cross-link fixing, link validation, series placement, code block annotation, and tag/description inference."
+tools: [vscode/askQuestions, read, agent/askQuestions, edit, search, web, todo]
 model: Claude Sonnet 4.6 (copilot)
 argument-hint: "Provide paths to one or more temp/ posts to convert, or describe which batch to process"
 ---
@@ -34,7 +34,7 @@ archived: true
 originalUrl: "https://medium.com/rapha%C3%ABl-pothin/<original-slug>"
 ---
 
-> **Archive notice:** This post was originally published on Medium on <human-readable date>. It is preserved here as part of my writing history. Some content may be outdated.
+> **Archive notice:** This post was originally published on Medium. It is preserved here as part of my writing history. Some content may be outdated.
 
 <cleaned body>
 ```
@@ -81,15 +81,27 @@ Add language annotations to bare ` ``` ` blocks where the language is identifiab
 
 ### 6. Archive Notice
 
-Insert the archive notice blockquote immediately after the frontmatter, before the body content. Use the human-readable date (e.g., "June 15, 2023").
+Insert the archive notice blockquote immediately after the frontmatter, before the body content. The publication date is shown via badges rendered by the ArchivePage component, so do **not** include it in the notice text.
 
 ### 7. First Heading
 
 **Remove the first `# heading`** from the body — it duplicates the `title` field and will be rendered by the ArchivePage component.
 
-### 8. External Links
+### 8. Link Validation
 
-Leave all external links intact. Do not modify URLs to Microsoft Learn, GitHub, or other external sites.
+Use the `web` tool to check **every external link** in the post. Apply the following based on the result:
+
+| Result                                                                                                                      | Action                                                                                                                                                                                                                                                                                            |
+| --------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **200 OK** (same content)                                                                                                   | Keep the link as-is.                                                                                                                                                                                                                                                                              |
+| **Permanent redirect** (301/308, or the page loads at a different URL — e.g., `docs.microsoft.com` → `learn.microsoft.com`) | **Update the URL** silently to the final destination.                                                                                                                                                                                                                                             |
+| **404 / Gone / unreachable**                                                                                                | **Remove the link markup** but keep the anchor text as plain text. If the surrounding sentence only makes sense as a "click here" reference, rewrite it to describe the concept inline instead. Add a `<!-- TODO: review — dead link removed: <original-url> -->` comment so the user can verify. |
+| **Soft 404** (page loads but content is clearly unrelated — e.g., a generic "page not found" body, a domain-parked page)    | Treat the same as a 404.                                                                                                                                                                                                                                                                          |
+| **Timeout / network error**                                                                                                 | Do **not** assume the link is dead. Keep it as-is but add `<!-- TODO: review — link could not be verified: <url> -->`.                                                                                                                                                                            |
+
+**Important**: When multiple links redirect to the same new domain pattern (e.g., all `docs.microsoft.com` links redirect to `learn.microsoft.com`), apply the pattern to remaining links in the same post without re-fetching each one individually — only verify a sample to confirm the pattern holds, then apply it.
+
+Do **not** modify anchor text when updating a URL — only the `href` changes.
 
 ## Series Handling
 
@@ -166,7 +178,7 @@ If a pattern recurs across multiple posts (e.g., you discover a consistent way t
 3. For each post:
    a. Parse metadata (title, date, tags if present).
    b. Determine target path (standalone vs. series subfolder).
-   c. Apply all transformation rules.
+   c. Apply all transformation rules (including link validation via the `web` tool).
    d. Write the output file to `content/archive/<path>`.
 4. After each post, briefly confirm what was written and flag any TODO comments left for review.
 5. After the batch is complete, provide a summary table: post title, target path, tags assigned, and any items flagged for review.
@@ -184,7 +196,7 @@ If a pattern recurs across multiple posts (e.g., you discover a consistent way t
 
 After processing a batch, output a table like:
 
-| #   | Title                                                     | Target Path                                                           | Tags                                                   | Flags                 |
-| --- | --------------------------------------------------------- | --------------------------------------------------------------------- | ------------------------------------------------------ | --------------------- |
-| 1   | Tracking changes in open source projects                  | `archive/tracking-changes-in-open-source-projects.md`                 | changelog, open-source, github, git                    | —                     |
-| 2   | Power Platform's protection — Azure AD Conditional Access | `archive/power-platform-protection/01-azure-ad-conditional-access.md` | power-platform, security, azure-ad, conditional-access | 1 TODO: code language |
+| #   | Title                                                     | Target Path                                                           | Tags                                                   | Links                      | Flags                 |
+| --- | --------------------------------------------------------- | --------------------------------------------------------------------- | ------------------------------------------------------ | -------------------------- | --------------------- |
+| 1   | Tracking changes in open source projects                  | `archive/tracking-changes-in-open-source-projects.md`                 | changelog, open-source, github, git                    | 3 OK, 1 updated            | —                     |
+| 2   | Power Platform's protection — Azure AD Conditional Access | `archive/power-platform-protection/01-azure-ad-conditional-access.md` | power-platform, security, azure-ad, conditional-access | 5 OK, 2 updated, 1 removed | 1 TODO: code language |

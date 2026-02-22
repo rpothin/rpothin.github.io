@@ -1,5 +1,70 @@
 [
   {
+    "slug": "synchronous-operations-with-dataverse-low-code-plug-ins",
+    "title": "Synchronous operations with Dataverse low-code plug-ins",
+    "date": "2023-06-05",
+    "tags": [
+      "power-platform",
+      "dataverse",
+      "low-code",
+      "power-fx",
+      "alm"
+    ],
+    "description": "An early look at Dataverse low-code plug-ins — instant and automated flavors — including what they look like behind the scenes in source control, and why they could blur the line between low-code and code-first development."
+  },
+  {
+    "slug": "am-i-a-site-reliability-engineer",
+    "title": "Am I a Site Reliability Engineer?",
+    "date": "2023-02-13",
+    "tags": [
+      "devops",
+      "power-platform",
+      "site-reliability-engineering",
+      "alm",
+      "monitoring"
+    ],
+    "description": "A personal reflection on SRE principles — what they mean, whether they apply to Power Platform, and how the author's daily work around ALM, reliability, and production management maps onto Site Reliability Engineering practices."
+  },
+  {
+    "slug": "the-future-of-power-platform-solution-export-to-repository-is-here",
+    "title": "The future of Power Platform solution export to repository is here!",
+    "date": "2022-09-29",
+    "tags": [
+      "power-platform",
+      "alm",
+      "power-platform-cli",
+      "source-control",
+      "devops"
+    ],
+    "description": "First impressions of the pac solution clone and sync commands, which streamline getting Power Platform solutions into a repository by eliminating the traditional export-then-unpack workflow."
+  },
+  {
+    "slug": "empowering-power-platform-developers-with-net-interactive-notebooks",
+    "title": "Empowering Power Platform developers with .Net Interactive notebooks",
+    "date": "2022-07-26",
+    "tags": [
+      "power-platform",
+      "dataverse",
+      "dotnet",
+      "developer-tools",
+      "jupyter-notebooks"
+    ],
+    "description": "An exploration of how .Net Interactive notebooks in VS Code can help Power Platform developers with support, administration, and learning scenarios — using C# and PowerShell to interact with Dataverse without relying on open-source modules."
+  },
+  {
+    "slug": "asynchronous-data-operations-in-dataverse-from-a-canvas-app",
+    "title": "Asynchronous data operations in Dataverse from a canvas app",
+    "date": "2021-08-23",
+    "tags": [
+      "power-platform",
+      "dataverse",
+      "canvas-app",
+      "power-automate",
+      "power-fx"
+    ],
+    "description": "A walkthrough of an asynchronous design pattern where a canvas app uses the Patch function to create a Dataverse record that triggers a cloud flow, with the app polling for completion and notifying the user once data operations are done."
+  },
+  {
     "slug": "created-by-modified-by-columns-behavior-in-a-canvas-app-cloud-flow-dataverse-scenario",
     "title": "\"Created by\" / \"Modified by\" columns behavior in a canvas app + cloud flow + Dataverse scenario",
     "date": "2021-08-16",

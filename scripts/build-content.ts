@@ -234,6 +234,7 @@ async function main() {
       import("shiki/langs/markdown.mjs"),
       import("shiki/langs/bash.mjs"),
       import("shiki/langs/dax.mjs"),
+      import("shiki/langs/csharp.mjs"),
     ],
     engine: createOnigurumaEngine(import("shiki/wasm")),
   });

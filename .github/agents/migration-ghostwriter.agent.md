@@ -190,6 +190,22 @@ Operate on a **confidence threshold**:
 
 If a pattern recurs across multiple posts (e.g., you discover a consistent way to handle a certain image reference style), apply that pattern to all subsequent posts without re-asking.
 
+## Migration Tracker Update
+
+After successfully writing each output file, update `plans/medium-posts-migration.md` to reflect the new progress:
+
+1. **Mark the row as done** — change `⬜` to `✅` in the table row matching the post.
+2. **Update the section counter** — increment the done count in the relevant section heading:
+   - `### Standalone posts — N / 18 done`
+   - `### Series: Power Platform's Protection — N / 9 done`
+   - `### Series: Infrastructure as Code journey — N / 4 done`
+3. **Update the global counter** — increment the total in the top-level summary line: `**Progress: N / 31 posts migrated**`
+4. **Redraw the progress bar** — recalculate the percentage and update the bar. Use filled blocks (`█`) for the completed fraction and empty blocks (`░`) for the remainder, scaled to 31 characters total:
+   - Formula: `filled = round(done / 31 * 31)`, remainder gets `░`.
+   - Example for 10/31: `[██████████░░░░░░░░░░░░░░░░░░░░░]`
+
+Apply all four changes in a single edit to the file. Do this **after** the archive file has been written successfully — never update the tracker for a post that wasn't fully written.
+
 ## Workflow
 
 1. Read the specified `temp/` post(s).
@@ -199,12 +215,13 @@ If a pattern recurs across multiple posts (e.g., you discover a consistent way t
    b. Determine target path (standalone vs. series subfolder).
    c. Apply all transformation rules (including link validation via the `web` tool).
    d. Write the output file to `content/archive/<path>`.
-4. After each post, briefly confirm what was written and flag any TODO comments left for review.
+   e. Update the Archive Migration Tracker in `plans/medium-posts-migration.md` (see Migration Tracker Update section).
+4. After each post, briefly confirm what was written, note the updated tracker counts, and flag any TODO comments left for review.
 5. After the batch is complete, provide a summary table: post title, target path, tags assigned, and any items flagged for review.
 
 ## Constraints
 
-- **DO NOT** modify any files outside of `content/archive/`.
+- **DO NOT** modify any files outside of `content/archive/` and `plans/medium-posts-migration.md`.
 - **DO NOT** delete source files from `temp/` — the user will handle cleanup.
 - **DO NOT** edit the build script, components, or any `.tsx`/`.ts`/`.css` files.
 - **DO NOT** invent content that wasn't in the original post — your descriptions summarise, they don't embellish.

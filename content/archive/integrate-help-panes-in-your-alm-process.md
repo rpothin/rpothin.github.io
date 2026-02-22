@@ -53,7 +53,8 @@ Steps:
 - **Content**: The content code for the Help Pane. Refer to [Microsoft's documentation](https://learn.microsoft.com/en-us/power-apps/maker/data-platform/create-custom-help-pages#custom-help-xml-definition) for details.
 - **Locale**: The language in which the Help Pane is displayed
 
-> Note: For now, if you create a Help Page from a solution, you still have to add it with **Add Existing** afterward.
+> [!NOTE]
+> For now, if you create a Help Page from a solution, you still have to add it with **Add Existing** afterward.
 
 Once the new Help Page has been created and added, remember to **save** and **publish** your solution.
 

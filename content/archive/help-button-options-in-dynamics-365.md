@@ -16,6 +16,7 @@ Today, in Dynamics 365, you have a little question mark button on the top right 
 
 By default, your Dynamics 365 environment is configured to send you to the [Microsoft Dynamics 365 documentation page](https://learn.microsoft.com/en-us/dynamics365/) if you click on the help button.
 
+> [!NOTE]
 > To my mind it is a little bit complicated to keep this default option because the Microsoft documentation is helpful if you do not make customization on your environment, but it is not often the case.
 
 ## The Global Custom Help Page
@@ -40,6 +41,7 @@ Example parameters when opening from a lead form:
 - `entrypoint=form`: Specifies the type of page ("form" or "hierarchychart"). Not present if opened from a dashboard or list.
 - `formid=e3b6ddb7-8df0-4410-ac7b-fd32e5053d38`: The GUID of the originating form (only specified if opened from a form).
 
+> [!TIP]
 > Until today, I liked to use the global custom help page option with the user documentation in a SharePoint Document Library.
 
 ## The Custom Help Page for a Custom Entity
@@ -52,7 +54,8 @@ Steps:
 2. Open the configuration page of a custom entity within a solution (in the classic interface).
 3. Activate the option **"Use custom help"** and specify the URL you want to reach.
 
-> Unfortunately, it seems this feature is not currently working with the Unified Interface.  
+> [!WARNING]
+> Unfortunately, it seems this feature is not currently working with the Unified Interface.
 > See: [Forum thread on Dynamics CE Unified Interface custom help URL](https://community.dynamics.com/crm/f/microsoft-dynamics-crm-forum/371287/dynamics-ce-aka-crm---custome-help-url-on-unified-interface)
 
 ## Help Panes (Preview)
@@ -61,4 +64,5 @@ Your last option, the **custom help panes**, is available since version **9.1.0.
 
 See documentation: [Create custom help pages](https://learn.microsoft.com/en-us/power-apps/maker/data-platform/create-custom-help-pages)
 
+> [!NOTE]
 > We will enter into the details about the configuration of Help Panes in a next article because we have a lot to cover.

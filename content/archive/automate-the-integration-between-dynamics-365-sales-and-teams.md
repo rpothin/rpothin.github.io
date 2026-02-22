@@ -25,6 +25,7 @@ Rather than just creating a new article, I decided to build an open source solut
 
 [D365Sales-Teams-AutomatedIntegration-StarterKit GitHub repository](https://github.com/rpothin/D365Sales-Teams-AutomatedIntegration-StarterKit)
 
+> [!NOTE]
 > This solution is not perfect and there is still lot of things I would like to improve it in the future. But I really hope it will help some people start their journey to an automated integration between Dynamics 365 Sales and Microsoft Teams. And if you want to contribute to this project do not hesitate to contact me. I will be happy to bring you in and work on it with you.
 
 ## The key concepts of this integration
@@ -35,6 +36,7 @@ Behind the scenes when a user clicks on the "Collaborate" button on a record pag
 
 - Create a Dynamics 365 tab in the targeted Team channel and pointing to the originating record
 
+> [!TIP]
 > The automation of this part was a bit tricky because it was really important to understand the format of the request body for the call to Microsoft Graph. The Provision Dynamics 365 Tab to Microsoft Teams article by Matti Paukkonen was helpful and you should definitely take a look at it if you want to have a good understanding of this piece of the solution.
 
 - Create a Microsoft Teams Collaboration record in Dynamics 365 that will hold many details regarding the tab created in Teams (I do not know exactly how, but this action will also automatically generate a Document Location record that will allow the users to have access the files in the Teams channel where the Dynamics 365 tab has been created)
@@ -62,6 +64,7 @@ I also tried to manage all the small updates that could happen along the way (li
 - Obviously how the integration between Dynamics 365 Sales and Microsoft Teams works
 - How to use environment variables in a solution and to manage them in an automated build process: in my build pipeline I eliminate all the environment variable values I export from my development to not include this information in the repository or in the solution in the GitHub release
 
+> [!TIP]
 > The Tip of the Day #1363 give the best way to manage environment variables in Power Automate using a Child Flow. This article was also a good reminder on how to manage Child Flow outputs using the Respond to a PowerApp or flow action.
 
 - How to build a solution and make it available as a GitHub release using GitHub as repository and Azure Pipelines as CI/CD engine: I have learned than making a commit in a GitHub repository from a pipeline in Azure DevOps is a bit different than doing it in an Azure DevOps repository, and I also have learned how to create a GitHub release
@@ -77,4 +80,5 @@ I really think this starter kit is the beginning of something that could benefit
 
 In the same time, this project is really great to experiment and discover new things around the Power Platform and Microsoft Teams. So, I am sure I am not loosing my time working on this project.
 
+> [!NOTE]
 > Again, if you want to contribute to this project do not hesitate to contact me. I will be happy to welcome you on board and to have the chance to work with you.

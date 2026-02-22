@@ -1,5 +1,122 @@
 [
   {
+    "slug": "power-platform-protection/09-microsoft-sentinel-the-watchtower",
+    "title": "Power Platform's Protection — Microsoft Sentinel, the watchtower",
+    "date": "2025-02-06",
+    "tags": [
+      "power-platform",
+      "security",
+      "microsoft-sentinel",
+      "siem",
+      "dynamics-365"
+    ],
+    "description": "A guide to Microsoft Sentinel's growing coverage of Microsoft Business Apps — setting up workspace infrastructure with Bicep and PowerShell, exploring the ASIM parsers, analytics rules, playbooks, hunting queries, and workbooks, and strategies for Power Platform teams to collaborate with security teams."
+  },
+  {
+    "slug": "power-platform-protection/08-microsoft-purview-the-data-guardian",
+    "title": "Power Platform's Protection — Microsoft Purview the data guardian",
+    "date": "2024-12-09",
+    "tags": [
+      "power-platform",
+      "security",
+      "microsoft-purview",
+      "dataverse",
+      "data-governance"
+    ],
+    "description": "How Microsoft Purview's Data Map, Unified Catalog, and DSPM for AI can be used to classify and govern Dataverse data — including scanning tables for sensitivity labels, onboarding Fabric for Data Quality monitoring, and monitoring AI activity."
+  },
+  {
+    "slug": "power-platform-protection/07-building-secure-and-responsible-generative-ai-solutions",
+    "title": "Power Platform's Protection — Building secure and responsible Generative AI solutions",
+    "date": "2024-10-19",
+    "tags": [
+      "power-platform",
+      "security",
+      "generative-ai",
+      "responsible-ai",
+      "copilot-studio"
+    ],
+    "description": "An overview of Generative AI security risks — prompt injection, plugin vulnerabilities, indirect injection — alongside the community knowledge bases and practical Power Platform-specific mitigations for Copilots and prompts."
+  },
+  {
+    "slug": "power-platform-protection/06-managed-identity-for-dataverse-plug-ins",
+    "title": "Power Platform's protection — Managed Identity for Dataverse plug-ins",
+    "date": "2024-10-02",
+    "tags": [
+      "power-platform",
+      "security",
+      "managed-identity",
+      "dataverse",
+      "azure"
+    ],
+    "description": "Why Managed Identity is the right identity choice for Dataverse plug-ins integrating with Azure resources, how to configure the end-to-end setup, and the considerations needed to adopt it at scale — from assembly organization to ALM and governance."
+  },
+  {
+    "slug": "power-platform-protection/05-virtual-network-integration",
+    "title": "Power Platform's protection — Virtual Network integration",
+    "date": "2024-09-23",
+    "tags": [
+      "power-platform",
+      "security",
+      "virtual-network",
+      "azure",
+      "infrastructure-as-code"
+    ],
+    "description": "A deep dive into Virtual Network support for Power Platform — why it matters for securing Dataverse plug-ins and connector traffic, how to set it up with Bicep and PowerShell, and three architectural patterns for scaling the integration."
+  },
+  {
+    "slug": "power-platform-protection/04-microsoft-purview-compliance",
+    "title": "Power Platform's protection — Microsoft Purview Compliance",
+    "date": "2023-08-17",
+    "tags": [
+      "power-platform",
+      "security",
+      "microsoft-purview",
+      "audit-logs",
+      "compliance"
+    ],
+    "description": "How Microsoft Purview Compliance's auditing solution surfaces Power Apps, Power Automate, DLP, connector, and Dataverse activities — illustrated through realistic threat scenarios for both administrator-level and user-level monitoring."
+  },
+  {
+    "slug": "power-platform-protection/03-platform-internal-capabilities",
+    "title": "Power Platform's protection — Platform internal capabilities",
+    "date": "2023-07-30",
+    "tags": [
+      "power-platform",
+      "security",
+      "dataverse",
+      "governance",
+      "managed-environments"
+    ],
+    "description": "A tour of Power Platform's native security capabilities — DLP policies, environment security groups, Dataverse security roles, tenant isolation, IP cookie binding, IP firewall, and Customer Lockbox — and how they combine into a layered protection strategy."
+  },
+  {
+    "slug": "power-platform-protection/02-defender-for-cloud-apps",
+    "title": "Power Platform's protection — Defender for Cloud Apps",
+    "date": "2023-06-26",
+    "tags": [
+      "power-platform",
+      "security",
+      "defender-for-cloud-apps",
+      "dataverse",
+      "session-controls"
+    ],
+    "description": "An exploration of how Defender for Cloud Apps, acting as a Cloud Access Security Broker (CASB), can complement Azure AD Conditional Access to control access to and activities within Dataverse and model-driven applications."
+  },
+  {
+    "slug": "power-platform-protection/01-azure-ad-conditional-access",
+    "title": "Power Platform's protection — Azure AD Conditional Access",
+    "date": "2023-06-15",
+    "tags": [
+      "power-platform",
+      "security",
+      "entra-id",
+      "conditional-access",
+      "zero-trust"
+    ],
+    "description": "A detailed walkthrough of how Azure AD (now Entra ID) Conditional Access policies can protect Power Platform services, individual canvas apps, and workload identities — with practical configuration examples for each scenario."
+  },
+  {
     "slug": "synchronous-operations-with-dataverse-low-code-plug-ins",
     "title": "Synchronous operations with Dataverse low-code plug-ins",
     "date": "2023-06-05",

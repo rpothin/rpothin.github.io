@@ -1,5 +1,70 @@
 [
   {
+    "slug": "created-by-modified-by-columns-behavior-in-a-canvas-app-cloud-flow-dataverse-scenario",
+    "title": "\"Created by\" / \"Modified by\" columns behavior in a canvas app + cloud flow + Dataverse scenario",
+    "date": "2021-08-16",
+    "tags": [
+      "power-platform",
+      "dataverse",
+      "canvas-app",
+      "power-automate",
+      "cloud-flow"
+    ],
+    "description": "An investigation into why 'Created by' and 'Modified by' columns in Dataverse don't reflect the actual end user when records are created via cloud flows triggered from canvas apps — and which connector configurations correctly resolve the issue."
+  },
+  {
+    "slug": "tracking-changes-in-open-source-projects",
+    "title": "Tracking changes in open source projects",
+    "date": "2021-08-04",
+    "tags": [
+      "open-source",
+      "devops",
+      "github",
+      "git",
+      "changelog"
+    ],
+    "description": "A practical guide to adopting the keep-a-changelog convention in open source projects, including how to create and back-date git tags to build a meaningful, auditable version history."
+  },
+  {
+    "slug": "q-and-a-about-alm-and-power-platform",
+    "title": "Q&A about ALM and Power Platform",
+    "date": "2021-05-03",
+    "tags": [
+      "power-platform",
+      "alm",
+      "git",
+      "branching-strategy",
+      "devops"
+    ],
+    "description": "Answers to practical questions from a fellow Microsoft MVP on branching strategies, repository content decisions, and the recommended end-to-end flow for delivering Power Platform solutions from development to production."
+  },
+  {
+    "slug": "why-devops-culture-matters-working-with-the-power-platform",
+    "title": "Why DevOps culture matters working with the Power Platform?",
+    "date": "2021-01-22",
+    "tags": [
+      "power-platform",
+      "devops",
+      "devops-culture",
+      "citizen-developer",
+      "alm"
+    ],
+    "description": "An exploration of why DevOps culture — not just the tools — is the critical differentiator for Power Platform success, and why involving citizen developers in that culture is both a challenge and an opportunity."
+  },
+  {
+    "slug": "power-platform-enthusiasts-point-of-view-on-devops-culture",
+    "title": "Power Platform enthusiast's point of view on DevOps culture",
+    "date": "2020-12-31",
+    "tags": [
+      "power-platform",
+      "devops",
+      "devops-culture",
+      "alm",
+      "citizen-developer"
+    ],
+    "description": "A year-end reflection on what DevOps truly means — beyond tooling and automation — and how the DevOps mindset can reshape the way Power Platform developers and citizen developers work together to deliver value."
+  },
+  {
     "slug": "automate-the-integration-between-dynamics-365-sales-and-teams",
     "title": "Automate the integration between Dynamics 365 Sales and Teams",
     "date": "2020-10-24",

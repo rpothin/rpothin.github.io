@@ -12,7 +12,7 @@ originalUrl: "https://medium.com/rapha%C3%ABl-pothin/tracking-changes-in-open-so
 
 Few weeks back, I was thinking how I could clearly share details about the evolution of one of my open source projects in GitHub. As it is not one where I plan to generate releases (it is a GitHub repository template with GitHub workflows), I started looking for other ways to achieve this.
 
-It is during this quest that I have discovered the concept of "Changelog" through an amazing project: keep a changelog.
+It is during this quest that I have discovered the concept of "Changelog" through an amazing project: [keep a changelog](https://keepachangelog.com/).
 
 ## What is a changelog?
 
@@ -58,7 +58,8 @@ git tag v1.2.3
 git push origin v1.2.3
 ```
 
-If you want to add a tag to a commit in the past and want to display the correct date on it, you can use the following bash commands (⚠ these commands will only work in bash):
+If you want to add a tag to a commit in the past and want to display the correct date on it, <!-- TODO: review — original linked to an external explanation of GIT_COMMITTER_DATE; link URL not preserved in Medium export -->
+you can use the following bash commands - explained in details in additional resources (⚠ these commands will only work in bash):
 
 ```bash
 git checkout <commit>
@@ -82,4 +83,4 @@ From my point of view, the keep a changelog project provide a great example with
 
 The only personal touch I added are some emojis for the types of changes because I find it more fun like that 😊
 
-Do not hesitate to take a look at my first changelog. It is (and perhaps will always be) a work in progress, but it already helps me a lot to follow what I am changing in the solution.
+Do not hesitate to take a look at [my first changelog](https://github.com/rpothin/PowerPlatform-ALM-With-GitHub-Template/blob/main/CHANGELOG.md). It is (and perhaps will always be) a work in progress, but it already helps me a lot to follow what I am changing in the solution.

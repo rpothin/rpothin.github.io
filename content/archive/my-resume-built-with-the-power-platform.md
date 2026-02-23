@@ -69,6 +69,10 @@ CurrentExperience = SWITCH(WorkExperiences[cra8f_currentexperience],TRUE,"☑️
 
 I also used an embedded canvas app to display details about a selected record in a table. Personally, I think that integrate a canvas app in a Power BI reports is an amazing way to make your reports more interactive.
 
+<!-- TODO: review — original linked to a published light version of this Power BI report (without the embedded canvas app); link URL not preserved in Medium export -->
+
+And if you want to play with a light version of this report (without the embedded canvas app), it was previously made available online.
+
 ## My resume available through a virtual assistant
 
 Finally, what would be a Power Platform solution for my resume without a virtual assistant built with Power Virtual Agent to help me share my story with the world.
@@ -82,3 +86,7 @@ Here is a summary of what I learned and used in PVA to build my virtual assistan
 - You can format messages using markdown
 
 This was a really funny project to work on. The best part is that I really learned many things working building these different versions of my resume with the Power Platform. What best format to present your profile than the platform you work with daily, isn't it? 😉
+
+<!-- TODO: review — original linked to resources to try the different parts of this solution; link URL not preserved in Medium export -->
+
+If you want to try the different parts of this solution, resources to explore the project were previously available online.

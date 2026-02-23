@@ -10,7 +10,7 @@ originalUrl: "https://medium.com/rapha%C3%ABl-pothin/why-devops-culture-matters-
 > [!NOTE]
 > **Archive notice:** This post was originally published on Medium. It is preserved here as part of my writing history. Some content may be outdated.
 
-For me, the DevOps culture could be THE THNG that makes the difference between organizations for which the Power Platform means chaos and the ones where it can empower every employee to achieve more, thus helping the company to be more successful.
+For me, the DevOps culture could be THE THING that makes the difference between organizations for which the Power Platform means chaos and the ones where it can empower every employee to achieve more, thus helping the company to be more successful.
 
 ## It is not (only) about the tools!
 

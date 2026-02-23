@@ -65,6 +65,58 @@
     "description": "A deep dive into Virtual Network support for Power Platform — why it matters for securing Dataverse plug-ins and connector traffic, how to set it up with Bicep and PowerShell, and three architectural patterns for scaling the integration."
   },
   {
+    "slug": "infrastructure-as-code/04-a-bright-future",
+    "title": "The Power Platform Infrastructure as Code journey — A bright future",
+    "date": "2024-08-10",
+    "tags": [
+      "power-platform",
+      "infrastructure-as-code",
+      "terraform",
+      "governance",
+      "organizational-change"
+    ],
+    "description": "Maya prepares to present her DLP policy IaC strategy to IT leadership — covering how to upskill the team, plan the progressive migration of existing policies, and unlock unexpected benefits like automated testing, reduced privileged access, and risk audits."
+  },
+  {
+    "slug": "infrastructure-as-code/03-dawn-of-transformation",
+    "title": "The Power Platform Infrastructure as Code journey — Dawn of transformation",
+    "date": "2024-07-19",
+    "tags": [
+      "power-platform",
+      "infrastructure-as-code",
+      "terraform",
+      "dlp-policies",
+      "governance"
+    ],
+    "description": "Maya pushes DLP policy changes from code into Power Platform, converts existing policies to Terraform variable files, and discovers the critical 'terraform import' step needed to onboard already-managed resources without duplicates."
+  },
+  {
+    "slug": "infrastructure-as-code/02-first-stop-inventory",
+    "title": "The Power Platform Infrastructure as Code journey — First stop: Inventory",
+    "date": "2024-07-01",
+    "tags": [
+      "power-platform",
+      "infrastructure-as-code",
+      "terraform",
+      "dlp-policies",
+      "governance"
+    ],
+    "description": "Following Maya, a fictional engineer, as she identifies the pain points of managing DLP policies through the Power Platform Admin Center UI, discovers the Terraform provider, and builds a proof of concept to export existing policies as code."
+  },
+  {
+    "slug": "infrastructure-as-code/01-a-light-at-the-end-of-the-tunnel",
+    "title": "Infrastructure as code for Power Platform, a light at the end of the tunnel?",
+    "date": "2024-06-08",
+    "tags": [
+      "power-platform",
+      "infrastructure-as-code",
+      "terraform",
+      "governance",
+      "devops"
+    ],
+    "description": "An introduction to the Power Platform Terraform provider — why infrastructure as code matters for platform governance, how the provider works at a high level, and what trade-offs teams should weigh before adopting it."
+  },
+  {
     "slug": "power-platform-protection/04-microsoft-purview-compliance",
     "title": "Power Platform's protection — Microsoft Purview Compliance",
     "date": "2023-08-17",

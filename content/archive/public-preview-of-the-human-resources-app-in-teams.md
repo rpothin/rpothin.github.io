@@ -12,6 +12,15 @@ originalUrl: "https://medium.com/rapha%C3%ABl-pothin/public-preview-of-the-human
 
 The Human Resources app in Teams is in public preview for two days now. I took advantage of this time to make some tests and register a quick tour video of the available features in this application.
 
+<div class="video-container">
+  <iframe
+    src="https://www.youtube-nocookie.com/embed/Pm5WeD4lXYk"
+    title="Quick tour of the public preview of the Human Resources app in Teams"
+    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+    allowfullscreen
+  ></iframe>
+</div>
+
 For me, the most important missing feature in this application for now is the time-off balances forecasting in the Time off tab. As mentioned in the Microsoft documentation page, they already have identified this point, so they will perhaps (fingers crossed) try to work on it soon.
 
 And I am sure Microsoft has multiple ideas for the bot they will implement in the future (like "When is my next time-off?" or "Give me the next public holidays").

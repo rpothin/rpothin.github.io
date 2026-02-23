@@ -112,6 +112,15 @@ Once you have these policies in place (and well named and organized), you will b
 
 But obviously, connection is only the first step in the consumption of Power Platform services and protecting it is only a part of a larger objective — having a good security posture. In upcoming articles, we will continue to explore other capabilities of the Microsoft cloud that will help improve our level of protection of Power Platform.
 
+<div class="video-container">
+  <iframe
+    src="https://www.youtube-nocookie.com/embed/KbKxKhuSOF4"
+    title="Deep-Dive into Power Platform Managed Security"
+    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+    allowfullscreen
+  ></iframe>
+</div>
+
 ---
 
 ### Power Platform's Protection series

@@ -35,11 +35,29 @@ To make this model-driven app more appealing I have used some PCFs made by amazi
 - Social Media Icons: to present the social media links in the coolest possible way
 - HoverCard Details List: to allow to display a long text directly from a view
 
+<div class="video-container">
+  <iframe
+    src="https://www.youtube-nocookie.com/embed/Vt7WI-9BUfo"
+    title="My Resume as a model driven app"
+    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+    allowfullscreen
+  ></iframe>
+</div>
+
 ## My resume as a canvas app for phone
 
 The next stop of this journey was a canvas app for a phone. I said to myself: it could be cool to be able to present my resume on my phone during an interview.
 
 So, I began to build it and along the way I learned how to make a component used to bring a slider menu to life. And, for one screen of this app, I wanted to have a five stars filter for a gallery. But as I did not find any, I decided to build one myself as a component.
+
+<div class="video-container">
+  <iframe
+    src="https://www.youtube-nocookie.com/embed/iMntYJZFVX0"
+    title="My Resume as a canvas app for phone"
+    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+    allowfullscreen
+  ></iframe>
+</div>
 
 ## My resume as a canvas app for tablet
 
@@ -48,6 +66,15 @@ A canvas app for tablet allow to present the same things but differently. So, I 
 It gave me the chance to discover another interesting mechanism available in Power Apps: using a sub gallery to expand and collapse gallery items.
 
 A huge part of this project was about Power Apps (3 apps 😮), but I was also able to explore the other parts of the Power Platform.
+
+<div class="video-container">
+  <iframe
+    src="https://www.youtube-nocookie.com/embed/D4jzhmtdEB8"
+    title="My Resume as a canvas app for tablet"
+    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+    allowfullscreen
+  ></iframe>
+</div>
 
 ## My resume in a Power BI report
 
@@ -73,6 +100,15 @@ I also used an embedded canvas app to display details about a selected record in
 
 And if you want to play with a light version of this report (without the embedded canvas app), it was previously made available online.
 
+<div class="video-container">
+  <iframe
+    src="https://www.youtube-nocookie.com/embed/jL6O_csZAk4"
+    title="My resume in a Power BI report"
+    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+    allowfullscreen
+  ></iframe>
+</div>
+
 ## My resume available through a virtual assistant
 
 Finally, what would be a Power Platform solution for my resume without a virtual assistant built with Power Virtual Agent to help me share my story with the world.
@@ -86,6 +122,15 @@ Here is a summary of what I learned and used in PVA to build my virtual assistan
 - You can format messages using markdown
 
 This was a really funny project to work on. The best part is that I really learned many things working building these different versions of my resume with the Power Platform. What best format to present your profile than the platform you work with daily, isn't it? 😉
+
+<div class="video-container">
+  <iframe
+    src="https://www.youtube-nocookie.com/embed/ProTmqA5RYY"
+    title="My resume available through a virtual assistant"
+    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+    allowfullscreen
+  ></iframe>
+</div>
 
 <!-- TODO: review — original linked to resources to try the different parts of this solution; link URL not preserved in Medium export -->
 

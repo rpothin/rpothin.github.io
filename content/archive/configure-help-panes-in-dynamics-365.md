@@ -73,6 +73,15 @@ But don't worry—you can still configure these Help Panes by following the same
 
 ## Conclusion
 
+<div class="video-container">
+  <iframe
+    src="https://www.youtube-nocookie.com/embed/HSXHwQzDY4o"
+    title="Improve User Adoption With Help Panes In Model Driven Apps - 365 Power Up Tampa 2020"
+    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+    allowfullscreen
+  ></iframe>
+</div>
+
 Now that we've explored all the configuration options for Help Panes, the next step is integrating their management into the application's life cycle. That will be covered in a future article.
 
 This feature offers a collaborative advantage: while some team members configure Help Panes, others can continue working on app development and configuration.

@@ -76,6 +76,15 @@ But I am personally convinced that starting at a certain scale and if you prepar
 
 In future articles, we will go through some scenarios where I think the Power Platform Terraform provider could provide great value. Stay tuned!
 
+<div class="video-container">
+  <iframe
+    src="https://www.youtube-nocookie.com/embed/E8ZBybdeWYQ"
+    title="Enhancing Power Platform Governance Through Terraform: Embracing Infrastructure as Code"
+    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+    allowfullscreen
+  ></iframe>
+</div>
+
 ---
 
 ### Infrastructure as Code journey series

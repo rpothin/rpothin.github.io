@@ -37,10 +37,279 @@ This is where Infrastructure as Code (IaC) and scripting come in. By automating 
 
 First, we will need a Log Analytics Workspace and to add Microsoft Sentinel to it. For this task Bicep is one of the options available.
 
+```bicep
+// microsoft-sentinel-workspace.bicep
+// Source: https://gist.github.com/rpothin/3e3e225386e50fbca1591068a55d0c45
+@description('Name of the Log Analytics Workspace')
+param logAnalyticsWorkspaceName string
+
+@description('Log Analytics Workspace Pricing Tier')
+param logAnalyticsWorkspaceSkuName string = 'PerGB2018'
+
+@description('Resource Group Location')
+param location string
+
+@description('Tags for resources')
+param tags object = {}
+
+@description('Retention period in days for the Log Analytics Workspace')
+param retentionInDays int = 30
+
+// Create log analytics workspace
+resource logAnalyticsWorkspace 'Microsoft.OperationalInsights/workspaces@2023-09-01' = {
+  name: logAnalyticsWorkspaceName
+  location: location
+  tags: tags
+  properties: {
+    sku: {
+      name: logAnalyticsWorkspaceSkuName
+    }
+    retentionInDays: retentionInDays
+  }
+}
+
+// Add Microsoft Sentinel to the log analytics workspace
+resource microsoftSentinel 'Microsoft.OperationsManagement/solutions@2015-11-01-preview' = {
+  name: 'SecurityInsights(${logAnalyticsWorkspaceName})'
+  location: location
+  tags: tags
+  plan: {
+    name: 'SecurityInsights(${logAnalyticsWorkspaceName})'
+    product: 'OMSGallery/SecurityInsights'
+    publisher: 'Microsoft'
+    promotionCode: ''
+  }
+  properties: {
+    workspaceResourceId: logAnalyticsWorkspace.id
+  }
+}
+
+output logAnalyticsWorkspaceId string = logAnalyticsWorkspace.id
+```
+
 While deploying a Sentinel workspace with Bicep is straightforward, installing solutions into it via IaC is currently not well-supported. Fortunately, with some PowerShell scripting and API calls, we can automate the installation of the Microsoft Business Applications solution.
+
+```powershell
+# install-microsoft-business-applications-solution-into-microsoft-sentinel-workspace.ps1
+# Source: https://gist.github.com/rpothin/390c6a79d06ec7ad3c8b25ead8906a81
+
+# Connect to Azure CLI with device code
+az login --use-device-code
+
+# Get a token to be able to use the https://management.azure.com/ api
+$token = az account get-access-token --resource "https://management.azure.com/" --query accessToken -o tsv
+
+#region Navigation to the considered Log Analytics workspace
+
+# List the available subscriptions and prompt the user to select one
+az account list --query "[].{Name:name, SubscriptionId:id}" -o json | ConvertFrom-Json | Format-Table -AutoSize
+# Get the subscription id from the user
+$subscriptionId = Read-Host "Enter the subscription id"
+
+# List the resource groups under the selected subscription
+az group list --subscription $subscriptionId --query "[].{Name:name, Location:location}" -o json | ConvertFrom-Json | Format-Table -AutoSize
+# Get the resource group name from the user
+$resourceGroupName = Read-Host "Enter the resource group name"
+
+# List the log analytics workspaces under the selected resource group
+$workspaces = az monitor log-analytics workspace list --resource-group $resourceGroupName --subscription $subscriptionId --query "[].{Name:name, Location:location}" -o json | ConvertFrom-Json
+$workspaces | Format-Table -AutoSize
+
+# Get the log analytics workspace name from the user
+$workspaceName = Read-Host "Enter the log analytics workspace name"
+
+$consideredWorkspace = $workspaces | Where-Object { $_.name -eq $workspaceName }
+
+#endregion
+
+#region Get Microsoft Business Applications Sentinel solution packaged content
+
+try {
+    $uri = "https://management.azure.com/subscriptions/$subscriptionId/resourceGroups/$resourceGroupName/providers/Microsoft.OperationalInsights/workspaces/$workspaceName/providers/Microsoft.SecurityInsights/contentProductPackages?api-version=2024-09-01"
+    $response = Invoke-WebRequest -Uri $uri -Headers @{Authorization = "Bearer $token"} -Method Get
+    $responseContent = $response.Content | ConvertFrom-Json
+    $responseContentValue = $responseContent.value
+
+    $solutionDetails = $responseContentValue | Where-Object { $_.properties.displayName -eq "Microsoft Business Applications" } | Select-Object id,name
+    if (-not $solutionDetails) {
+        throw "Microsoft Business Applications solution not found."
+    }
+
+    $solutionURL = "https://management.azure.com" + $solutionDetails.id + "?api-version=2024-09-01"
+    $responseSolution = Invoke-WebRequest -Uri $solutionURL -Headers @{Authorization = "Bearer $token"} -Method Get
+    $responseSolutionContent = $responseSolution.Content | ConvertFrom-Json
+    $solutionAvailableVersion = $responseSolutionContent.properties.version
+    $solutionPackagedContent = $responseSolutionContent.properties.packagedContent
+} catch {
+    Write-Error "Failed to retrieve Microsoft Business Applications Sentinel solution: $_"
+    exit 1
+}
+
+#endregion
+
+#region Install the Microsoft Business Applications Sentinel solution
+
+try {
+    $uri = "https://management.azure.com/batch?api-version=2020-06-01"
+    $deploymentName = "BizAppsSentinelSolutionInstall-" + (Get-Date).ToString("yyyyMMddHHmmss")
+
+    $body = @{
+        requests = @(
+            @{
+                content = @{
+                    properties = @{
+                        parameters = @{
+                            "workspace"          = @{"value" = $workspaceName }
+                            "workspace-location" = @{"value" = $consideredWorkspace.Location }
+                        }
+                        template = $solutionPackagedContent
+                        mode = "Incremental"
+                    }
+                }
+                httpMethod = "PUT"
+                name = [guid]::NewGuid().ToString()
+                requestHeaderDetails = @{ commandName = "Microsoft_Azure_SentinelUS.ContenthubClickBulkInstall/put" }
+                url = "/subscriptions/$subscriptionId/resourcegroups/$resourceGroupName/providers/Microsoft.Resources/deployments/$deploymentName`?api-version=2020-06-01"
+            }
+        )
+    }
+
+    $response = Invoke-WebRequest -Uri $uri -Headers @{ Authorization = "Bearer $token" } -Method Post -Body ($body | ConvertTo-Json -Depth 50) -ContentType "application/json"
+    if ($response.StatusCode -ne 200) {
+        throw "Failed to install Microsoft Business Applications Sentinel solution."
+    }
+} catch {
+    Write-Error "Failed to install Microsoft Business Applications Sentinel solution: $_"
+    exit 1
+}
+
+#endregion
+```
 
 > [!NOTE]
 > Updating your installation of the Microsoft Business Applications when a new version is available also seems possible.
+
+```powershell
+# update-installed-microsoft-business-applications-solution.ps1
+# Source: https://gist.github.com/rpothin/02f1b799a0250737cf1baa5f162d8972
+
+# Source: https://techcommunity.microsoft.com/blog/microsoftsentinelblog/deploy-microsoft-sentinel-using-bicep/4270970
+
+# Connect to Azure CLI with device code
+az login --use-device-code
+
+# Get a token to be able to use the https://management.azure.com/ api
+$token = az account get-access-token --resource "https://management.azure.com/" --query accessToken -o tsv
+
+#region Navigation to the considered Log Analytics workspace
+
+# List the available subscriptions and prompt the user to select one
+az account list --query "[].{Name:name, SubscriptionId:id}" -o json | ConvertFrom-Json | Format-Table -AutoSize
+
+# Get the subscription id from the user
+$subscriptionId = Read-Host "Enter the subscription id"
+
+# List the resource groups under the selected subscription
+az group list --subscription $subscriptionId --query "[].{Name:name, Location:location}" -o json | ConvertFrom-Json | Format-Table -AutoSize
+
+# Get the resource group name from the user
+$resourceGroupName = Read-Host "Enter the resource group name"
+
+# List the log analytics workspaces under the selected resource group
+$workspaces = az monitor log-analytics workspace list --resource-group $resourceGroupName --subscription $subscriptionId --query "[].{Name:name, Location:location}" -o json | ConvertFrom-Json
+
+$workspaces | Format-Table -AutoSize
+
+# Get the log analytics workspace name from the user
+$workspaceName = Read-Host "Enter the log analytics workspace name"
+
+$consideredWorkspace = $workspaces | Where-Object { $_.name -eq $workspaceName }
+
+#endregion
+
+#region Get Microsoft Business Applications Sentinel solution packaged content
+
+try {
+    # Search the Microsoft Business Applications solution in the list of solutions available for the considered Log Analytics workspace
+    $uri = "https://management.azure.com/subscriptions/$subscriptionId/resourceGroups/$resourceGroupName/providers/Microsoft.OperationalInsights/workspaces/$workspaceName/providers/Microsoft.SecurityInsights/contentProductPackages?api-version=2024-09-01"
+    $response = Invoke-WebRequest -Uri $uri -Headers @{Authorization = "Bearer $token"} -Method Get
+
+    $responseContent = $response.Content | ConvertFrom-Json
+    $responseContentValue = $responseContent.value
+
+    $solutionDetails = $responseContentValue | Where-Object { $_.properties.displayName -eq "Microsoft Business Applications" } | Select-Object id,name
+
+    if (-not $solutionDetails) {
+        throw "Microsoft Business Applications solution not found."
+    }
+
+    # Get the Microsoft Business Applications Sentinel solution packaged content
+    $solutionURL = "https://management.azure.com" + $solutionDetails.id + "?api-version=2024-09-01"
+    $responseSolution = Invoke-WebRequest -Uri $solutionURL -Headers @{Authorization = "Bearer $token"} -Method Get
+
+    $responseSolutionContent = $responseSolution.Content | ConvertFrom-Json
+    $solutionAvailableVersion = $responseSolutionContent.properties.version
+    $solutionPackagedContent = $responseSolutionContent.properties.packagedContent
+} catch {
+    Write-Error "Failed to retrieve Microsoft Business Applications Sentinel solution: $_"
+    exit 1
+}
+
+#endregion
+
+#region Update of the Microsoft Business Applications Sentinel solution if new version available
+
+# Get the state of the Microsoft Business Applications Sentinel solution installed in the considered Microsoft Sentinel Workspace
+$uri = "https://management.azure.com/subscriptions/$subscriptionId/resourceGroups/$resourceGroupName/providers/Microsoft.OperationalInsights/workspaces/$workspaceName/providers/Microsoft.SecurityInsights/contentpackages?api-version=2023-04-01-preview&%24filter=(properties%2FcontentId%20eq%20'sentinel4dynamics365.powerplatform')"
+$response = Invoke-WebRequest -Uri $uri -Headers @{Authorization = "Bearer $token"} -Method Get
+
+$responseContent = $response.Content | ConvertFrom-Json
+$solutionInstalledVersion = $responseContent.value.properties.version
+
+# Update the Microsoft Business Applications Sentinel solution if a new version is available
+if ($solutionInstalledVersion -ne $solutionAvailableVersion) {
+    try {
+        $uri = "https://management.azure.com/batch?api-version=2020-06-01"
+
+        $deploymentName = "BizAppsSentinelSolutionUpdate-" + (Get-Date).ToString("yyyyMMddHHmmss")
+
+        $body = @{
+            requests = @(
+                @{
+                    content = @{
+                        properties = @{
+                            parameters = @{
+                                "workspace"          = @{"value" = $workspaceName }
+                                "workspace-location" = @{"value" = $consideredWorkspace.Location }
+                            }
+                            template = $solutionPackagedContent
+                            mode = "Incremental"
+                        }
+                    }
+                    httpMethod = "PUT"
+                    name = [guid]::NewGuid().ToString()
+                    requestHeaderDetails = @{
+                        commandName = "Microsoft_Azure_SentinelUS.ContenthubClickBulkInstall/put"
+                    }
+                    url = "/subscriptions/$subscriptionId/resourcegroups/$resourceGroupName/providers/Microsoft.Resources/deployments/$deploymentName`?api-version=2020-06-01"
+                }
+            )
+        }
+
+        # POST to uri
+        $response = Invoke-WebRequest -Uri $uri -Headers @{ Authorization = "Bearer $token" } -Method Post -Body ($body | ConvertTo-Json -Depth 50) -ContentType "application/json"
+
+        if ($response.StatusCode -ne 200) {
+            throw "Failed to update Microsoft Business Applications Sentinel solution."
+        }
+    } catch {
+        Write-Error "Failed to update Microsoft Business Applications Sentinel solution: $_"
+        exit 1
+    }
+}
+
+#endregion
+```
 
 At this point, the key remaining task is to enable the data connectors provided by the solution and relevant to your Power Platform and Dynamics 365 usage to be able to start ingesting data into your Microsoft Sentinel workspace. Even if it could theoretically be done with some effort using code, finishing this last mile in the Azure portal is a practical approach:
 

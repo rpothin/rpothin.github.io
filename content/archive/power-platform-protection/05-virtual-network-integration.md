@@ -59,10 +59,418 @@ An important thing to consider is that the setup consists of two distinct phases
 
 From my perspective, Azure configuration should be done as much as possible using infrastructure as code, sometimes combined with Azure CLI. The required Azure elements include:
 
-- Infrastructure as code in Bicep: modules for virtual network and enterprise policy, followed by a combination of the modules
-- Deployment code in PowerShell with Azure CLI
+**Virtual Network and Subnet Bicep module** (`vnet-subnet-with-delegation-module.bicep`):
+
+```bicep
+// vnet-subnet-with-delegation-module.bicep
+// Source: https://gist.github.com/rpothin/519b7de46f9f076af2fb713bce7ab4d4
+/* Parameters */
+@minLength(1)
+@maxLength(50)
+@description('Name of the Power Platform environment group considered in the infrastructure')
+param environmentGroupName string
+
+@allowed([
+  'primary'
+  'failover'
+])
+@description('Category of the network resources to configure')
+param category string
+
+@minLength(1)
+@maxLength(2)
+@description('Index for the resources in the case of multiple environment groups')
+param index string = '01'
+
+@minLength(1)
+@description('Location for all resources')
+param location string
+
+@description('Address prefixes for the virtual network')
+param vnetAddressPrefixes string
+
+@description('Address prefixes for the subnet used for injection')
+param injectionSnetAddressPrefixes string
+
+@description('Address prefixes for the subnet used for private endpoints')
+param privateEndpointsSnetAddressPrefixes string
+
+/* Resources */
+// Virtual Network
+resource virtualNetwork 'Microsoft.Network/virtualNetworks@2024-01-01' = {
+  name: 'vnet-${environmentGroupName}-${category}-${index}'
+  location: location
+  properties: {
+    addressSpace: {
+      addressPrefixes: [
+        vnetAddressPrefixes
+      ]
+    }
+  }
+}
+
+// Network Security Group
+resource networkSecurityGroup 'Microsoft.Network/networkSecurityGroups@2020-06-01' = {
+  name: 'nsg-${environmentGroupName}-${category}-${index}'
+  location: location
+  properties: {
+    securityRules: []
+  }
+}
+
+// Subnets
+// With delegations to the Microsoft.PowerPlatform/enterprisePolicies service
+resource injectionSnet 'Microsoft.Network/virtualNetworks/subnets@2024-01-01' = {
+  name: 'snet-${environmentGroupName}-${category}-${index}'
+  parent: virtualNetwork
+  properties: {
+    addressPrefix: injectionSnetAddressPrefixes
+    delegations: [
+      {
+        name: 'enterprisePolicies'
+        properties: {
+          serviceName: 'Microsoft.PowerPlatform/enterprisePolicies'
+        }
+      }
+    ]
+    serviceEndpoints: []
+    privateEndpointNetworkPolicies: 'Disabled'
+    privateLinkServiceNetworkPolicies: 'Disabled'
+    networkSecurityGroup: {
+      id: networkSecurityGroup.id
+    }
+  }
+}
+
+resource privateEndpointSnet 'Microsoft.Network/virtualNetworks/subnets@2024-01-01' = {
+  name: 'private-endpoints-snet-${environmentGroupName}-${category}-${index}'
+  parent: virtualNetwork
+  dependsOn: [
+    injectionSnet
+  ]
+  properties: {
+    addressPrefix: privateEndpointsSnetAddressPrefixes
+    delegations: []
+    serviceEndpoints: []
+    privateEndpointNetworkPolicies: 'Disabled'
+    privateLinkServiceNetworkPolicies: 'Disabled'
+    networkSecurityGroup: {
+      id: networkSecurityGroup.id
+    }
+  }
+}
+
+/* Outputs */
+output vnetId string = virtualNetwork.id
+output vnetName string = virtualNetwork.name
+output injectionSnetId string = injectionSnet.id
+output injectionSnetName string = injectionSnet.name
+output privateEndpointSnetId string = privateEndpointSnet.id
+output privateEndpointSnetName string = privateEndpointSnet.name
+```
+
+**Enterprise Policy Bicep module** (`powerplatform-network-injection-enterprise-policy-module.bicep`):
+
+```bicep
+// powerplatform-network-injection-enterprise-policy-module.bicep
+// Source: https://gist.github.com/rpothin/c196918aff904507d68ad5c349130d87
+/* Parameters */
+@minLength(1)
+@maxLength(50)
+@description('Name of the Power Platform environment group considered in the infrastructure')
+param environmentGroupName string
+
+@minLength(1)
+@maxLength(2)
+@description('Index for the resources in the case of multiple environment groups')
+param index string = '01'
+
+@minLength(1)
+@description('Location for all resources')
+param location string
+
+// Array of objects with the following structure:
+/*
+{
+  id: 'string'
+  subnet: {
+    name: 'string'
+  }
+}
+*/
+@description('Array of objects with the following structure: { id: string; subnet: { name: string; } }')
+param vnetSubnets array
+
+/* Resources */
+// Enterprise Policy for networkInjection
+resource enterprisePolicy 'Microsoft.PowerPlatform/enterprisePolicies@2020-10-30-preview' = {
+  name: 'ep-${environmentGroupName}-${index}'
+  location: location
+  kind: 'NetworkInjection'
+  properties: {
+    networkInjection: {
+      virtualNetworks: vnetSubnets
+    }
+  }
+}
+
+/* Outputs */
+output enterprisePolicyId string = enterprisePolicy.id
+output enterprisePolicyName string = enterprisePolicy.name
+```
+
+**Combined Bicep configuration** (`powerplatform-network-injection.bicep`):
+
+```bicep
+// powerplatform-network-injection.bicep
+// Source: https://gist.github.com/rpothin/ba2dd9469903705ffb2abb492d808510
+/* Deployment scope */
+targetScope = 'resourceGroup'
+
+/* Parameters */
+@minLength(1)
+@maxLength(50)
+@description('Name of the Power Platform environment group considered for the VNet integration enterprise policy')
+param environmentGroupName string
+
+@minLength(1)
+@maxLength(2)
+@description('Index resource group and resources in the case of multiple environments')
+param index string = '01'
+
+@allowed([
+  'eastus'
+  'westus'
+  'southafricanorth'
+  'southafricawest'
+  'uksouth'
+  'ukwest'
+  'japaneast'
+  'japanwest'
+  'centralindia'
+  'southindia'
+  'francecentral'
+  'francesouth'
+  'westeurope'
+  'northeurope'
+  'germanynorth'
+  'germanywestcentral'
+  'switzerlandnorth'
+  'switzerlandwest'
+  'canadacentral'
+  'canadaeast'
+  'brazilsouth'
+  'southcentralus'
+  'australiasoutheast'
+  'australiaeast'
+  'eastasia'
+  'southeastasia'
+  'uaecentral'
+  'uaenorth'
+  'koreasouth'
+  'koreacentral'
+  'norwaywest'
+  'norwayeast'
+  'singapore'
+  'swedencentral'
+])
+@description('Primary location for all resources')
+param location string
+
+@allowed([
+  'unitedstates'
+  'canada'
+  'uk'
+  'japan'
+  'southafrica'
+  'india'
+  'france'
+  'europe'
+  'germany'
+  'switzerland'
+  'brazil'
+  'australia'
+  'asia'
+  'uae'
+  'korea'
+  'norway'
+  'singapore'
+  'sweden'
+])
+@description('Location for the Enterprise policy')
+param enterprisePolicyLocation string
+
+@description('Boolean to define if the Enterprise Policy resource should be deployed - to avoid errors if the enterprise policy is already linked to Power Platforme environments')
+param deployEnterprisePolicy bool = false
+
+@description('Boolean to define if the Key Vault resource should be deployed - to avoid errors if the Key Vault is already created')
+param deployKeyVaultForTests bool = false
+
+/* Variables */
+var failoverLocations = {
+  eastus: 'westus'
+  westus: 'eastus'
+  southafricanorth: 'southafricawest'
+  southafricawest: 'southafricanorth'
+  uksouth: 'ukwest'
+  ukwest: 'uksouth'
+  japaneast: 'japanwest'
+  japanwest: 'japaneast'
+  centralindia: 'southindia'
+  southindia: 'centralindia'
+  francecentral: 'francesouth'
+  francesouth: 'francecentral'
+  westeurope: 'northeurope'
+  northeurope: 'westeurope'
+  germanynorth: 'germanywestcentral'
+  germanywestcentral: 'germanynorth'
+  switzerlandnorth: 'switzerlandwest'
+  switzerlandwest: 'switzerlandnorth'
+  canadacentral: 'canadaeast'
+  canadaeast: 'canadacentral'
+  brazilsouth: 'southcentralus'
+  southcentralus: 'brazilsouth'
+  australiasoutheast: 'australiaeast'
+  australiaeast: 'australiasoutheast'
+  eastasia: 'southeastasia'
+  southeastasia: 'eastasia'
+  uaecentral: 'uaenorth'
+  uaenorth: 'uaecentral'
+  koreasouth: 'koreacentral'
+  koreacentral: 'koreasouth'
+  norwaywest: 'norwayeast'
+  norwayeast: 'norwaywest'
+  singapore: 'southeastasia'
+  swedencentral: 'swedencentral'
+}
+
+var failoverLocation = failoverLocations[location]
+
+var networksConfiguration = [
+  {
+    category: 'primary'
+    location: location
+    vnetAddressPrefixes: '10.0.0.0/22'
+    injectionSnetAddressPrefixes: '10.0.0.0/24'
+    privateEndpointsSnetAddressPrefixes: '10.0.1.0/24'
+  }
+  {
+    category: 'failover'
+    location: failoverLocation
+    vnetAddressPrefixes: '11.0.0.0/22'
+    injectionSnetAddressPrefixes: '11.0.0.0/24'
+    privateEndpointsSnetAddressPrefixes: '11.0.1.0/24'
+  }
+]
+
+/* Resources */
+// Primary and failover VNet and Subnets
+module networks './vnet-subnet-with-delegation.bicep' = [for network in networksConfiguration: {
+  name: 'network-${network.category}'
+  params: {
+    environmentGroupName: environmentGroupName
+    category: network.category
+    index: index
+    location: network.location
+    vnetAddressPrefixes: network.vnetAddressPrefixes
+    injectionSnetAddressPrefixes: network.injectionSnetAddressPrefixes
+    privateEndpointsSnetAddressPrefixes: network.privateEndpointsSnetAddressPrefixes
+  }
+}]
+
+// Array of objects for the Enterprise Policy creation
+var vnetSubnets = [
+  {
+    id: networks[0].outputs.vnetId
+    subnet: {
+      name: networks[0].outputs.injectionSnetName
+    }
+  }
+  {
+    id: networks[1].outputs.vnetId
+    subnet: {
+      name: networks[1].outputs.injectionSnetName
+    }
+  }
+]
+
+// Enterprise Policy for networkInjection
+module enterprisePolicy './enterprise-policy.bicep' = if (deployEnterprisePolicy) {
+  name: 'enterprise-policy'
+  params: {
+    environmentGroupName: environmentGroupName
+    index: index
+    location: enterprisePolicyLocation
+    vnetSubnets: vnetSubnets
+  }
+}
+
+/* Outputs */
+output primaryVnetId string = networks[0].outputs.vnetId
+output primarySubnetId string = networks[0].outputs.injectionSnetId
+output primarySubnetName string = networks[0].outputs.injectionSnetName
+output failoverVnetId string = networks[1].outputs.vnetId
+output failoverSubnetId string = networks[1].outputs.injectionSnetId
+output failoverSubnetName string = networks[1].outputs.injectionSnetName
+output enterprisePolicyId string = deployEnterprisePolicy ? enterprisePolicy.outputs.enterprisePolicyId : 'Enterprise Policy not deployed'
+output enterprisePolicyName string = deployEnterprisePolicy ? enterprisePolicy.outputs.enterprisePolicyName : 'Enterprise Policy not deployed'
+```
+
+**Deployment script in PowerShell with Azure CLI** (`powerplatform-network-injection-azure-deployment.ps1`):
+
+```powershell
+// powerplatform-network-injection-azure-deployment.ps1
+// Source: https://gist.github.com/rpothin/9a70061b37e6a98ba68a88cf9269ecb0
+# Prerequisite: to be logged in to Azure CLI with an account with at least the Contributor role on the considered Azure subscription
+
+# 1. Microsoft.PowerPlatform resource provider registration in the considered Azure subscription
+az provider register --subscription $azureSubscriptionId --namespace Microsoft.PowerPlatform
+
+# 2. Create the resource group where the we want to deploy the resources if it does not yet exist
+$resourceGroupName = "rg-" + $environmentGroupName + "-" + $index # Name of the resource group
+
+$resourceGroupExists = az group exists --name $resourceGroupName --subscription $azureSubscriptionId
+
+if ($resourceGroupExists -eq "false") {
+  $resourceGroupLocation = $location
+  $resourceGroup = az group create --name $resourceGroupName --location $resourceGroupLocation --subscription $azureSubscriptionId
+}
+
+# 3. Deploy the resources using Bicep
+# Note: There is a parameter for the deployment of the enterprise policy because if it is already linked to environments and you try to deploy the infrastructure with the enterprise policy the deployment will fail
+$azureInfrastructureDeploymentOutputs = az deployment group create --subscription $azureSubscriptionId --resource-group $resourceGroupName --name $deploymentName --template-file $infrastructureAsCodeFilePath --parameters $bicepParametersFilePath --parameters deployEnterprisePolicy=$deployEnterprisePolicyResourceParameterValue --output json | ConvertFrom-Json
+
+# 4. Grant Reader role to the enterprise policy to the identity / group that will finalize the configuration - link the enterprise policy to the Power Platform environments
+$enterprisePolicyId = $azureInfrastructureDeploymentOutputs.properties.outputs.enterprisePolicyId.value
+$grantEnterprisePolicyReadAccessToPowerPlatformAdminsTeam = az role assignment create --assignee $powerPlatformAdminObjectId --role Reader --scope $enterprisePolicyId
+```
 
 Once the Azure elements are in place, you can link Power Platform environments from the same region (with Managed Environment enabled) to the configured network injection enterprise policy.
+
+```powershell
+// powerplatform-network-injection-link-to-environment.ps1
+// Source: https://gist.github.com/rpothin/0571a5b86b1cccf50852ed08aeeb63c0
+# Prerequisite: to be logged in to Azure CLI with an account with the Power Platform Administrator role or a service principal registered with 'pac admin register'
+
+# 1. Get access token for Power Platform Admin API
+$powerPlatformAdminApiUrl = "https://api.bap.microsoft.com/" # URL of the Power Platform Admin API
+$powerPlatformAdminApiToken = az account get-access-token --resource $powerPlatformAdminApiUrl --query accessToken --output tsv 
+
+# 2. Link Power Platform network injection enterprise policy to environment
+$ApiVersion = "2019-10-01" # Version of the Power Platform Admin API to use to link / unlink an enterprise policy to a Power Platform environment
+
+$body = [pscustomobject]@{
+  "SystemId" = az resource show --ids $enterprisePolicyId --query "properties.systemId" -o tsv
+}
+
+$linkEnterprisePolicyUri = "https://api.bap.microsoft.com/providers/Microsoft.BusinessAppPlatform/environments/$powerPlatformEnvironmentId/enterprisePolicies/NetworkInjection/link?&api-version=$ApiVersion"
+
+$linkEnterprisePolicyResult = iwr -Uri $linkEnterprisePolicyUri -Authentication OAuth -Token $(ConvertTo-SecureString $powerPlatformAdminApiToken -AsPlainText -Force) -Method Post -ContentType "application/json" -Body ($body | ConvertTo-Json) -UseBasicParsing
+
+# Potential errors:
+# Environment not Managed: "The following Power Platform environments are not managed: azureRegion, environmentId, protectionLevel and cannot be connected to the VNet Integration Enterprise Policy"
+# Environment not in the same region than the enterprise policy: "The following Power Platform environments are in non-allowed Azure regions: azureRegion, environmentId, protectionLevel and cannot be connected to the VNet Integration Enterprise Policy"
+```
 
 At this point, you will have the minimal setup to start communicating privately from a Power Platform environment to Azure resources. To test this setup, I added an Azure Key Vault with a private endpoint and disabled public access to the resource group, then implemented a custom API to manually list the available secrets through the network injection enterprise policy.
 

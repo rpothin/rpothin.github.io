@@ -58,14 +58,347 @@ Here are the steps to achieve an operational Dataverse plug-in that authenticate
 
 1. **Initialize the Dataverse Plug-in**: Use the `pac plugin init` Power Platform CLI command.
 2. **Replace some code in `PluginBase.cs`**: Add in the `PluginBase.cs` file the elements related to `IManagedIdentityService` (source: Scott Durow's article).
+
+```csharp
+// powerplatform-managedidentity-pluginbase.cs
+// Source: https://gist.github.com/rpothin/acdbc6a523083ff33581280f3993b837
+using Microsoft.Xrm.Sdk;
+using Microsoft.Xrm.Sdk.Extensions;
+using Microsoft.Xrm.Sdk.PluginTelemetry;
+using System;
+using System.Runtime.CompilerServices;
+using System.ServiceModel;
+
+namespace managedidentityplugin
+{
+    /// ...
+
+    /// <summary>
+    /// This interface provides an abstraction on top of IServiceProvider for commonly used PowerPlatform Dataverse Plugin development constructs
+    /// </summary>
+    public interface ILocalPluginContext
+    {
+        /// ...
+
+        /// <summary>
+        /// General Service Provide for things not accounted for in the base class.
+        /// </summary>
+        IServiceProvider ServiceProvider { get; }
+
+        /// <summary>
+        /// Managed Identity Service for things not accounted for in the base class.
+        /// </summary>
+        IManagedIdentityService ManagedIdentityService { get; }
+
+        /// ...
+    }
+
+    /// <summary>
+    /// Plug-in context object.
+    /// </summary>
+    public class LocalPluginContext : ILocalPluginContext
+    {
+        /// ...
+
+        /// <summary>
+        /// General Service Provider for things not accounted for in the base class.
+        /// </summary>
+        public IServiceProvider ServiceProvider { get; }
+
+        /// <summary>
+        /// Managed Identity Service for things not accounted for in the base class.
+        /// </summary>
+        public IManagedIdentityService ManagedIdentityService { get; private set; }
+
+        /// ...
+
+        /// <summary>
+        /// Helper object that stores the services available in this plug-in.
+        /// </summary>
+        /// <param name="serviceProvider"></param>
+        public LocalPluginContext(IServiceProvider serviceProvider)
+        {
+            if (serviceProvider == null)
+            {
+                throw new InvalidPluginExecutionException(nameof(serviceProvider));
+            }
+
+            ServiceProvider = serviceProvider;
+            ManagedIdentityService = (IManagedIdentityService)serviceProvider.GetService(typeof(IManagedIdentityService));
+
+            /// ...
+
+        }
+
+        /// ...
+    }
+}
+
+```
+
 3. **Add a method to get a token**: In your plug-in code, add a method to obtain a token for the considered managed identity (source: Scott Durow's article).
+
+```csharp
+// powerplatform-managedidentity-GetAccessTokenManagedIdentity.cs
+// Source: https://gist.github.com/rpothin/69463791f96714c4c7cd462b4ef5b0d8
+/// <summary>
+/// Acquires an access token using managed identity for the specified scopes.
+/// </summary>
+/// <param name="scopes">An array of scopes for which the token is requested. Typically, this includes resource URLs.</param>
+/// <param name="localPluginContext">The local plugin context which provides tracing and managed identity services.</param>
+/// <returns>A string representing the acquired access token.</returns>
+/// <exception cref="Exception">Thrown when the token acquisition fails.</exception>
+private string GetAccessTokenManagedIdentity(string[] scopes, ILocalPluginContext localPluginContext)
+{
+    // Initialize empty token
+    string token = string.Empty;
+
+    try
+    {
+        localPluginContext.TracingService.Trace("Scopes in GetAccessTokenManagedIdentity: " + string.Join(", ", scopes));
+        token = localPluginContext.ManagedIdentityService.AcquireToken(scopes);
+        // scope here is the resource URL :: example --> https://org9dfaa538.api.crm.dynamics.com/.default
+    }
+    catch (Exception ex)
+    {
+        localPluginContext.Trace($"Failed to acquire token {ex.Message}");
+    }
+
+    return token;
+}
+```
 4. **Build your assembly**: Use the `dotnet build` .NET CLI command.
 5. **Create and sign a certificate**: Create a certificate and then sign the plug-in assembly with it. For simplicity, I used a self-signed certificate, but you should consider a valid certificate for real use (source: Scott Durow's article).
+
+```powershell
+// powerplatform-managedidentity-certificate-signpluginassembly.ps1
+// Source: https://gist.github.com/rpothin/fad8fe8bd3bec747108db9c9e82375f5
+# Pre-requisite: plug-in assembly already built using for example 'dotnet build'
+
+# 1. Generate a self-signed certificate
+$cert = New-SelfSignedCertificate -Subject "CN=$name, O=corp, C=$name.com" -DnsName "www.$name.com" -Type CodeSigning -KeyUsage DigitalSignature -CertStoreLocation Cert:\CurrentUser\My -FriendlyName $friendlyName
+
+# Note: The cert object contains a Thumbprint property we will use for the configuration of the federated credentials of the managed identity so keep it available
+
+# 2. Set a password for the private key (optional)
+$pw = ConvertTo-SecureString -String $password -Force -AsPlainText
+
+# 3. Export the certificate as a PFX file
+$certificatePath = ".\certificate.pfx"
+Export-PfxCertificate -Cert $cert -FilePath $certificatePath -Password $pw
+
+# 4. Sign the plug-in assembly with the certificate
+# Note: The signtool utility is part of the Windows SDK (Software Development Kit). You can find it in the installation directory of the Windows SDK. If you haven't already installed the Windows SDK, you can download it from here: https://developer.microsoft.com/en-us/windows/downloads/windows-sdk/
+$signToolPath = "C:\Program Files (x86)\Windows Kits\10\bin\10.0.26100.0\x64\signtool.exe"
+Start-Process -FilePath $signToolPath -ArgumentList "sign /fd $fileDigestAlgorithm /f `"$certificatePath`" /p `"$password`" `"$dllPath`"" -NoNewWindow -Wait
+```
+
 6. **Register your plug-in**: Register your plug-in into your environment using the Plugin Registration Tool, which you can open with the `pac tool prt` Power Platform CLI command.
 7. **Configure an Application Registration or User-Assigned Managed Identity**: Depending on your scenario, configure an application registration or a user-assigned managed identity. For my test, I chose a user-assigned managed identity to interact with an Azure Key Vault.
+
+```powershell
+// powerplatform-managedidentity-azureconfiguration.ps1
+// Source: https://gist.github.com/rpothin/f222ce58bc8154002461ee370fca4e0c
+### Initialization
+# Generate the issuer URL based on the environment ID.
+$environmentIdPrefix = $environmentId.Substring(0, $environmentId.Length - 2).Replace("-", "")
+$environmentIdSuffix = $environmentId.Substring($environmentId.Length - 2)
+$issuer = "https://$environmentIdPrefix.$environmentIdSuffix.environment.api.powerplatform.com/sts"
+
+# Generate the subject identifier based on the certificate thumbprint (extracted during the configuration of the certificate) and the environment ID.
+$subjectIdentifier = "component:pluginassembly,thumbprint:$certificateThumbprint,environment:$environmentId"
+
+### User-assigned managed identity - Best choice for integration with Azure resources only
+# 1. Create a user-assigned managed identity.
+$userAssignedManagedIdentityAsJson = az identity create --name $userAssignedManagedIdentityName --resource-group $resourceGroupName
+$userAssignedManagedIdentity = $userAssignedManagedIdentityAsJson | ConvertFrom-Json
+
+# 2. Configure federated identity credentials for the user-assigned managed identity.
+az identity federated-credential create --name $federatedIdentityCredentialName --identity-name $userAssignedManagedIdentityName --resource-group $resourceGroupName --issuer $issuer --subject $subjectIdentifier
+
+$managedIdentityClientId = $userAssignedManagedIdentity.clientId
+
+### Application registration - Best choice for integration with services / resources not in Azure (ex: other Dataverse environment)
+# 1. Create an application registration.
+$applicationRegistrationAsJson = az ad app create --display-name $applicationRegistrationName
+$applicationRegistration = $applicationRegistrationAsJson | ConvertFrom-Json
+
+# 2. Configure federated identity credentials for the application registration.
+$parameters = @{
+	name = $federatedIdentityCredentialName
+	issuer = $issuer
+	subject = $subjectIdentifier
+	audiences = @("api://azureadtokenexchange") # Lowercase to avoid the error mentioned in the following blog article: https://itmustbecode.com/how-to-secure-a-dataverse-plug-in-with-managed-identity-using-plugin-identity-manager-for-xrmtoolbox/
+}
+
+$parametersJsonString = $parameters | ConvertTo-Json -Compress
+$parametersFilePath = "parameters.json"
+$parametersJsonString | Out-File -FilePath $parametersFilePath -Encoding utf8
+
+az ad app federated-credential create --id $applicationRegistration.appId --parameters @$parametersFilePath
+
+Remove-Item $parametersFilePath
+
+$managedIdentityClientId = $applicationRegistration.appId
+
+### Assign role on resources to managed identity
+# (Example) Assign the Key Vault Secrets User role to the user-assigned managed identity.
+az role assignment create --assignee $managedIdentityClientId --role "Key Vault Secrets User" --scope $keyVaultId
+```
+
 8. **Configure Federated Identity Credentials**: Configure the federated identity credentials on your managed identity to secure its consumption from a defined source.
 9. **Grant access to Azure resources**: Grant access to the Azure resources you want to integrate with your managed identity using the `az role assignment create` Azure CLI command.
 10. **Create the Managed Identity record in Dataverse**: Create the managed identity record in Dataverse and bind it with a plug-in assembly, using tools like Power Platform CLI with the `pac pfx run` command (source: Scott Durow's GitHub project PowerShell scripts).
+
+```powershell
+// powerplatform-managedidentity-dataverseconfiguration.ps1
+// Source: https://gist.github.com/rpothin/e19be92c07461649db77ce984d7f6cbb
+### Initialization
+# Empty pfx script
+$pfxScript = ""
+
+# Create an empty folder named pfx-scripts
+$folderPath = Join-Path -Path (Get-Location) -ChildPath "pfx-scripts"
+if (-not (Test-Path -Path $folderPath)) {
+    New-Item -Path $folderPath -ItemType Directory
+}
+
+### List managed identities not created by SYSTEM
+$pfxScript = @"
+    ShowColumns(
+        Filter(
+            'Managed Identities',
+            'Created By'.'Full Name' <> "SYSTEM"
+        ),
+        'ManagedIdentity Id',
+        TenantId,
+        ApplicationId,
+        Name
+    )
+"@
+
+$listManagedIdentitiesPfxScriptPath = Join-Path -Path $folderPath -ChildPath "list-managed-identities.pfx"
+
+Set-Content -Path $listManagedIdentitiesPfxScriptPath -Value $pfxScript
+
+pac pfx run --file $listManagedIdentitiesPfxScriptPath --echo
+
+### Create a new managed identity
+$pfxScript = @"
+Collect(
+    'Managed Identities',
+    {
+        Name: "$managedIdentityName",
+        ApplicationId:GUID("$applicationId"),
+        TenantId:GUID("$tenantId"),
+        'Credential Source':'Credential Source (Managed Identities)'.IsManaged,
+        'Subject Scope':'Subject Scope (Managed Identities)'.EnviornmentScope
+    }
+).'ManagedIdentity Id'
+"@
+    
+$createManagedIdentityPfxScriptPath = Join-Path -Path $folderPath -ChildPath "create-managed-identity.pfx"
+
+Set-Content -Path $createManagedIdentityPfxScriptPath -Value $pfxScript
+
+pac pfx run --file $createManagedIdentityPfxScriptPath --echo
+
+### List plug-in assemblies not created by SYSTEM
+$pfxScript = @"
+    AddColumns(
+        ShowColumns(
+            Filter(
+                'Plug-in Assemblies',
+                'Created By'.'Full Name' <> "SYSTEM"
+            ),
+            PluginAssemblyId,
+            Name,
+            ManagedIdentityId
+        ),
+        ManagedIdentityName,
+        LookUp(
+            'Managed Identities',
+            'ManagedIdentity Id' = ThisRecord.'ManagedIdentity Id'
+        ).Name
+    )
+"@
+
+$listPluginAssembliesPfxScriptPath = Join-Path -Path $folderPath -ChildPath "list-plugin-assemblies.pfx"
+
+Set-Content -Path $listPluginAssembliesPfxScriptPath -Value $pfxScript
+
+pac pfx run --file $listPluginAssembliesPfxScriptPath --echo
+
+### Link the managed identity to the plug-in assembly
+$pfxScript = @"
+    Patch(
+        'Plug-in Assemblies',
+        LookUp(
+            'Plug-in Assemblies',
+            PluginAssemblyId = GUID("$pluginAssemblyId")
+        ),
+        {
+            ManagedIdentityId: LookUp(
+                'Managed Identities',
+                ApplicationId = GUID("$applicationId") && TenantId = GUID("$tenantId")
+            )
+        }
+    )
+"@
+
+$linkManagedIdentityToPluginAssemblyPfxScriptPath = Join-Path -Path $folderPath -ChildPath "link-managed-identity-to-plugin-assembly.pfx"
+
+Set-Content -Path $linkManagedIdentityToPluginAssemblyPfxScriptPath -Value $pfxScript
+
+pac pfx run --file $linkManagedIdentityToPluginAssemblyPfxScriptPath --echo
+
+### Delete folder with the pfx scripts
+Remove-Item -Path $folderPath -Recurse -Force
+```
+
+Alternatively, you can use SQL queries with the SQL 4 CDS plugin in XrmToolBox:
+
+```sql
+-- powerplatform-managedidentity-dataverseconfiguration.sql
+-- Source: https://gist.github.com/rpothin/827309aed3cb91d67e3ecbb38479ecb2
+-- 1. Selects specific columns from the 'managedidentity' table where the 'createdbyname' is not 'SYSTEM',
+--    and orders the results by 'modifiedon' in descending order.
+SELECT   managedidentityid,
+         applicationid,
+         name,
+         createdby,
+         createdon,
+         credentialsource,
+         credentialsourcename,
+         subjectscope,
+         subjectscopename,
+         tenantid
+FROM     managedidentity
+WHERE    createdbyname <> 'SYSTEM'
+ORDER BY modifiedon DESC;
+
+-- 2. Inserts a new record into the 'managedidentity' table with specified values for 'applicationid', 
+--    'credentialsource', 'subjectscope', and 'tenantid'.
+INSERT  INTO managedidentity (applicationid, name, credentialsource, subjectscope, tenantid)
+VALUES                      ('61124aa6-920d-4a5d-bb5c-4b6a41d50eee', 'mi-dataverse-plugin', 2, 1, '7e7df62f-7cc4-4e63-a250-a277063e1be7');
+
+-- 3. Selects specific columns from the 'pluginassembly' table where the 'createdbyname' is not 'SYSTEM',
+--    and orders the results by 'modifiedon' in descending order.
+SELECT   pluginassemblyid,
+         pluginassemblyidunique,
+         name,
+         managedidentityid
+FROM     pluginassembly
+WHERE    createdbyname <> 'SYSTEM'
+ORDER BY modifiedon DESC;
+
+-- 4. Updates the 'managedidentityid' in the 'pluginassembly' table for a specific 'pluginassemblyid'.
+UPDATE pluginassembly
+SET    managedidentityid = '12d83b39-9078-ef11-ac21-002248b1be27'
+WHERE  pluginassemblyid = '53b2fbdb-f0f4-410f-8a27-6bdb06f1737b';
+
+-- ⚠️ If your update is targeting an assembly not signed with a valid certificate you will get the following error: "Plugin assembly must be signed with valid certificate to associate to Managed Identity"
+```
 
 Not being a seasoned .Net developer, I struggled a bit with the plug-in assembly configuration, from the code itself to signing it with a self-signed certificate. Additionally, I lost some time due to an incorrect format for the issuer in the federated identity credentials configuration — I forgot to remove the "-" in the Power Platform environment ID prefix.
 

@@ -56,6 +56,8 @@ Now that the reasons why using managed identities from Dataverse plug-ins is ben
 
 Here are the steps to achieve an operational Dataverse plug-in that authenticates to an Azure resource using a managed identity:
 
+![Overview of what is involved in the configuration of Managed Identities for Dataverse Plug-ins](/content/archive/power-platform-protection/06-managed-identity-overview.png)
+
 1. **Initialize the Dataverse Plug-in**: Use the `pac plugin init` Power Platform CLI command.
 2. **Replace some code in `PluginBase.cs`**: Add in the `PluginBase.cs` file the elements related to `IManagedIdentityService` (source: Scott Durow's article).
 
@@ -167,6 +169,7 @@ private string GetAccessTokenManagedIdentity(string[] scopes, ILocalPluginContex
     return token;
 }
 ```
+
 4. **Build your assembly**: Use the `dotnet build` .NET CLI command.
 5. **Create and sign a certificate**: Create a certificate and then sign the plug-in assembly with it. For simplicity, I used a self-signed certificate, but you should consider a valid certificate for real use (source: Scott Durow's article).
 
@@ -296,7 +299,7 @@ Collect(
     }
 ).'ManagedIdentity Id'
 "@
-    
+
 $createManagedIdentityPfxScriptPath = Join-Path -Path $folderPath -ChildPath "create-managed-identity.pfx"
 
 Set-Content -Path $createManagedIdentityPfxScriptPath -Value $pfxScript
@@ -377,7 +380,7 @@ FROM     managedidentity
 WHERE    createdbyname <> 'SYSTEM'
 ORDER BY modifiedon DESC;
 
--- 2. Inserts a new record into the 'managedidentity' table with specified values for 'applicationid', 
+-- 2. Inserts a new record into the 'managedidentity' table with specified values for 'applicationid',
 --    'credentialsource', 'subjectscope', and 'tenantid'.
 INSERT  INTO managedidentity (applicationid, name, credentialsource, subjectscope, tenantid)
 VALUES                      ('61124aa6-920d-4a5d-bb5c-4b6a41d50eee', 'mi-dataverse-plugin', 2, 1, '7e7df62f-7cc4-4e63-a250-a277063e1be7');
@@ -421,7 +424,11 @@ If you typically have most of your Dataverse plug-ins code in a single assembly,
 
 In scenarios where Dataverse plug-ins integrate independently with different Azure resources, avoid concentrating all plug-ins in one assembly integrated with different Azure resources using only one managed identity.
 
+![Single Assembly: Dataverse plug-ins in one assembly integrated with different Azure resources using only one managed identity](/content/archive/power-platform-protection/06-managed-identity-single-assembly.png)
+
 Instead, follow a pattern of specialized assemblies where Dataverse plug-ins focus on integration with only one Azure resource through a dedicated managed identity.
+
+![Specialized Assemblies: Dataverse plug-ins in specialized assemblies focusing on integration with only one Azure resource through a dedicated managed identity](/content/archive/power-platform-protection/06-managed-identity-specialized-assemblies.png)
 
 ### ALM story for Dataverse plug-ins with Managed Identities
 

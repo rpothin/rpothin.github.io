@@ -34,6 +34,8 @@ Since few months I have read lot of articles, documentation pages, listened podc
 
 "What is DevOps?" by Donovan Brown from Microsoft
 
+!["What is DevOps?" by Donovan Brown from Microsoft](/content/archive/devops-enthusiast-banner.jpg)
+
 I really like this definition because it is a simple way to show that DevOps is really not an easy subject to master. You have different elements involved and in particular people. So, even if this definition does not explicitly say the word, we can guess reading it that DevOps is more a culture than anything else.
 
 The next big step in my learning of the DevOps culture was the discovery of an amazing book: "The Phoenix Project: A Novel about IT, DevOps, and Helping Your Business Win". This book really opened my eyes about this topic. I strongly advise you to read it if you want to understand what your company is perhaps going through and how you can find a way to improve your IT organization implementing the DevOps culture.

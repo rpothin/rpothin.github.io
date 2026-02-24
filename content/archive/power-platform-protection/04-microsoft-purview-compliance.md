@@ -26,6 +26,8 @@ Using a simple searching interface, you will have access to Power Platform and D
 - try to confirm potential security risks based on hypothesis
 - export specific audit logs to respond to compliance obligations
 
+![Microsoft Purview Compliance Audit Search interface](/content/archive/power-platform-protection/04-purview-compliance-audit-search.png)
+
 > [!WARNING]
 > I have not been able to find most of the audit logs presented here using the new search experience, and I had to come back to the classic one to find the activities I was looking for. I hope Microsoft will fix this before the retirement of the classic search experience currently planned for October 2023.
 
@@ -51,6 +53,8 @@ In that case, audit logs like the ones below could help to get a better understa
 - Power Apps — Edited app permission
 - Power Automate — Created flow
 
+![Example of an "Edited app permission" activity in Microsoft Purview Compliance](/content/archive/power-platform-protection/04-purview-compliance-edited-app-permission.png)
+
 Scenario 2: a malicious production environment administrator will deploy a custom connector as a trap for users to spread it (using it in canvas apps or cloud flows) and allowing the exfiltration of data.
 
 Detecting activities around custom connectors and connections being now possible in Microsoft Purview Compliance audit logs, in this scenario we could search for activities like:
@@ -59,12 +63,16 @@ Detecting activities around custom connectors and connections being now possible
 - Power Platform Connector — API permission added or edited
 - Power Platform Connector — Connection created
 
+![Example of an "API created" activity in Microsoft Purview Compliance](/content/archive/power-platform-protection/04-purview-compliance-api-created.png)
+
 Scenario 3: a rogue Power Platform administrator will temporarily update a data loss prevention policy and create a cloud flow to send files outside of the organization boundaries — using a non-authorized connector simplifying files exfiltration.
 
 Being also covered for Data Loss Prevention policies management activities in the audit logs in Microsoft Purview Compliance, an investigation could focus the analysis on the following elements:
 
 - Power Platform DLP — Updated DLP Policy
 - Power Automate — Created flow
+
+![Example of an "Updated DLP Policy" activity in Microsoft Purview Compliance](/content/archive/power-platform-protection/04-purview-compliance-updated-dlp-policy.png)
 
 Obviously, in all these scenarios the logs from Microsoft Purview Compliance are not sufficient to get a global picture of the situation. But they definitely can help bring the puzzle pieces together and understand how the malicious actor has been able to exfiltrate data.
 
@@ -76,6 +84,8 @@ Scenario A: a hijacked user account with access to interesting data is used to r
 
 In that case, and if your Dataverse configuration is relevant, multiple "Retrieve Multiple" activities (or even "Relevance Search" activities) will appear in audit logs search results in Microsoft Purview Compliance.
 
+![Illustration of a user going through multiple lists of contacts using different approaches](/content/archive/power-platform-protection/04-purview-compliance-user-contacts-illustration.png)
+
 > [!WARNING]
 > In this kind of scenario, I discourage you from focusing your analysis on the "Export to Excel" activities because there are other ways to bypass this mechanism to exfiltrate the data. Obviously, too many "Export to Excel" activities from the same user is often not a good sign, but it is not because you don't have these kinds of activities that nothing suspicious is going on.
 
@@ -83,13 +93,20 @@ Scenario B: a bribed user launching many different applications in a short perio
 
 I am assuming this kind of behavior is always a bit difficult to identify, but at least in Microsoft Purview Compliance we would have audit logs for the "Power Apps — Launched app" activity we could leverage in an investigation.
 
+![Example of a "Launched app" activity in Microsoft Purview Compliance](/content/archive/power-platform-protection/04-purview-compliance-launched-app.png)
+
 ## Focus on Dataverse configuration for auditing
 
 To be able to receive Dataverse audit logs into Microsoft Purview Compliance you will need to:
 
 - have your environment of type "Production" — like mentioned in the requirements in the Microsoft documentation
 - have the audit started ("Start Auditing") and the option "Read logs" checked on your environment — based on your requirements you will perhaps also want to check the "Log access" option
+
+![Environment configuration to send audit logs to Microsoft Purview Compliance](/content/archive/power-platform-protection/04-purview-compliance-env-config-audit-logs.png)
+
 - if you want to have audit logs for the consultation of a record or a list of records in a table you can follow the "Enable or disable auditing for an entity" procedure in the Microsoft documentation
+
+![Contact table configured to generate audit logs for Retrieve and RetrieveMultiple activities](/content/archive/power-platform-protection/04-purview-compliance-contact-table-audit-logs.png)
 
 > [!WARNING]
 > Currently, this audit configuration is only available in the classic ("old") interface on the tables main page.

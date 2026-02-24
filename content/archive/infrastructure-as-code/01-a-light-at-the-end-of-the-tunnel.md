@@ -10,9 +10,17 @@ originalUrl: "https://medium.com/rapha%C3%ABl-pothin/infrastructure-as-code-for-
 > [!NOTE]
 > **Archive notice:** This post was originally published on Medium. It is preserved here as part of my writing history. Some content may be outdated.
 
-At the end of 2023, my fellow MVP Natraj Yegnaraman shared an interesting post about the Power Platform Terraform provider being mentioned for the first time on the Azure Podcast — even if my reaction showed I was not indifferent. Most recently, Natraj shared another post announcing the preview of the Power Platform Terraform provider.
+At the end of 2023, my fellow MVP Natraj Yegnaraman shared an interesting post about the Power Platform Terraform provider being mentioned for the first time on the Azure Podcast — even if my reaction showed I was not indifferent.
+
+![Natraj Yegnaraman post regarding Azure Podcast episode 477 where Power Platform Terraform provider was mentioned for the first time](/content/archive/infrastructure-as-code/01-natraj-azure-podcast-tweet.png)
+
+Most recently, Natraj shared another post announcing the preview of the Power Platform Terraform provider.
+
+![Natraj's post announcing the preview of Power Platform Terraform provider](/content/archive/infrastructure-as-code/01-natraj-terraform-preview-tweet.png)
 
 Even if some of us were a bit sad to receive a Terraform provider while we were waiting for a Bicep-oriented approach to manage Power Platform assets with infrastructure as code, it was still big news and the beginning of a new journey for me.
+
+![Illustration of Power Platform and Terraform better together](/content/archive/infrastructure-as-code/01-power-platform-terraform-together.png)
 
 > [!WARNING]
 > One of the most important things to keep in mind is that the Power Platform Terraform provider is in the experimental phase (at the time where I write this article) and should definitely not be used in Production — or at least it will be at your own risk because no active support will be provided.

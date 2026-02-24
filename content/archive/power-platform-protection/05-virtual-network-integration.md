@@ -44,6 +44,8 @@ Based on my understanding, the Virtual Network support capability for Power Plat
 
 In our Power Platform context, this means the engine of the services covered by the Virtual Network support capability (Dataverse plug-ins and some connectors) will be injected into the subnets defined in the enterprise policy. This allows them to interact with other Azure resources isolated from the internet through private endpoints, and all outbound traffic from the services considered will have to go through the subnet they are integrated with and comply with the rules implemented, such as those in a Network Security Group (NSG).
 
+![Illustration of the Virtual Network support for Power Platform (taken from Microsoft documentation)](/content/archive/power-platform-protection/05-vnet-support-illustration.png)
+
 Integrating Power Platform services into an Azure subnet as described above could potentially mitigate some of the risks we identified earlier:
 
 - Outbound traffic from the services considered could be controlled using an NSG. If the scenarios covered in the Power Platform are limited to integration with resources in the organization's private network, traffic from Power Platform to elements outside of a defined private network could be blocked. So, even if a connection is created targeting an Azure resource outside of company boundaries, the outbound traffic from Power Platform to the resource would be blocked because it is not compliant with the NSG rules.
@@ -54,6 +56,8 @@ It should now be pretty obvious that Virtual Network support for Power Platform 
 ## How to setup Virtual Network integration with Power Platform environments?
 
 Microsoft offers a setup guide combined with PowerShell scripts to help you configure Virtual Network integration between Azure resources and a Power Platform environment. However, even though the documentation and provided scripts offer a lot of information for implementing an operational integration, I found that a good understanding of how Azure networking and infrastructure works is required to complete the setup successfully.
+
+![Overview of the Virtual Network integration with Power Platform environments setup process (taken from Microsoft documentation)](/content/archive/power-platform-protection/05-vnet-integration-setup-overview.png)
 
 An important thing to consider is that the setup consists of two distinct phases that take place in different parts of the Microsoft ecosystem: first in Azure (steps 1 to 4) and then in Power Platform (step 5). Depending on the role and responsibility model in your organization, this may impact which teams need to be involved and when to complete the setup.
 
@@ -454,7 +458,7 @@ Once the Azure elements are in place, you can link Power Platform environments f
 
 # 1. Get access token for Power Platform Admin API
 $powerPlatformAdminApiUrl = "https://api.bap.microsoft.com/" # URL of the Power Platform Admin API
-$powerPlatformAdminApiToken = az account get-access-token --resource $powerPlatformAdminApiUrl --query accessToken --output tsv 
+$powerPlatformAdminApiToken = az account get-access-token --resource $powerPlatformAdminApiUrl --query accessToken --output tsv
 
 # 2. Link Power Platform network injection enterprise policy to environment
 $ApiVersion = "2019-10-01" # Version of the Power Platform Admin API to use to link / unlink an enterprise policy to a Power Platform environment
@@ -489,9 +493,15 @@ From my perspective, there are a few strategies you could apply, and the choice 
 
 - **Single Set of Virtual Networks**: the Azure network resources are managed by the Power Platform governance team in their Azure subscription, with a service principal with the Network Contributor role on the Virtual Networks shared with the development team to allow them to configure private endpoints for their resources. This approach simplifies the setup for the development team, who only need to manage their resources, while the Power Platform governance team controls the network traffic using network security groups.
 
+![Power Platform Network Injection architecture overview with a single set of virtual networks](/content/archive/power-platform-protection/05-vnet-injection-single-set.png)
+
 - **Peered Virtual Networks**: each party (Power Platform governance team and development team) has a set of Virtual Networks and subnets peered together. This enables network traffic to flow from the Power Platform environments through the network injection enterprise policy to the resources via private endpoints. This approach offers more flexibility to the development team, who can manage the distribution of private endpoints in subnets in the peered Virtual Network without needing to communicate with the Power Platform governance team. However, it does not mean that the control of the traffic is out of the hands of the Power Platform governance team.
 
+![Power Platform Network Injection architecture overview with peered virtual networks](/content/archive/power-platform-protection/05-vnet-injection-peered-networks.png)
+
 - **Hub and Spoke Model**: all network traffic between two Virtual Networks goes through the hub for DNS resolution and inspection by firewalls. At an enterprise scale, this approach aims to better secure, monitor, and control all network traffic. This option is an evolution of the previous one and typically involves close collaboration with network teams to obtain private IP ranges and configure firewall rules to authorize traffic between the Virtual Networks involved in the Power Platform Virtual Network injection.
+
+![Power Platform Network Injection architecture overview following the hub and spoke model](/content/archive/power-platform-protection/05-vnet-injection-hub-spoke.png)
 
 I would recommend choosing the hub and spoke model only if your organization already has it in place and there is a compliance requirement to follow this approach, as it is definitely more complex. For the other proposed strategies, the choice will depend on the level of flexibility your development teams are looking for. You could start with the first model, which is easier for the development teams, and as your organization matures, you can introduce the second model to offer more flexibility for development teams seeking that.
 

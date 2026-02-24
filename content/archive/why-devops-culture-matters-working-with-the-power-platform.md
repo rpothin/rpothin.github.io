@@ -12,6 +12,8 @@ originalUrl: "https://medium.com/rapha%C3%ABl-pothin/why-devops-culture-matters-
 
 For me, the DevOps culture could be THE THING that makes the difference between organizations for which the Power Platform means chaos and the ones where it can empower every employee to achieve more, thus helping the company to be more successful.
 
+![Continuous flow of value — a key concept in DevOps culture](/content/archive/devops-culture-continuous-flow.png)
+
 ## It is not (only) about the tools!
 
 Many people in the DevOps community agree on the fact that that the tools are perhaps the less difficult part to implement in that story.

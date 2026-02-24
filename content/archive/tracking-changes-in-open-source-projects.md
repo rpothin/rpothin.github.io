@@ -20,6 +20,8 @@ For me a changelog is a file in your repository providing details about what hav
 
 As you can guess, it is a really important file for an open source project because many people can be involved and they need to understand what happened and what is in progress. It is clearly a great way to give a good visibility on the evolution of the solution. And it can benefit everyone (even yourself as a maintainer).
 
+![Changelog example - v0.1 of the rpothin/PowerPlatform-ALM-With-GitHub-Template GitHub repository](/content/archive/tracking-changelog-v01.png)
+
 ## What the "keep a changelog" project propose?
 
 It is pretty simple, the keep a changelog project come with a "CHANGELOG.md" example including good practices.
@@ -37,6 +39,8 @@ Example:
 ```
 
 Opening a link in this format, you will be able to easily see the differences between two versions of your solution.
+
+![Example of comparison between two versions of the olivierlacan/keep-a-changelog GitHub repository](/content/archive/tracking-version-comparison.png)
 
 ## How to manage the versions?
 
@@ -78,6 +82,8 @@ git tag -a v1.2.3 -m"v1.2.3"
 git checkout main
 git push origin v1.2.3
 ```
+
+![Example of tag associated to a past commit](/content/archive/tracking-tag-past-commit.png)
 
 From my point of view, the keep a changelog project provide a great example with good practices to help open source maintainers start or improve their changelog.
 

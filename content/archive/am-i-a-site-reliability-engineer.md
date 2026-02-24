@@ -19,9 +19,13 @@ From "What is Site Reliability Engineering?", to "Is it applicable to Power Plat
 
 ## What is Site Reliability Engineering?
 
+![SRE illustration from Google](/content/archive/sre-illustration.jpeg)
+
 A bit like for DevOps, it seems difficult to find a strong definition of Site Reliability Engineering, but for me the following phrase from the Google SRE website summarize pretty well the idea: "SRE is what you get when you treat operations as if it's a software problem."
 
 From my understanding, it is a set of principles and practices documented by Google and followed by many companies to improve reliability and development velocity with complex systems. Both DevOps and SRE promote ways to better manage software, but while DevOps is focusing on the "what", SRE is proposing an approach of the "how".
+
+![Summary of SRE practices](/content/archive/sre-summary-practices.png)
 
 Site Reliability Engineers can come from different backgrounds (software engineers, system administrators, system engineers...) but some key expected skills are (but are not limited to) the ability to write code, to automate manual repetitive tasks and to understand how complex systems work. Their mission is to work with product teams to improve the reliability of the systems, but also to improve the development velocity (time taken from the start of a development up to the deployment in Production).
 

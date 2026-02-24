@@ -17,6 +17,8 @@ Her colleagues lean forward, intrigued. Maya's progress has been nothing short o
 
 "Maya," one of her teammates says, "this could change everything for us. Imagine the efficiency gains, the consistency, and the ability to scale beyond manual configurations."
 
+![Maya presenting her progress on her experimentation and getting support from her team](/content/archive/infrastructure-as-code/03-maya-presenting-progress.jpeg)
+
 "Absolutely," another chimes in. "But we must tread carefully. Breaking an existing DLP policy — even unintentionally — could have serious consequences for the business."
 
 Maya nods, absorbing their feedback. She knows that transitioning to infrastructure as code won't be a simple flip of a switch. It's not just about the technical aspects, it's about winning hearts and minds. She'll need a strategy — a compelling case — to gain buy-in from her peers and management.
@@ -72,7 +74,7 @@ resource "powerplatform_data_loss_prevention_policy" "policy" {
   environments                      = var.environments
 
   business_connectors     = var.business_connectors
-  
+
   # Dynamically generate non-business connectors based on the business connectors specified
   non_business_connectors = [for conn in data.powerplatform_connectors.all_connectors.connectors : {
     id                           = conn.id
@@ -221,14 +223,14 @@ on:
     inputs:
       terraform_configuration:
         type: choice
-        description: 'The name of the Terraform configuration to plan and apply'
+        description: "The name of the Terraform configuration to plan and apply"
         required: true
         options:
           - dlp-policies
           - billing-policies
       terraform_var_file:
         type: string
-        description: 'The name of the Terraform variable file to use'
+        description: "The name of the Terraform variable file to use"
         required: true
 
 # Concurrency configuration for the current workflow - Keep only the latest workflow queued for the considered group
@@ -244,7 +246,7 @@ permissions:
   id-token: write
   contents: read
 
-#These environment variables are used by the terraform azure provider to setup OIDD authenticate. 
+#These environment variables are used by the terraform azure provider to setup OIDD authenticate.
 env:
   ARM_TENANT_ID: "${{ secrets.AZURE_TENANT_ID }}"
   ARM_CLIENT_ID: "${{ secrets.AZURE_CLIENT_ID }}"
@@ -262,11 +264,11 @@ env:
 
 jobs:
   terraform-plan:
-    name: 'Terraform Plan'
+    name: "Terraform Plan"
     runs-on: ubuntu-latest
     outputs:
       tfplanExitCode: ${{ steps.tf-plan.outputs.exitcode }}
-    
+
     steps:
       # Action used to checkout the main branch in the current repository
       #   Community action: https://github.com/actions/checkout
@@ -288,10 +290,10 @@ jobs:
           client-id: ${{ secrets.AZURE_CLIENT_ID }}
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-      
+
       # Download the Terraform Power Platform provider from GitHub
       - name: Download Terraform Power Platform Provider
-        env: 
+        env:
           GITHUB_TOKEN: ${{ secrets.PAT_DOWNLOAD_RELEASE }}
           PROVIDER_VERSION: ${{ vars.POWER_PLATFORM_PROVIDER_VERSION }}
           PROVIDER_REPO: ${{ vars.POWER_PLATFORM_PROVIDER_REPOSITORY }}
@@ -299,7 +301,7 @@ jobs:
         run: |
           gh release download "$PROVIDER_VERSION" --repo "$PROVIDER_REPO" --pattern "*.zip" --dir "$DOWNLOAD_DIR" --clobber
           ls -la "$DOWNLOAD_DIR"
-      
+
       # Initialize a new or existing Terraform working directory by creating initial files, loading any remote state, downloading modules, etc.
       - name: Terraform Init
         run: terraform -chdir=$TARGET_DIR init -backend-config="storage_account_name=$TF_STATE_STORAGE_ACCOUNT_NAME" -backend-config="resource_group_name=$TF_STATE_RESOURCE_GROUP_NAME" -backend-config="container_name=$TF_STATE_CONTAINER_NAME" -backend-config="key=$TF_STATE_KEY"
@@ -307,7 +309,7 @@ jobs:
       # Run terraform validate to check the syntax of the configuration files
       - name: Terraform Validate
         run: terraform -chdir=$TARGET_DIR validate
-      
+
       # Generates an execution plan for Terraform
       # An exit code of 0 indicated no changes, 1 a terraform failure, 2 there are pending changes.
       - name: Terraform Plan
@@ -317,7 +319,7 @@ jobs:
           terraform -chdir=$TARGET_DIR plan -detailed-exitcode -no-color -out tfplan -var-file=$TF_VAR_FILE || export exitcode=$?
 
           echo "exitcode=$exitcode" >> $GITHUB_OUTPUT
-          
+
           if [ $exitcode -eq 1 ]; then
             echo Terraform Plan Failed!
             exit 1
@@ -334,7 +336,7 @@ jobs:
           path: ${{ env.TARGET_DIR }}/tfplan
 
   terraform-apply:
-    name: 'Terraform Apply'
+    name: "Terraform Apply"
     needs: [terraform-plan]
     if: github.ref == 'refs/heads/main' && needs.terraform-plan.outputs.tfplanExitCode == 2
     runs-on: ubuntu-latest
@@ -344,7 +346,7 @@ jobs:
       #   Community action: https://github.com/actions/checkout
       - name: Checkout
         uses: actions/checkout@v4.1.1
-  
+
       # Install the latest version of the Terraform CLI
       #   Community action: https://github.com/hashicorp/setup-terraform
       - name: Setup Terraform
@@ -360,10 +362,10 @@ jobs:
           client-id: ${{ secrets.AZURE_CLIENT_ID }}
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-      
+
       # Download the Terraform Power Platform provider from GitHub
       - name: Download Terraform Power Platform Provider
-        env: 
+        env:
           GITHUB_TOKEN: ${{ secrets.PAT_DOWNLOAD_RELEASE }}
           PROVIDER_VERSION: ${{ vars.POWER_PLATFORM_PROVIDER_VERSION }}
           PROVIDER_REPO: ${{ vars.POWER_PLATFORM_PROVIDER_REPOSITORY }}
@@ -371,7 +373,7 @@ jobs:
         run: |
           gh release download "$PROVIDER_VERSION" --repo "$PROVIDER_REPO" --pattern "*.zip" --dir "$DOWNLOAD_DIR" --clobber
           ls -la "$DOWNLOAD_DIR"
-      
+
       # Initialize a new or existing Terraform working directory by creating initial files, loading any remote state, downloading modules, etc.
       - name: Terraform Init
         run: terraform -chdir=$TARGET_DIR init -backend-config="storage_account_name=$TF_STATE_STORAGE_ACCOUNT_NAME" -backend-config="resource_group_name=$TF_STATE_RESOURCE_GROUP_NAME" -backend-config="container_name=$TF_STATE_CONTAINER_NAME" -backend-config="key=$TF_STATE_KEY"
@@ -390,6 +392,8 @@ jobs:
 ```
 
 Maya sets up everything to create a first DLP policy swiftly. The GitHub workflow performs like a well-oiled machine, deploying a fresh DLP policy with the expected configuration in mere minutes. She's astounded by its efficiency.
+
+![Maya really happy with the result of her first DLP policy deployment with Terraform](/content/archive/infrastructure-as-code/03-maya-happy-dlp-deployment.jpeg)
 
 And then, fueled by curiosity, Maya adds another connector — found in what seems to be an up-to-date extract of connectors available in the platform from the same GitHub repository. The deployment goes flawlessly. She laughs — a contagious, triumphant sound — leaving her colleagues wondering if she's worked too hard or simply discovered the magic of code.
 
@@ -502,7 +506,7 @@ foreach ($policy in $existingDlpPoliciesFileContent.all_dlp_policies.value.polic
         $tfvarsContent += "`n"
         $tfvarsContent += "    data_group = `"$($customConnector.data_group)`""
         $tfvarsContent += "`n"
-        $tfvarsContent += "  },"        
+        $tfvarsContent += "  },"
     }
 
     $tfvarsContent = $tfvarsContent.TrimEnd(",")
@@ -542,6 +546,8 @@ But alas, reality diverged from her expectations. The result is not as anticipat
 
 What had she missed? She did not yet know, but the urgency weighed on her. To make this infrastructure-as-code approach viable for her organization, she must uncover the missing link — a bridge between the old and the new.
 
+![Maya finding her onboarding process of DLP policies in infrastructure as code is not working as expected](/content/archive/infrastructure-as-code/03-maya-onboarding-not-working.jpeg)
+
 ## The missing piece of the puzzle
 
 After a restful night's sleep, Maya returns to the office, her mind buzzing with determination. She senses that the answer hovers just beyond her grasp, waiting to reveal itself.
@@ -570,23 +576,23 @@ on:
     inputs:
       terraform_configuration:
         type: choice
-        description: 'The name of the Terraform configuration to import a resource into'
+        description: "The name of the Terraform configuration to import a resource into"
         required: true
         options:
           - dlp-policies
           - billing-policies
       terraform_var_file:
         type: string
-        description: 'The name of the Terraform variable file to use'
+        description: "The name of the Terraform variable file to use"
         required: true
       resource_type:
         type: choice
-        description: 'The type of resource to import'
+        description: "The type of resource to import"
         required: true
         options:
-            - powerplatform_data_loss_prevention_policy.policy
+          - powerplatform_data_loss_prevention_policy.policy
       resource_id:
-        description: 'The resource id'
+        description: "The resource id"
         required: true
 
 # Concurrency configuration for the current workflow - Keep only the latest workflow queued for the considered group
@@ -620,9 +626,9 @@ env:
 
 jobs:
   terraform-import:
-    name: 'Terraform Import'
+    name: "Terraform Import"
     runs-on: ubuntu-latest
-        
+
     steps:
       # Action used to checkout the main branch in the current repository
       #   Community action: https://github.com/actions/checkout
@@ -644,10 +650,10 @@ jobs:
           client-id: ${{ secrets.AZURE_CLIENT_ID }}
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-      
+
       # Download the Terraform Power Platform provider from GitHub
       - name: Download Terraform Power Platform Provider
-        env: 
+        env:
           GITHUB_TOKEN: ${{ secrets.PAT_DOWNLOAD_RELEASE }}
           PROVIDER_VERSION: ${{ vars.POWER_PLATFORM_PROVIDER_VERSION }}
           PROVIDER_REPO: ${{ vars.POWER_PLATFORM_PROVIDER_REPOSITORY }}
@@ -655,7 +661,7 @@ jobs:
         run: |
           gh release download "$PROVIDER_VERSION" --repo "$PROVIDER_REPO" --pattern "*.zip" --dir "$DOWNLOAD_DIR" --clobber
           ls -la "$DOWNLOAD_DIR"
-      
+
       # Initialize a new or existing Terraform working directory by creating initial files, loading any remote state, downloading modules, etc.
       - name: Terraform Init
         run: terraform -chdir=$TARGET_DIR init -backend-config="storage_account_name=$TF_STATE_STORAGE_ACCOUNT_NAME" -backend-config="resource_group_name=$TF_STATE_RESOURCE_GROUP_NAME" -backend-config="container_name=$TF_STATE_CONTAINER_NAME" -backend-config="key=$TF_STATE_KEY"
@@ -676,6 +682,8 @@ Next comes the pivotal moment. Armed with the DLP policy's ID (extracted from it
 Encouraged by this breakthrough, she dares to give the "plan and apply" process another try. Her change — a connector added — awaits deployment. The suspense is palpable as she monitors the GitHub workflow. Finally, the green check mark appears — a signal of success. And in the Power Platform Admin Center, Maya confirms her change landed as expected.
 
 It is the end of a long and emotional day closing on an important achievement for Maya. The lines of code she wrote today aren't mere syntax, they're bridges connecting possibility to reality.
+
+![Maya leaving the office full of hope after her recent achievements](/content/archive/infrastructure-as-code/03-maya-leaving-office-hopeful.jpeg)
 
 But as the office quiets, Maya knows this is still only the beginning. Tomorrow awaits — the rollout strategy, the training sessions, and the unexpected synergies. And beyond that, a new journey — the one that will reveal not just lines of infrastructure as code, but the beating heart of their operational excellence transformation.
 

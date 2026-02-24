@@ -26,6 +26,8 @@ Obviously, and just like with ALM strategy and DevOps culture, you will need to 
 
 In my projects, I try to promote a branching strategy close to the "Trunk Based Development" / "Release Flow" strategies. The main branch will contain all the approved and tested work that could be push to production. Short lived feature and hotfix branches will be used to do the work. And finally, the release branch will be for what we currently have in production. During a deployment phase we will have two release branches (the new one in deployment and the previous one just in case), but as soon everything seems good to everyone, we will delete the "old" release branch.
 
+![Illustration of the branching strategy - Example of the deployment of Release 1.1](/content/archive/qna-branching-strategy.jpeg)
+
 The main reasons why I consider a release branch are:
 
 - to not slow down development approaching a deployment to production (you know, when you have to froze the scope for the release)
@@ -52,6 +54,8 @@ For a feature (new one or update of an existing one), I like to follow the steps
 5. When the pull request is approved and my work merged to the main branch, it will be automatically deployed to a test environment (managed solution) — and do not forget to delete the "just in time" development 😉
 6. When some features are ready to go to production, we can create a new release branch and manually trigger a pipeline that will push the changes up to production (perhaps you will deploy first to other environments for last validations)
 7. When the deployment to production is declared successful, you can delete the previous release branch and keep only the last one
+
+![Illustration of the flow of work for Power Platform development](/content/archive/qna-flow-of-work.jpeg)
 
 For hotfixes, it is a little bit different. You need to create your branch from the release branch (it should be the one corresponding to what you have in production). And after the merge of your pull request to the main branch (to be sure to have your hotfix for the next release), you can use the cherry-pick feature to apply the same hotfix to the considered release branch. Then you can finish the cycle by deploying the new version of your release branch to production.
 

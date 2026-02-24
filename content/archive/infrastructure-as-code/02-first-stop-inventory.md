@@ -13,6 +13,8 @@ originalUrl: "https://medium.com/rapha%C3%ABl-pothin/the-power-platform-infrastr
 
 Maya, a brilliant young engineer, steps into her new role on the Power Platform team at a sprawling corporate giant. Their mission? To oversee the administration and governance of this critical platform. The stakes are high — the company's Power Platform consumption is already substantial.
 
+![Maya's first day in her new job ready to tackle any challenge](/content/archive/infrastructure-as-code/02-maya-first-day.png)
+
 With a background in generalist IT administration, Maya brings a fresh perspective to the team. Her penchant for innovation is palpable, and her colleagues eagerly anticipate the creative solutions she'll introduce.
 
 Her first challenge awaits: enhancing the management of Data Loss Prevention policies. It won't be easy, but Maya thrives on challenges. Join us as we follow Maya's journey, one that promises to transform the way Power Platform is governed in her organization.
@@ -50,6 +52,8 @@ After conducting further research, Maya discovered additional repositories that 
 With all prerequisites in place — an Azure subscription for storing state files, a service principal with the necessary permissions, and a GitHub repository for hosting the code — Maya quickly completed the setup, thanks to the excellent guidance found in the identified resources.
 
 Exporting the current state of the DLP policies as code in the repository would represent a significant milestone. This success would demonstrate to Maya's team that using infrastructure as code could be the way to enhance their Power Platform management experience.
+
+!["This is the way" meme from The Mandalorian regarding Infrastructure as Code for Power Platform](/content/archive/infrastructure-as-code/02-this-is-the-way.jpg)
 
 To achieve that, Maya utilized resources from the rpothin/PowerPlatform-Governance-With-Terraform repository, which included:
 
@@ -95,7 +99,7 @@ name: terraform-output
 on:
   workflow_dispatch:
   schedule:
-    - cron: '0 8 * * *'
+    - cron: "0 8 * * *"
 
 # Concurrency configuration for the current workflow - Keep only the latest workflow queued for the considered group
 concurrency:
@@ -110,7 +114,7 @@ permissions:
   id-token: write
   contents: read
 
-#These environment variables are used by the terraform azure provider to setup OIDD authenticate. 
+#These environment variables are used by the terraform azure provider to setup OIDD authenticate.
 env:
   ARM_TENANT_ID: "${{ secrets.AZURE_TENANT_ID }}"
   ARM_CLIENT_ID: "${{ secrets.AZURE_CLIENT_ID }}"
@@ -124,93 +128,94 @@ env:
   ARM_SKIP_PROVIDER_REGISTRATION: true #this is needed since we are running terraform with read-only permissions
 
 jobs:
-    terraform-output:
-        strategy:
-          matrix:
-            terraform_configuration: [ 'power-platform-connectors', 'existing-dlp-policies' ]
-        name: 'Terraform Output'
-        runs-on: ubuntu-latest
-        permissions: write-all
+  terraform-output:
+    strategy:
+      matrix:
+        terraform_configuration:
+          ["power-platform-connectors", "existing-dlp-policies"]
+    name: "Terraform Output"
+    runs-on: ubuntu-latest
+    permissions: write-all
+    env:
+      TARGET_DIR: ${{ github.workspace }}/src/${{ matrix.terraform_configuration }}
+      TF_STATE_KEY: ${{ matrix.terraform_configuration }}.terraform.tfstate
+
+    steps:
+      # Action used to checkout the main branch in the current repository
+      #   Community action: https://github.com/actions/checkout
+      - name: Checkout
+        uses: actions/checkout@v4.1.1
+
+      # Install the latest version of the Terraform CLI
+      #   Community action: https://github.com/hashicorp/setup-terraform
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_wrapper: false
+
+      # Log in to Azure using the Azure login action and with OpenID Connect (OIDC) federated credentials
+      #  Community action: https://github.com/Azure/login
+      - name: Log in with Azure (Federated Credentials)
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      # Download the Terraform Power Platform provider from GitHub
+      - name: Download Terraform Power Platform Provider
         env:
-          TARGET_DIR: ${{ github.workspace }}/src/${{ matrix.terraform_configuration }}
-          TF_STATE_KEY: ${{ matrix.terraform_configuration }}.terraform.tfstate
-        
-        steps:
-            # Action used to checkout the main branch in the current repository
-            #   Community action: https://github.com/actions/checkout
-            - name: Checkout
-              uses: actions/checkout@v4.1.1
+          GITHUB_TOKEN: ${{ secrets.PAT_DOWNLOAD_RELEASE }}
+          PROVIDER_VERSION: ${{ vars.POWER_PLATFORM_PROVIDER_VERSION }}
+          PROVIDER_REPO: ${{ vars.POWER_PLATFORM_PROVIDER_REPOSITORY }}
+          DOWNLOAD_DIR: /usr/share/terraform/providers/registry.terraform.io/microsoft/power-platform
+        run: |
+          gh release download "$PROVIDER_VERSION" --repo "$PROVIDER_REPO" --pattern "*.zip" --dir "$DOWNLOAD_DIR" --clobber
+          ls -la "$DOWNLOAD_DIR"
 
-            # Install the latest version of the Terraform CLI
-            #   Community action: https://github.com/hashicorp/setup-terraform
-            - name: Setup Terraform
-              uses: hashicorp/setup-terraform@v3
-              with:
-                terraform_wrapper: false
+      # Initialize a new or existing Terraform working directory by creating initial files, loading any remote state, downloading modules, etc.
+      - name: Terraform Init
+        run: terraform -chdir=$TARGET_DIR init -backend-config="storage_account_name=$TF_STATE_STORAGE_ACCOUNT_NAME" -backend-config="resource_group_name=$TF_STATE_RESOURCE_GROUP_NAME" -backend-config="container_name=$TF_STATE_CONTAINER_NAME" -backend-config="key=$TF_STATE_KEY"
 
-            # Log in to Azure using the Azure login action and with OpenID Connect (OIDC) federated credentials
-            #  Community action: https://github.com/Azure/login
-            - name: Log in with Azure (Federated Credentials)
-              uses: azure/login@v2
-              with:
-                client-id: ${{ secrets.AZURE_CLIENT_ID }}
-                tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-                subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-            
-            # Download the Terraform Power Platform provider from GitHub
-            - name: Download Terraform Power Platform Provider
-              env: 
-                GITHUB_TOKEN: ${{ secrets.PAT_DOWNLOAD_RELEASE }}
-                PROVIDER_VERSION: ${{ vars.POWER_PLATFORM_PROVIDER_VERSION }}
-                PROVIDER_REPO: ${{ vars.POWER_PLATFORM_PROVIDER_REPOSITORY }}
-                DOWNLOAD_DIR: /usr/share/terraform/providers/registry.terraform.io/microsoft/power-platform
-              run: |
-                gh release download "$PROVIDER_VERSION" --repo "$PROVIDER_REPO" --pattern "*.zip" --dir "$DOWNLOAD_DIR" --clobber
-                ls -la "$DOWNLOAD_DIR"
-            
-            # Initialize a new or existing Terraform working directory by creating initial files, loading any remote state, downloading modules, etc.
-            - name: Terraform Init
-              run: terraform -chdir=$TARGET_DIR init -backend-config="storage_account_name=$TF_STATE_STORAGE_ACCOUNT_NAME" -backend-config="resource_group_name=$TF_STATE_RESOURCE_GROUP_NAME" -backend-config="container_name=$TF_STATE_CONTAINER_NAME" -backend-config="key=$TF_STATE_KEY"
+      # Run terraform validate to check the syntax of the configuration files
+      - name: Terraform Validate
+        run: terraform -chdir=$TARGET_DIR validate
 
-            # Run terraform validate to check the syntax of the configuration files
-            - name: Terraform Validate
-              run: terraform -chdir=$TARGET_DIR validate
-          
-            # Generates an execution plan for Terraform
-            # An exit code of 0 indicated no changes, 1 a terraform failure, 2 there are pending changes.
-            - name: Terraform Plan
-              id: tf-plan
-              run: |
-                export exitcode=0
-                terraform -chdir=$TARGET_DIR plan -detailed-exitcode -no-color -out tfplan || export exitcode=$?
+      # Generates an execution plan for Terraform
+      # An exit code of 0 indicated no changes, 1 a terraform failure, 2 there are pending changes.
+      - name: Terraform Plan
+        id: tf-plan
+        run: |
+          export exitcode=0
+          terraform -chdir=$TARGET_DIR plan -detailed-exitcode -no-color -out tfplan || export exitcode=$?
 
-                echo "exitcode=$exitcode" >> $GITHUB_OUTPUT
-                
-                if [ $exitcode -eq 1 ]; then
-                  echo Terraform Plan Failed!
-                  exit 1
-                else 
-                  exit 0
-                fi
+          echo "exitcode=$exitcode" >> $GITHUB_OUTPUT
 
-            # Terraform Apply
-            - name: Terraform Apply
-              run: terraform -chdir=$TARGET_DIR apply -auto-approve
+          if [ $exitcode -eq 1 ]; then
+            echo Terraform Plan Failed!
+            exit 1
+          else 
+            exit 0
+          fi
 
-            # Get the data in Terraform configurations as JSON files
-            - name: Terraform Output
-              run: terraform -chdir=$TARGET_DIR output -json > ${{ github.workspace }}/src/${{ matrix.terraform_configuration }}/${{ matrix.terraform_configuration }}.json
+      # Terraform Apply
+      - name: Terraform Apply
+        run: terraform -chdir=$TARGET_DIR apply -auto-approve
 
-            # Commit and push the changes to the repository
-            - name: Commit changes
-              run: |
-                git config --global user.name 'action@github.com'
-                git config --global user.email 'GitHub Action'
-                
-                git add .
-                git diff --staged --quiet || git commit -m "Update ${{ matrix.terraform_configuration }}.json"
-                
-                git push origin main || true
+      # Get the data in Terraform configurations as JSON files
+      - name: Terraform Output
+        run: terraform -chdir=$TARGET_DIR output -json > ${{ github.workspace }}/src/${{ matrix.terraform_configuration }}/${{ matrix.terraform_configuration }}.json
+
+      # Commit and push the changes to the repository
+      - name: Commit changes
+        run: |
+          git config --global user.name 'action@github.com'
+          git config --global user.email 'GitHub Action'
+
+          git add .
+          git diff --staged --quiet || git commit -m "Update ${{ matrix.terraform_configuration }}.json"
+
+          git push origin main || true
 ```
 
 A quick test yielded promising results, giving Maya confidence that her team could now gain better visibility into the DLP policy configurations.

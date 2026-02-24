@@ -169,6 +169,22 @@ function collectMarkdownFiles(dir: string, basePath = ""): string[] {
   return files;
 }
 
+function copyContentAssets(srcDir: string, destDir: string): number {
+  let count = 0;
+  for (const entry of fs.readdirSync(srcDir, { withFileTypes: true })) {
+    const srcPath = path.join(srcDir, entry.name);
+    const destPath = path.join(destDir, entry.name);
+    if (entry.isDirectory()) {
+      fs.mkdirSync(destPath, { recursive: true });
+      count += copyContentAssets(srcPath, destPath);
+    } else if (!entry.name.endsWith(".md")) {
+      fs.copyFileSync(srcPath, destPath);
+      count++;
+    }
+  }
+  return count;
+}
+
 function buildFileTree(files: string[]): TreeNode[] {
   const root: TreeNode[] = [];
 
@@ -433,7 +449,11 @@ async function main() {
     "utf-8",
   );
 
+  // Copy non-Markdown assets (images, etc.) from content/ to public/content/
+  const copiedAssets = copyContentAssets(CONTENT_DIR, OUTPUT_CONTENT_DIR);
+
   console.log(`✅ Built ${markdownFiles.length} content files`);
+  console.log(`✅ Copied ${copiedAssets} content assets`);
   console.log(`✅ Generated file-tree.json`);
   console.log(`✅ Generated search-index.json`);
   console.log(`✅ Generated posts-meta.json with ${postsMeta.length} posts`);

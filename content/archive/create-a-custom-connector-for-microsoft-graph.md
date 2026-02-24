@@ -109,6 +109,9 @@ Once you have an application registered in Azure Active Directory for the Micros
   - **Scheme:** select HTTPS
   - **Host:** `graph.microsoft.com`
   - **Base URL:** `/v1.0/`
+
+![General configuration of our custom connector](/content/archive/msgraph-connector-general-config.png)
+
 - Once it is all set on this screen, you can click on the Security -> button
 
 - On the Security page, complete the information as described below:

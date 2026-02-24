@@ -20,6 +20,9 @@ Power Platform offers many different capabilities which can help secure its cons
 
 - Connectors are at the center of Power Platform, allowing us to interact with data in and outside the platform. Controlling which connector can interact with which one and also which operations it can execute can be done using Data loss prevention policies. So, if you want to mitigate the risk of having internal data exfiltrated outside of your organization boundaries I strongly encourage you to take a close look at your DLP policies configuration.
 - The best way to secure access to your Power Platform environments is to configure an Azure AD security group on each one of them. If a user is not a member of the Azure AD group configured on an environment, it will not be possible to add them as a user.
+
+  ![Error message trying to add a user not member of the considered Azure AD group to a Power Platform environment](/content/archive/power-platform-protection/ppic-env-group-error.png)
+
 - Inside an environment with Dataverse, access to data and capabilities is based on well-known concepts: the organizational structure (business units and teams), but also and mostly the security roles assigned to the users. For example, going with only one business unit and only one security role for all your users will not often be the right approach to be compliant with the least privilege access principle of the Zero Trust security strategy.
 - In the cases where access to Dataverse data requires a bit more flexibility, column security profiles can help you configure more granular permissions on specific columns (for example, the access to the date of birth could be limited to an application user for background operations, but the age accessible to a larger group of users).
 
@@ -37,9 +40,19 @@ Announced generally available early June 2023, Power Platform Tenant Isolation i
 
 If you just enable the Tenant Isolation capability, you will block all inbound and outbound interactions with other tenants. Once fully enabled, you will witness errors on connections with other tenants inside your own tenant, but also inside other tenants trying to interact with resources in yours.
 
+![Power Platform Tenant Isolation enabled without rules](/content/archive/power-platform-protection/ppic-tenant-isolation-enabled.png)
+
+![Error on a connection in an existing cloud flow after enabling Power Platform Tenant Isolation](/content/archive/power-platform-protection/ppic-tenant-isolation-flow-error.png)
+
 To configure a Tenant Isolation rule, you will need information — tenant domain or ID — that you can find in the "Overview" page of Microsoft Entra ID (formerly Azure AD).
 
+![Where to find a tenant domain or ID for the configuration of Tenant Isolation rules](/content/archive/power-platform-protection/ppic-tenant-domain-id.png)
+
 For example, an outbound rule can allow interactions from your tenant to a specific partner tenant identified by its ID. With this rule, cloud flows inside your tenant can stop raising errors on connections with that partner tenant — but interactions in the other direction will still be blocked unless an inbound rule is configured.
+
+![Example of an outbound rule configured in the Power Platform Tenant Isolation page](/content/archive/power-platform-protection/ppic-tenant-isolation-outbound-rule.png)
+
+![Error trying to configure a connection to a tenant without inbound rules in the Tenant Isolation configuration](/content/archive/power-platform-protection/ppic-tenant-isolation-inbound-error.png)
 
 > [!WARNING]
 > If you work with partners and include them in your Tenant Isolation rules, don't forget to ask them to do the same to be as much protected as possible. If they don't and they are compromised, your tenant will also become at risk due to the permissive rules configured on your side.
@@ -52,19 +65,31 @@ Managed Environments is a suite of capabilities that aim to help organizations i
 
 Session hijacking exploits or "Pass-the-cookie" attacks could have a critical impact on your business but do not represent a risk easy to mitigate. Fortunately, Dataverse, with the IP address based cookie binding feature, offers since the end of January 2023 when it became generally available a way to protect your organization against this scenario. Moreover, its activation is simple — you just need to go to the "Privacy + Security" settings page of your environment, switch the "Enable IP address based cookie binding" toggle to "On" and save your changes.
 
+![Illustration of the activation of the “IP address based cookie binding” feature](/content/archive/power-platform-protection/ppic-ip-cookie-binding.png)
+
 > [!NOTE]
 > Once "IP address based cookie binding" is enabled you can also provide "Reverse proxy IP addresses" — like Defender for Cloud Apps — if it is something you use in your organization. If you don't do that, there is a risk your users will often get errors, even if it seems their IP is not changing.
 
 If the IP of a user changes while using Dataverse (through a model driven app for example), they will see an error message in their browser. A malicious actor who has been able to exfiltrate a user's cookie and tries to use it from a different IP will be similarly blocked.
 
+![Error displayed in the browser if the IP of a user changes](/content/archive/power-platform-protection/ppic-ip-change-error.png)
+
+![Similar error got by a malicious actor executing requests with an exfiltrated cookie](/content/archive/power-platform-protection/ppic-exfiltrated-cookie-error.png)
+
 In the Zero Trust security strategy, identity protection goes alongside another important pillar: network protection. For this part, Dataverse has an incoming capability to cover your organization: IP address based firewall rule (which was still in Preview at the publication of this article and therefore should not be yet used in Production). Moreover, it gives you some flexibility regarding Service Tags, Microsoft trusted services and also application users.
 
 As recommended by Microsoft, trying this feature should be done with the "Enable IP address based firewall rule (Preview)" toggle set to "On" in the "Privacy + Security" settings page of an environment, by entering a known IP range, and validating (multiple times) that the "Enable IP firewall in audit only mode." option is checked. Also, if you want to analyze IP firewall in audit only mode, don't forget to enable audit on your environment.
 
+![Simple configuration of IP address based firewall rule](/content/archive/power-platform-protection/ppic-ip-firewall-rule.png)
+
 > [!WARNING]
 > As mentioned in the Microsoft documentation, if you are locked out of your environment you will need to contact Microsoft support to get it unlocked.
 
-With this configuration, consuming Dataverse outside of the configured IP range should generate audit logs. If you disable the "Enable IP firewall in audit only mode." option, users with an IP not in the allowed list should be blocked with an explicit error message.
+With this configuration, consuming Dataverse outside of the configured IP range should generate audit logs.
+
+![IPFirewallAccessDenied audit log example to illustrate the feature in audit mode](/content/archive/power-platform-protection/ppic-ip-firewall-audit-log.png)
+
+If you disable the "Enable IP firewall in audit only mode." option, users with an IP not in the allowed list should be blocked with an explicit error message.
 
 > [!NOTE]
 > I was not able to validate the expected behavior in audit only mode during my initial tests in Developer or Trial type environments. Perhaps my configuration was not ideal for a test of this capability in Preview.
@@ -74,6 +99,8 @@ With this configuration, consuming Dataverse outside of the configured IP range 
 The last capability I wanted to share with you should help your organization be more compliant and to have better control of your data privacy. Even if it is a bit more situational, since it became generally available in January 2023, Customer Lockbox in Power Platform and Dynamics 365 allows you to approve and monitor Microsoft support's group requests to access your data.
 
 The activation of this feature is done at the tenant level (in PPAC, under Policies) and will automatically apply to all your Managed Environments.
+
+![Activation of Customer Lockbox in Power Platform Admin Center](/content/archive/power-platform-protection/ppic-customer-lockbox.png)
 
 Once Customer Lockbox is enabled:
 

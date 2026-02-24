@@ -50,6 +50,8 @@ In this article, we will consider the strategy below to allow the members of our
 3. Encourage the members of your company to choose one of this Team templates when they ask for the creation of a new Team
 4. But also give the option to request the creation of a blank Team with a preset list of configurations, in the case of there is no Team template corresponding to their need
 
+![A Team template and Teams generated with Power Automate](/content/archive/teams-creation-strategy-overview.png)
+
 Obviously, this strategy should come with approval processes, but this would be the only human actions needed for the Teams creation.
 
 Also, I encourage you to regularly review the two first points presented above to keep your Team templates list up to date based on your company's activities.
@@ -76,13 +78,19 @@ The cloning of a Team based on a template can be done with a flow like the one d
 
 - Configuration of the "partsToClone" variable needed for the Team cloning based on some of the input parameters
 
+  ![Scope with the "partsToClone" variable configuration steps (left) — Focus on one of the "partsToClone" variable configuration steps (right)](/content/archive/teams-clone-parts-to-clone-scope.png)
+
 - Control of the "partsToClone" variable configuration before continuing the flow execution. If the variable has been correctly initialized, we finalize its configuration.
+
+  ![Check if the "partsToClone" variable is empty, and finalize its configuration if not (left) — "Configure run after" settings of the condition action (right)](/content/archive/teams-clone-parts-to-clone-check.png)
 
 - Cloning of the selected Team template and removing of the first character of the "Location" variable return by the Team template cloning operation
 
 - Check the Team template cloning operation status until it is "succeeded" or if too many checking has been made. And if it is "succeeded" update the "teamId" variable with the ID of the new Team.
 
 - Control of the result of the Team template cloning operation, and if it is "succeeded" we continue the execution of the flow
+
+  ![Check if the result of the Team template cloning operation is "succeeded" (left) — "Configure run after" settings of the condition action (right)](/content/archive/teams-clone-status-succeeded-check.png)
 
 - If everything is good so far, we add the requester of the Team creation as Owner
 
@@ -196,6 +204,8 @@ And in the "installedApps" variable, we expect a string like the following one:
 - Check the Team creation operation status until it is "succeeded" or if too many checking has been made. And if it is "succeeded" update the "teamId" variable with the ID of the new Team.
 
 - Control of the result of the Team creation operation, and if it is "succeeded" we continue the execution of the flow
+
+  ![Check if the result of the Team creation operation is "succeeded" (left) — "Configure run after" settings of the condition action (right)](/content/archive/teams-create-status-succeeded-check.png)
 
 - If everything is good so far, we add the requester of the Team creation as Owner
 

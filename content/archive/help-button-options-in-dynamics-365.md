@@ -14,7 +14,11 @@ originalUrl: "https://medium.com/rapha%C3%ABl-pothin/help-button-options-in-dyna
 
 Today, in Dynamics 365, you have a little question mark button on the top right of your screen that gives your end users the opportunity to easily get a first level of help.
 
+![Help button on the Dashboards page of the Sales Hub app](/content/archive/d365-help-button-dashboard.png)
+
 By default, your Dynamics 365 environment is configured to send you to the [Microsoft Dynamics 365 documentation page](https://learn.microsoft.com/en-us/dynamics365/) if you click on the help button.
+
+![Microsoft Dynamics 365 documentation page when you click on the Help button by default](/content/archive/d365-help-button-default-page.png)
 
 > [!NOTE]
 > To my mind it is a little bit complicated to keep this default option because the Microsoft documentation is helpful if you do not make customization on your environment, but it is not often the case.
@@ -29,6 +33,8 @@ To do so, go to:
 Set **"Use custom Help for customizable entities"** to **"Yes"** and specify a custom help URL in the **"Global custom Help URL"** field.
 
 For example, you can put your user documentation (as step-by-step guides or videos) on a SharePoint site, and specify here the URL.
+
+![Configuration of a Custom Help URL](/content/archive/d365-help-custom-url-config.png)
 
 ### URL Parameters for Flexibility
 
@@ -54,6 +60,8 @@ Steps:
 2. Open the configuration page of a custom entity within a solution (in the classic interface).
 3. Activate the option **"Use custom help"** and specify the URL you want to reach.
 
+![Custom Help Page for the Donation entity (custom)](/content/archive/d365-help-custom-entity-page.png)
+
 > [!WARNING]
 > Unfortunately, it seems this feature is not currently working with the Unified Interface.
 > See: [Forum thread on Dynamics CE Unified Interface custom help URL](https://community.dynamics.com/crm/f/microsoft-dynamics-crm-forum/371287/dynamics-ce-aka-crm---custome-help-url-on-unified-interface)
@@ -63,6 +71,8 @@ Steps:
 Your last option, the **custom help panes**, is available since version **9.1.0.10300**. This feature has great potential to build an interactive help experience in Dynamics 365 for your end users.
 
 See documentation: [Create custom help pages](https://learn.microsoft.com/en-us/power-apps/maker/data-platform/create-custom-help-pages)
+
+![Help Pane example on the Lead form](/content/archive/d365-help-panes-lead-form.png)
 
 > [!NOTE]
 > We will enter into the details about the configuration of Help Panes in a next article because we have a lot to cover.

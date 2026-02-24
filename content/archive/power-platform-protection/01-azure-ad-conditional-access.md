@@ -20,8 +20,12 @@ The main goal of Azure AD Conditional Access is to use "signals" (like "is the u
 
 In summary, Azure AD Conditional Access applies an if-then statement to access request to identify what needs to be done.
 
+![Overview of Azure AD Conditional Access](/content/archive/aad-ca-overview.png)
+
 > [!NOTE]
 > **Example:** If a user in group A tries to access Dataverse from outside of the United States, block the request.
+
+![Illustration of the Signal > Decision > Enforcement flow in Azure AD Conditional Access](/content/archive/aad-ca-signal-decision-enforcement.png)
 
 Important points to consider regarding Azure AD Conditional Access is that "[...] policies are enforced after first-factor authentication is completed" and it "[...] isn't intended to be an organization's first line of defense for scenarios like denial-of-service (DoS) attacks, but it can use signals from these events to determine access" (source: [What is Conditional Access? — Microsoft Entra | Microsoft Learn](https://learn.microsoft.com/en-us/entra/identity/conditional-access/overview)). In other words, Azure AD Conditional Access policies apply during the authentication, but after that the rules are not continuously checked. If a token has been generated under valid conditions, it can be used in different and invalid conditions during its lifetime.
 
@@ -50,16 +54,38 @@ Currently the "apps" related to Power Platform you can consider configuring in a
 - Microsoft Flow: for the Power Automate maker portal (configuration or running components like cloud flows)
 - Microsoft PowerApps: for the Power Apps maker portal (configuration or playing an app)
 
+![Power Platform apps available in Azure AD Conditional Access policies](/content/archive/aad-ca-power-platform-apps.png)
+
 You will find below a few examples of Azure AD Conditional Access policies you could consider to secure the access to these Power Platform services by your users:
 
 - Requiring multifactor authentication (MFA) for Power Platform Administrators accessing Power Platform services
+
+  ![Requiring MFA for Power Platform Administrators — Included apps](/content/archive/aad-ca-mfa-admin-included-apps.png)
+
+  ![Requiring MFA for Power Platform Administrators — Selected grant control](/content/archive/aad-ca-mfa-admin-grant.png)
 
 > [!NOTE]
 > If the user is only eligible to the Power Platform Administrator role, the policy will apply the enforcement (MFA in our example) only if the Azure AD role has been activated through Azure AD Privileged Identity Management. Also, if you assign Azure AD roles through group membership, based on some tests, it seems the Azure AD Conditional Access policy will not apply the enforcements as expected.
 
 - Blocking a user trying to access Dataverse data from a desktop app (like Excel)
 
+  ![Block access to Dataverse from mobile / desktop — Included apps](/content/archive/aad-ca-block-mobile-included-apps.png)
+
+  ![Block access to Dataverse from mobile / desktop — Selected client apps as condition](/content/archive/aad-ca-block-mobile-client-apps.png)
+
+  ![Block access to Dataverse from mobile / desktop — Block access](/content/archive/aad-ca-block-mobile-grant.png)
+
+  ![Block access to Dataverse from mobile / desktop — Test result from Excel](/content/archive/aad-ca-block-mobile-test.png)
+
 - Redirecting to Defender for Cloud Apps users accessing Dataverse from outside United States to apply more security rules (like blocking files download)
+
+  ![Redirect access to Dataverse from outside United States to Defender for Cloud Apps — Included apps](/content/archive/aad-ca-redirect-usa-included-apps.png)
+
+  ![Redirect access to Dataverse from outside United States to Defender for Cloud Apps — Location condition](/content/archive/aad-ca-redirect-usa-location.png)
+
+  ![Redirect access to Dataverse from outside United States to Defender for Cloud Apps — Custom policy for Conditional Access App](/content/archive/aad-ca-redirect-usa-mcas-policy.png)
+
+  ![Redirect access to Dataverse from outside United States to Defender for Cloud Apps — Test result from Canada](/content/archive/aad-ca-redirect-usa-test.png)
 
 > [!NOTE]
 > This scenario is explored further in the [Defender for Cloud Apps article](/archive/power-platform-protection/02-defender-for-cloud-apps).
@@ -76,11 +102,29 @@ In the case of canvas apps not using Dataverse, the policies presented in the pr
 > [!TIP]
 > To link an Azure AD Conditional Access Authentication Context to a canvas app you need to use the `Set-AdminPowerAppConditionalAccessAuthenticationContextIds` PowerShell command. And you can also use the `Get-AdminPowerAppConditionalAccessAuthenticationContextIds` command to check if there is an Azure AD Conditional Access Authentication Context linked to a canvas app.
 
+![Azure AD Conditional Access Authentication Context to link to a canvas app](/content/archive/aad-ca-auth-context.png)
+
+![Canvas apps considered in the examples — Only using the User() object](/content/archive/aad-ca-canvas-apps-examples.png)
+
 By going through 2 more examples of Azure AD Conditional Access policies, we will see how we can also protect the access to a canvas app not using Dataverse:
 
 - Blocking the access to a canvas app for a user if not on a specific device configuration (browser not allowed)
 
+  ![Block access to canvas app if user not on an iOS device — Included authentication context](/content/archive/aad-ca-block-ios-auth-context.png)
+
+  ![Block access to canvas app if user not on an iOS device — Condition on device platform](/content/archive/aad-ca-block-ios-platform.png)
+
+  ![Block access to canvas app if user not on an iOS device — Block access](/content/archive/aad-ca-block-ios-grant.png)
+
+  ![Block access to canvas app if user not on an iOS device — Test result from a browser on a Windows device](/content/archive/aad-ca-block-ios-test.png)
+
 - Requiring multifactor authentication for a user with accessing a canvas app with a medium user and sign-in risk
+
+  ![Require MFA for a user with medium user or sign-in risk — Included authentication context](/content/archive/aad-ca-mfa-risk-auth-context.png)
+
+  ![Require MFA for a user with medium user or sign-in risk — Medium user risk condition](/content/archive/aad-ca-mfa-risk-condition.png)
+
+  ![Require MFA for a user with medium user or sign-in risk — Require MFA grant control](/content/archive/aad-ca-mfa-risk-grant.png)
 
 With this additional capability of Azure AD Conditional Access (Authentication Context), we can secure access to Power Platform by users pretty well and cover lot of different scenarios.
 
@@ -99,12 +143,25 @@ For example, we could configure an Azure AD Conditional Access policy to block t
 First, we need to configure a Named Location using the IP ranges of the AppService Azure Service Tags for the Canada East region:
 
 1. Get the IP ranges of the AppService Azure Service Tags of the Canada East Azure region using the `az network list-service-tags` command from Azure CLI
+
+   ![Get AppService.CanadaEast Azure Service Tag IP Ranges](/content/archive/aad-ca-canada-east-ip-ranges.png)
+
 2. Create a Named Location with IP ranges in Azure AD Conditional Access with the result from step 1 using the `New-MgIdentityConditionalAccessNamedLocation` command of the Microsoft Graph PowerShell module
+
+   ![Creation of Azure AD Conditional Access Named Location for App Service Canada East IP ranges](/content/archive/aad-ca-canada-east-named-location.png)
 
 Then we will move forward with the configuration of the Azure AD Conditional Access policy to block workload identities trying to access Dataverse from a different place than an Azure Functions app in the Canada East Azure region.
 
 > [!NOTE]
 > To control the access of workload identities, the only available option is currently to select the "All cloud apps" option — but, don't worry, it includes Dataverse.
+
+![Block access to Dataverse for workload identities not coming from Azure Functions Canada East — Included apps](/content/archive/aad-ca-workload-identity-included-apps.png)
+
+![Block access to Dataverse for workload identities not coming from Azure Functions Canada East — Excluded locations](/content/archive/aad-ca-workload-identity-excluded-locations.png)
+
+![Block access to Dataverse for workload identities not coming from Azure Functions Canada East — Block access](/content/archive/aad-ca-workload-identity-grant.png)
+
+![Block access to Dataverse for workload identities not coming from Azure Functions Canada East — Test result from my laptop](/content/archive/aad-ca-workload-identity-test.png)
 
 These are just some scenarios you could cover with Azure AD Conditional Access to protect Power Platform from an access perspective. Signals like device compliance or device configuration should also definitely be part of your plan.
 

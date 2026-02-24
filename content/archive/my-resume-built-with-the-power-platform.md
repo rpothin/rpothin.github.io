@@ -16,6 +16,8 @@ Reading this great article, an idea came to my mind. I always struggled building
 
 And here we are! I leveraged all the components of the Power Platform to build my resume and in this article, I will present to you the different parts of this solution.
 
+![One version of my resume built with the Power Platform](/content/archive/resume-power-platform-app.png)
+
 ## I used the CDS to store the data
 
 For me, the Common Data Service is an effective way to store data. It is why I decided to configure some custom entities here to build my resume.
@@ -23,6 +25,8 @@ For me, the Common Data Service is an effective way to store data. It is why I d
 Obviously, this data model is perfectible, but it is a good start to build my resume with the Power Platform.
 
 I built this data model so it could be used for example in an organization to present the profile of their members in an interesting new way.
+
+![The data model configured to store the data of my resume](/content/archive/resume-data-model.png)
 
 ## My resume as a model-driven app
 

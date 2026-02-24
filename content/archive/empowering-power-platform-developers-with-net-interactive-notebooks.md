@@ -25,6 +25,12 @@ The goal of my first prototype was to cover the following really simple scenario
 
 To cover my scenario, I chose PowerShell and combined the Azure CLI to get a token with calls to the Dataverse Web API. I added an abstraction layer with PowerShell functions, like for the calls to the Dataverse Web API, to make the notebook more readable and have some consistency between common actions.
 
+![Power Platform Support — User configuration validation — Initialization](/content/archive/notebooks-pps-validation-init.png)
+
+![Power Platform Support — User configuration validation — Get token](/content/archive/notebooks-pps-validation-token.png)
+
+![Power Platform Support — User configuration validation — Get user configuration](/content/archive/notebooks-pps-validation-get-config.png)
+
 > [!NOTE]
 > Obviously, I could have used the Microsoft.Xrm.Data.PowerShell open-source PowerShell module to interact with Dataverse. But I know that some companies are not really comfortable using open-source modules so I wanted to present a solution based only on Microsoft resources.
 
@@ -49,6 +55,8 @@ Now the setup is simple as:
 
 After a few minutes, you will be good to go.
 
+![.Net Interactive Notebooks VS Code extension — Setup result](/content/archive/notebooks-vscode-extension-setup.png)
+
 The next step will be to initialize the notebook you will work with. The easiest way to do that is to, still in VS Code:
 
 1. Open the Command Palette (Ctrl + Shift + P on Windows / Cmd + Shift + P on Mac)
@@ -65,6 +73,8 @@ Console.WriteLine("Hello world!");
 7. To execute your code, click on the Execute button on the left of the code cell or on the Run All button at the top of the notebook
 
 Congratulations, at this point you have a .Net Interactive notebook initialized in VS Code.
+
+![.Net Interactive Notebook in VS Code — "Hello world!" test](/content/archive/notebooks-hello-world.png)
 
 > [!TIP]
 > If you are looking for more details about this VS Code extension and the differences between the types of notebooks, Andrew Lock wrote a really great article on this topic.
@@ -84,9 +94,21 @@ With the Microsoft.PowerPlatform.Dataverse.Client library now generally availabl
 
 In your .Net Interactive notebook, you need to add the initialization code to load the required libraries for this scenario.
 
+![Power Platform Notebook Demonstration — Initialization](/content/archive/notebooks-demo-init.png)
+
 Obviously, talking about interactions with Dataverse, the next step is to connect to an environment. With the connection initialization code, the person using the notebook will be able to connect using their own account (better traceability) to the considered environment.
 
+![Power Platform Notebook Demonstration — Connect to Dataverse environment](/content/archive/notebooks-demo-connect-dataverse.png)
+
 To finally cover our demonstration scenario, we still have to search for a user based on a domain name and to get his security roles.
+
+![Power Platform Notebook Demonstration — Search user](/content/archive/notebooks-demo-search-user.png)
+
+![Power Platform Notebook Demonstration — Display user details](/content/archive/notebooks-demo-user-details.png)
+
+![Power Platform Notebook Demonstration — Get user security roles](/content/archive/notebooks-demo-get-security-roles.png)
+
+![Power Platform Notebook Demonstration — Display user security roles details](/content/archive/notebooks-demo-security-roles-details.png)
 
 ## Going further by taking advantage of the "multiple languages" capability
 
@@ -99,6 +121,8 @@ Here, you should pay close attention to the first line that will enable this mag
 ```
 #!share --from <origin language> <variable name>
 ```
+
+![Power Platform Notebook Demonstration — Variable from C# to PowerShell](/content/archive/notebooks-demo-csharp-to-powershell.png)
 
 ## Conclusion & Call to action
 

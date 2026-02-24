@@ -39,6 +39,8 @@ Last but not least, Microsoft took the time to prepare a few examples of Dataver
 > [!TIP]
 > These examples are available with the Dataverse Accelerator App I talked about earlier, and I definitely encourage you to take a look at them.
 
+![Home page of the Dataverse Accelerator App](/content/archive/low-code-plugin-dataverse-accelerator.png)
+
 ## What's going on behind the scenes?
 
 When you create Dataverse low-code plug-ins, obviously there are a few things going on behind the scenes.
@@ -46,6 +48,8 @@ When you create Dataverse low-code plug-ins, obviously there are a few things go
 The first thing you could quickly discover in the "Solutions" section of the Power Apps maker portal is that there is a new "FxExpression" object type where you will find one line per Dataverse low-code plug-in you have in your environment.
 
 Unfortunately, at the moment, if you try to access the details of a FxExpression you will get the following unpleasant error message: "The record you are trying to access does not have a form to display. Please contact your administrator for assistance.". But I am sure Microsoft will provide a form for FxEpressions in an upcoming version.
+
+![Example of FxExpressions in the Solutions section](/content/archive/low-code-plugin-fxexpressions-example.png)
 
 > [!NOTE]
 > The next details are provided thanks to a strange passion of the author of this article to take a look at object dependencies to understand how things work inside Dataverse.
@@ -59,7 +63,11 @@ For automated plug-ins we find only tables and columns as dependent objects (dep
 
 Doing a quick search in all the objects in the environment with the name of an automated plug-in FxExpression, we can discover a Plug-In Step — definitely involved in this kind of Dataverse low-code plug-in.
 
+![Search results with the name of an automated plug-in FxExpression](/content/archive/low-code-plugin-search-results.png)
+
 Checking the dependencies of this Plug-In Step, we finally find a Plug-In Type named "Microsoft.PowerFx.Evaluator" and coming from the "msft_PowerfxRuleSolution" solution.
+
+![Required objects on the Plug-In Step found in the previous step](/content/archive/low-code-plugin-step-required-objects.png)
 
 > [!NOTE]
 > This analysis gives us, from my point of view, interesting reasons to help us understand the difference regarding application lifecycle management (ALM) support between instant (custom API with parameters) and automated plug-ins (plug-in type from a Microsoft solution perhaps not available on all environments by default).
@@ -68,6 +76,8 @@ Checking the dependencies of this Plug-In Step, we finally find a Plug-In Type n
 
 I cloned locally a solution containing FxExpression objects to show you what they are made of.
 
+![3 different examples of FxExpression objects in source control](/content/archive/low-code-plugin-source-control-examples.png)
+
 A FxExpression object in source code can contain up to 3 files:
 
 > [!NOTE]
@@ -75,12 +85,20 @@ A FxExpression object in source code can contain up to 3 files:
 
 - **fxexpression.json**: metadata of the FxExpression object with details like name, unique name, parameters (if it is an instant plug-in), status (statecode and statuscode) and if it is customizable or not
 
+  ![Example of the fxexpression.json file of the FxExpression of a customizable instant plug-in](/content/archive/low-code-plugin-fxexpression-json.png)
+
 - **expression.yaml**: PowerFx code configured in the related Dataverse low-code plug-in
+
+  ![Example of the expression.yaml file of the FxExpression of a Dataverse low-code plug-in](/content/archive/low-code-plugin-expression-yaml.png)
 
 - **dependencies.json**: some dependencies which seems required to make the considered Dataverse low-code plug-in work
 
+  ![Example of the dependencies.json file of the FxExpression of a Dataverse low-code plug-in](/content/archive/low-code-plugin-dependencies-json.png)
+
 > [!NOTE]
 > In my example, the "cr6ab_Createaccountandprimarycontact" FxExpression, I am bit surprised by the content of the "dependencies.json" file because my business logic has dependencies with some columns of the "contact" table, but also with the "name" column of the "account" table. But this result is consistent with the dependencies listed in the Power Apps maker portal.
+
+![Validation of dependencies on the "cr6ab_Createaccountandprimarycontact" FxExpression object](/content/archive/low-code-plugin-dependency-validation.png)
 
 Whether for low-code developers or code-first developers, I think this new Dataverse low-code plug-ins capability will bring value to Power Platform but also blur the line between low-code and code-first development.
 

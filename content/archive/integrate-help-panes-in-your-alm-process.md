@@ -26,6 +26,8 @@ To manage Help Pages configurations:
 2. Switch to **classic mode**
 3. Go to the **Help Pages** section
 
+!["Help Pages" section in a solution open in classic mode](/content/archive/alm-help-pages-solution-classic.png)
+
 ## Add an Existing Help Page to a Solution
 
 This is the easiest way to integrate a Help Page into a solution. Configure the Help Page directly from the model-driven app, and then add it to your solution to move between environments.
@@ -33,9 +35,16 @@ This is the easiest way to integrate a Help Page into a solution. Configure the 
 To do this:
 
 1. In the **Help Pages** section of your solution (classic mode), click **Add Existing**
+
+   ![Click on the "Add Existing" button](/content/archive/alm-help-pages-add-existing.png)
+
 2. Select the Help Pages you want to include
 
+   ![Select the Help Pages you want to have in the solution](/content/archive/alm-help-pages-select.png)
+
 Don't forget to **save** and **publish** your changes to the solution.
+
+![Verification of the presence of the Help Pages in the solution](/content/archive/alm-help-pages-solution-verify.png)
 
 ## Create a New Help Page from a Solution
 
@@ -45,13 +54,25 @@ Steps:
 
 1. In the **Help Pages** section of your solution, click **New**
 
+   ![Click on the "New" button](/content/archive/alm-help-pages-new-button.png)
+
 ### Help Page Form Fields
 
+![Help Page form to complete](/content/archive/alm-help-page-form.png)
+
 - **Display Name**: Title displayed at the top of the Help Pane
+
+  ![Title of the Help Pane configured in the "Display Name" field of the Help Page record](/content/archive/alm-help-page-display-name.png)
+
 - **Path**: Defines the page where the Help Pane will be shown
+
+  ![Decomposition of Path examples](/content/archive/alm-help-page-path-decomposition.png)
+
 - **Content Type**: Usually `text/pphml` (typo likely in source—should be `text/html`)
 - **Content**: The content code for the Help Pane. Refer to [Microsoft's documentation](https://learn.microsoft.com/en-us/power-apps/maker/data-platform/create-custom-help-pages#custom-help-xml-definition) for details.
 - **Locale**: The language in which the Help Pane is displayed
+
+![Example of a Help Page record](/content/archive/alm-help-page-record-example.png)
 
 > [!NOTE]
 > For now, if you create a Help Page from a solution, you still have to add it with **Add Existing** afterward.

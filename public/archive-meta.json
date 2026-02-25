@@ -1,0 +1,404 @@
+[
+  {
+    "slug": "power-platform-protection/09-microsoft-sentinel-the-watchtower",
+    "title": "Power Platform's Protection — Microsoft Sentinel, the watchtower",
+    "date": "2025-02-06",
+    "tags": [
+      "power-platform",
+      "security",
+      "microsoft-sentinel",
+      "siem",
+      "dynamics-365"
+    ],
+    "description": "A guide to Microsoft Sentinel's growing coverage of Microsoft Business Apps — setting up workspace infrastructure with Bicep and PowerShell, exploring the ASIM parsers, analytics rules, playbooks, hunting queries, and workbooks, and strategies for Power Platform teams to collaborate with security teams."
+  },
+  {
+    "slug": "power-platform-protection/08-microsoft-purview-the-data-guardian",
+    "title": "Power Platform's Protection — Microsoft Purview the data guardian",
+    "date": "2024-12-09",
+    "tags": [
+      "power-platform",
+      "security",
+      "microsoft-purview",
+      "dataverse",
+      "data-governance"
+    ],
+    "description": "How Microsoft Purview's Data Map, Unified Catalog, and DSPM for AI can be used to classify and govern Dataverse data — including scanning tables for sensitivity labels, onboarding Fabric for Data Quality monitoring, and monitoring AI activity."
+  },
+  {
+    "slug": "power-platform-protection/07-building-secure-and-responsible-generative-ai-solutions",
+    "title": "Power Platform's Protection — Building secure and responsible Generative AI solutions",
+    "date": "2024-10-19",
+    "tags": [
+      "power-platform",
+      "security",
+      "generative-ai",
+      "responsible-ai",
+      "copilot-studio"
+    ],
+    "description": "An overview of Generative AI security risks — prompt injection, plugin vulnerabilities, indirect injection — alongside the community knowledge bases and practical Power Platform-specific mitigations for Copilots and prompts."
+  },
+  {
+    "slug": "power-platform-protection/06-managed-identity-for-dataverse-plug-ins",
+    "title": "Power Platform's protection — Managed Identity for Dataverse plug-ins",
+    "date": "2024-10-02",
+    "tags": [
+      "power-platform",
+      "security",
+      "managed-identity",
+      "dataverse",
+      "azure"
+    ],
+    "description": "Why Managed Identity is the right identity choice for Dataverse plug-ins integrating with Azure resources, how to configure the end-to-end setup, and the considerations needed to adopt it at scale — from assembly organization to ALM and governance."
+  },
+  {
+    "slug": "power-platform-protection/05-virtual-network-integration",
+    "title": "Power Platform's protection — Virtual Network integration",
+    "date": "2024-09-23",
+    "tags": [
+      "power-platform",
+      "security",
+      "virtual-network",
+      "azure",
+      "infrastructure-as-code"
+    ],
+    "description": "A deep dive into Virtual Network support for Power Platform — why it matters for securing Dataverse plug-ins and connector traffic, how to set it up with Bicep and PowerShell, and three architectural patterns for scaling the integration."
+  },
+  {
+    "slug": "infrastructure-as-code/04-a-bright-future",
+    "title": "The Power Platform Infrastructure as Code journey — A bright future",
+    "date": "2024-08-10",
+    "tags": [
+      "power-platform",
+      "infrastructure-as-code",
+      "terraform",
+      "governance",
+      "organizational-change"
+    ],
+    "description": "Maya prepares to present her DLP policy IaC strategy to IT leadership — covering how to upskill the team, plan the progressive migration of existing policies, and unlock unexpected benefits like automated testing, reduced privileged access, and risk audits."
+  },
+  {
+    "slug": "infrastructure-as-code/03-dawn-of-transformation",
+    "title": "The Power Platform Infrastructure as Code journey — Dawn of transformation",
+    "date": "2024-07-19",
+    "tags": [
+      "power-platform",
+      "infrastructure-as-code",
+      "terraform",
+      "dlp-policies",
+      "governance"
+    ],
+    "description": "Maya pushes DLP policy changes from code into Power Platform, converts existing policies to Terraform variable files, and discovers the critical 'terraform import' step needed to onboard already-managed resources without duplicates."
+  },
+  {
+    "slug": "infrastructure-as-code/02-first-stop-inventory",
+    "title": "The Power Platform Infrastructure as Code journey — First stop: Inventory",
+    "date": "2024-07-01",
+    "tags": [
+      "power-platform",
+      "infrastructure-as-code",
+      "terraform",
+      "dlp-policies",
+      "governance"
+    ],
+    "description": "Following Maya, a fictional engineer, as she identifies the pain points of managing DLP policies through the Power Platform Admin Center UI, discovers the Terraform provider, and builds a proof of concept to export existing policies as code."
+  },
+  {
+    "slug": "infrastructure-as-code/01-a-light-at-the-end-of-the-tunnel",
+    "title": "Infrastructure as code for Power Platform, a light at the end of the tunnel?",
+    "date": "2024-06-08",
+    "tags": [
+      "power-platform",
+      "infrastructure-as-code",
+      "terraform",
+      "governance",
+      "devops"
+    ],
+    "description": "An introduction to the Power Platform Terraform provider — why infrastructure as code matters for platform governance, how the provider works at a high level, and what trade-offs teams should weigh before adopting it."
+  },
+  {
+    "slug": "power-platform-protection/04-microsoft-purview-compliance",
+    "title": "Power Platform's protection — Microsoft Purview Compliance",
+    "date": "2023-08-17",
+    "tags": [
+      "power-platform",
+      "security",
+      "microsoft-purview",
+      "audit-logs",
+      "compliance"
+    ],
+    "description": "How Microsoft Purview Compliance's auditing solution surfaces Power Apps, Power Automate, DLP, connector, and Dataverse activities — illustrated through realistic threat scenarios for both administrator-level and user-level monitoring."
+  },
+  {
+    "slug": "power-platform-protection/03-platform-internal-capabilities",
+    "title": "Power Platform's protection — Platform internal capabilities",
+    "date": "2023-07-30",
+    "tags": [
+      "power-platform",
+      "security",
+      "dataverse",
+      "governance",
+      "managed-environments"
+    ],
+    "description": "A tour of Power Platform's native security capabilities — DLP policies, environment security groups, Dataverse security roles, tenant isolation, IP cookie binding, IP firewall, and Customer Lockbox — and how they combine into a layered protection strategy."
+  },
+  {
+    "slug": "power-platform-protection/02-defender-for-cloud-apps",
+    "title": "Power Platform's protection — Defender for Cloud Apps",
+    "date": "2023-06-26",
+    "tags": [
+      "power-platform",
+      "security",
+      "defender-for-cloud-apps",
+      "dataverse",
+      "session-controls"
+    ],
+    "description": "An exploration of how Defender for Cloud Apps, acting as a Cloud Access Security Broker (CASB), can complement Azure AD Conditional Access to control access to and activities within Dataverse and model-driven applications."
+  },
+  {
+    "slug": "power-platform-protection/01-azure-ad-conditional-access",
+    "title": "Power Platform's protection — Azure AD Conditional Access",
+    "date": "2023-06-15",
+    "tags": [
+      "power-platform",
+      "security",
+      "entra-id",
+      "conditional-access",
+      "zero-trust"
+    ],
+    "description": "A detailed walkthrough of how Azure AD (now Entra ID) Conditional Access policies can protect Power Platform services, individual canvas apps, and workload identities — with practical configuration examples for each scenario."
+  },
+  {
+    "slug": "synchronous-operations-with-dataverse-low-code-plug-ins",
+    "title": "Synchronous operations with Dataverse low-code plug-ins",
+    "date": "2023-06-05",
+    "tags": [
+      "power-platform",
+      "dataverse",
+      "low-code",
+      "power-fx",
+      "alm"
+    ],
+    "description": "An early look at Dataverse low-code plug-ins — instant and automated flavors — including what they look like behind the scenes in source control, and why they could blur the line between low-code and code-first development."
+  },
+  {
+    "slug": "am-i-a-site-reliability-engineer",
+    "title": "Am I a Site Reliability Engineer?",
+    "date": "2023-02-13",
+    "tags": [
+      "devops",
+      "power-platform",
+      "site-reliability-engineering",
+      "alm",
+      "monitoring"
+    ],
+    "description": "A personal reflection on SRE principles — what they mean, whether they apply to Power Platform, and how the author's daily work around ALM, reliability, and production management maps onto Site Reliability Engineering practices."
+  },
+  {
+    "slug": "the-future-of-power-platform-solution-export-to-repository-is-here",
+    "title": "The future of Power Platform solution export to repository is here!",
+    "date": "2022-09-29",
+    "tags": [
+      "power-platform",
+      "alm",
+      "power-platform-cli",
+      "source-control",
+      "devops"
+    ],
+    "description": "First impressions of the pac solution clone and sync commands, which streamline getting Power Platform solutions into a repository by eliminating the traditional export-then-unpack workflow."
+  },
+  {
+    "slug": "empowering-power-platform-developers-with-net-interactive-notebooks",
+    "title": "Empowering Power Platform developers with .Net Interactive notebooks",
+    "date": "2022-07-26",
+    "tags": [
+      "power-platform",
+      "dataverse",
+      "dotnet",
+      "developer-tools",
+      "jupyter-notebooks"
+    ],
+    "description": "An exploration of how .Net Interactive notebooks in VS Code can help Power Platform developers with support, administration, and learning scenarios — using C# and PowerShell to interact with Dataverse without relying on open-source modules."
+  },
+  {
+    "slug": "asynchronous-data-operations-in-dataverse-from-a-canvas-app",
+    "title": "Asynchronous data operations in Dataverse from a canvas app",
+    "date": "2021-08-23",
+    "tags": [
+      "power-platform",
+      "dataverse",
+      "canvas-app",
+      "power-automate",
+      "power-fx"
+    ],
+    "description": "A walkthrough of an asynchronous design pattern where a canvas app uses the Patch function to create a Dataverse record that triggers a cloud flow, with the app polling for completion and notifying the user once data operations are done."
+  },
+  {
+    "slug": "created-by-modified-by-columns-behavior-in-a-canvas-app-cloud-flow-dataverse-scenario",
+    "title": "\"Created by\" / \"Modified by\" columns behavior in a canvas app + cloud flow + Dataverse scenario",
+    "date": "2021-08-16",
+    "tags": [
+      "power-platform",
+      "dataverse",
+      "canvas-app",
+      "power-automate",
+      "cloud-flow"
+    ],
+    "description": "An investigation into why 'Created by' and 'Modified by' columns in Dataverse don't reflect the actual end user when records are created via cloud flows triggered from canvas apps — and which connector configurations correctly resolve the issue."
+  },
+  {
+    "slug": "tracking-changes-in-open-source-projects",
+    "title": "Tracking changes in open source projects",
+    "date": "2021-08-04",
+    "tags": [
+      "open-source",
+      "devops",
+      "github",
+      "git",
+      "changelog"
+    ],
+    "description": "A practical guide to adopting the keep-a-changelog convention in open source projects, including how to create and back-date git tags to build a meaningful, auditable version history."
+  },
+  {
+    "slug": "q-and-a-about-alm-and-power-platform",
+    "title": "Q&A about ALM and Power Platform",
+    "date": "2021-05-03",
+    "tags": [
+      "power-platform",
+      "alm",
+      "git",
+      "branching-strategy",
+      "devops"
+    ],
+    "description": "Answers to practical questions from a fellow Microsoft MVP on branching strategies, repository content decisions, and the recommended end-to-end flow for delivering Power Platform solutions from development to production."
+  },
+  {
+    "slug": "why-devops-culture-matters-working-with-the-power-platform",
+    "title": "Why DevOps culture matters working with the Power Platform?",
+    "date": "2021-01-22",
+    "tags": [
+      "power-platform",
+      "devops",
+      "devops-culture",
+      "citizen-developer",
+      "alm"
+    ],
+    "description": "An exploration of why DevOps culture — not just the tools — is the critical differentiator for Power Platform success, and why involving citizen developers in that culture is both a challenge and an opportunity."
+  },
+  {
+    "slug": "power-platform-enthusiasts-point-of-view-on-devops-culture",
+    "title": "Power Platform enthusiast's point of view on DevOps culture",
+    "date": "2020-12-31",
+    "tags": [
+      "power-platform",
+      "devops",
+      "devops-culture",
+      "alm",
+      "citizen-developer"
+    ],
+    "description": "A year-end reflection on what DevOps truly means — beyond tooling and automation — and how the DevOps mindset can reshape the way Power Platform developers and citizen developers work together to deliver value."
+  },
+  {
+    "slug": "automate-the-integration-between-dynamics-365-sales-and-teams",
+    "title": "Automate the integration between Dynamics 365 Sales and Teams",
+    "date": "2020-10-24",
+    "tags": [
+      "power-automate",
+      "microsoft-teams",
+      "dynamics-365",
+      "microsoft-graph",
+      "power-platform"
+    ],
+    "description": "A walkthrough of an open-source starter kit that automates the Dynamics 365 Sales and Microsoft Teams integration, covering automatic channel and tab creation across the lead-to-opportunity lifecycle, along with lessons learned and current limitations."
+  },
+  {
+    "slug": "my-resume-built-with-the-power-platform",
+    "title": "My resume built with the Power Platform",
+    "date": "2020-06-12",
+    "tags": [
+      "power-platform",
+      "power-apps",
+      "power-bi",
+      "power-virtual-agents",
+      "canvas-apps"
+    ],
+    "description": "A fun personal project exploring every component of the Power Platform — Common Data Service, model-driven app, canvas apps for phone and tablet, Power BI report, and a Power Virtual Agents bot — all to build and present a resume in a novel way."
+  },
+  {
+    "slug": "public-preview-of-the-human-resources-app-in-teams",
+    "title": "Public Preview of the Human Resources app in Teams",
+    "date": "2020-05-23",
+    "tags": [
+      "dynamics-365",
+      "microsoft-teams",
+      "human-resources",
+      "power-platform"
+    ],
+    "description": "A quick look at the public preview of the Human Resources app in Microsoft Teams, highlighting available features, missing capabilities like time-off balance forecasting, and known bot errors users may encounter."
+  },
+  {
+    "slug": "using-power-automate-in-your-teams-creation-process",
+    "title": "Using Power Automate in your Teams creation process",
+    "date": "2020-04-24",
+    "tags": [
+      "power-automate",
+      "microsoft-teams",
+      "microsoft-graph",
+      "power-platform",
+      "custom-connectors"
+    ],
+    "description": "Explores three Power Automate-based approaches to automating Microsoft Teams creation — cloning a template team, creating a team from scratch via an Office 365 group, and using the beta Microsoft Graph endpoint — as part of a governed self-service Teams request process."
+  },
+  {
+    "slug": "create-a-custom-connector-for-microsoft-graph",
+    "title": "Create a custom connector for Microsoft Graph",
+    "date": "2020-03-24",
+    "tags": [
+      "power-platform",
+      "microsoft-graph",
+      "custom-connectors",
+      "azure-ad",
+      "power-automate"
+    ],
+    "description": "A step-by-step guide to building a Microsoft Graph custom connector in Power Apps or Power Automate, covering Azure AD app registration with OAuth 2.0, connector security configuration, and adding a first action using the Teams creation API as a live example."
+  },
+  {
+    "slug": "integrate-help-panes-in-your-alm-process",
+    "title": "Integrate Help Panes in your ALM process",
+    "date": "2019-12-23",
+    "tags": [
+      "dynamics-365",
+      "help-panes",
+      "alm",
+      "model-driven-apps",
+      "power-platform"
+    ],
+    "description": "Explains how to integrate Dynamics 365 Help Pane configurations into solutions so they can travel through your ALM pipeline alongside feature development, covering both adding existing Help Pages and creating new ones directly from a solution."
+  },
+  {
+    "slug": "configure-help-panes-in-dynamics-365",
+    "title": "Configure Help Panes in Dynamics 365",
+    "date": "2019-12-11",
+    "tags": [
+      "dynamics-365",
+      "help-panes",
+      "model-driven-apps",
+      "power-apps",
+      "customization"
+    ],
+    "description": "A deep dive into configuring Help Panes in Dynamics 365 model-driven apps, covering how to enable the feature, the full range of formatting and insertion options available in the editor, and how coach marks and balloons can be used to build interactive in-app guidance."
+  },
+  {
+    "slug": "help-button-options-in-dynamics-365",
+    "title": "Help button options in Dynamics 365",
+    "date": "2019-12-04",
+    "tags": [
+      "dynamics-365",
+      "customization",
+      "user-experience",
+      "help-panes",
+      "power-platform"
+    ],
+    "description": "An overview of the help button options available in Dynamics 365, covering the default Microsoft documentation link, global and entity-specific custom help pages with URL parameters, and the Help Panes preview feature for building interactive in-app guidance."
+  }
+]

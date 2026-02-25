@@ -1,40 +1,50 @@
-import { useNavigate } from 'react-router-dom';
-import { useSearch } from '../hooks/useSearch';
+import { useNavigate } from "react-router-dom";
+import { useSearch } from "../hooks/useSearch";
 
 export function SearchPanel() {
   const { query, setQuery, results, isLoading } = useSearch();
   const navigate = useNavigate();
 
   const handleResultClick = (ref: string) => {
-    if (ref === 'about') {
-      navigate('/about');
-    } else if (ref.startsWith('posts/')) {
-      const slug = ref.replace('posts/', '');
+    if (ref === "about") {
+      navigate("/about");
+    } else if (ref.startsWith("posts/")) {
+      const slug = ref.replace("posts/", "");
       navigate(`/posts/${slug}`);
+    } else if (ref.startsWith("archive/")) {
+      navigate(`/${ref}`);
     }
   };
 
   return (
-    <div className="p-2">
-      <input
-        type="text"
-        placeholder="Search..."
-        value={query}
-        onChange={(e) => setQuery(e.target.value)}
-        className="w-full px-2 py-1 text-sm rounded-none border-none outline-none"
-        style={{
-          backgroundColor: 'var(--vscode-input-background)',
-          color: 'var(--vscode-input-foreground)',
-        }}
-      />
-      <div className="mt-2">
+    <div className="flex flex-col h-full">
+      <div className="p-2 shrink-0">
+        <input
+          type="text"
+          placeholder="Search..."
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          className="w-full px-2 py-1 text-sm rounded-none border-none outline-none"
+          style={{
+            backgroundColor: "var(--vscode-input-background)",
+            color: "var(--vscode-input-foreground)",
+          }}
+        />
+      </div>
+      <div className="flex-1 overflow-y-auto px-2 pb-2">
         {isLoading && (
-          <div className="text-xs px-2" style={{ color: 'var(--vscode-tab-inactiveForeground)' }}>
+          <div
+            className="text-xs px-2"
+            style={{ color: "var(--vscode-tab-inactiveForeground)" }}
+          >
             Loading index...
           </div>
         )}
         {!isLoading && query && results.length === 0 && (
-          <div className="text-xs px-2" style={{ color: 'var(--vscode-tab-inactiveForeground)' }}>
+          <div
+            className="text-xs px-2"
+            style={{ color: "var(--vscode-tab-inactiveForeground)" }}
+          >
             No results found
           </div>
         )}
@@ -42,18 +52,19 @@ export function SearchPanel() {
           <button
             key={r.ref}
             className="w-full text-left px-2 py-1.5 text-sm cursor-pointer block"
-            style={{ color: 'var(--vscode-editor-foreground)' }}
+            style={{ color: "var(--vscode-editor-foreground)" }}
             onMouseEnter={(e) =>
-              (e.currentTarget.style.backgroundColor = 'var(--vscode-list-hoverBackground)')
+              (e.currentTarget.style.backgroundColor =
+                "var(--vscode-list-hoverBackground)")
             }
-            onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '')}
+            onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "")}
             onClick={() => handleResultClick(r.ref)}
           >
             <div className="font-medium truncate">{r.title}</div>
             {r.description && (
               <div
                 className="text-xs truncate mt-0.5"
-                style={{ color: 'var(--vscode-tab-inactiveForeground)' }}
+                style={{ color: "var(--vscode-tab-inactiveForeground)" }}
               >
                 {r.description}
               </div>
@@ -61,7 +72,7 @@ export function SearchPanel() {
             {r.date && (
               <div
                 className="text-xs mt-0.5"
-                style={{ color: 'var(--vscode-tab-inactiveForeground)' }}
+                style={{ color: "var(--vscode-tab-inactiveForeground)" }}
               >
                 {r.date}
               </div>

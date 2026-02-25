@@ -14,7 +14,7 @@ This is the first post on my new, VS Code-themed software engineer blog, and it 
 - **From [Medium](https://medium.com/rapha%C3%ABl-pothin) to my own website + blog**
 - **From a Power Platform–centered focus to AI-native software engineering**
 
-I started blogging on Medium in **December 2019**. Over the last five years I published **32 posts** — not a huge number, but I’m genuinely proud of them. They represent real learning, real time spent digging into details, and (the best part) having been able to help people along the way.
+I started blogging on Medium in **December 2019**. Over the last five years I published **31 posts** — not a huge number, but I’m genuinely proud of them. They represent real learning, real time spent digging into details, and (the best part) having been able to help people along the way.
 
 Through that entire journey, my goals have stayed consistent:
 

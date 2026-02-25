@@ -15,6 +15,7 @@ import { HomePage } from "./pages/HomePage";
 import { PostPage } from "./pages/PostPage";
 import { AboutPage } from "./pages/AboutPage";
 import { PrivacyPage } from "./pages/PrivacyPage";
+import { ArchivePage } from "./pages/ArchivePage";
 import { useTheme } from "./hooks/useTheme";
 
 interface PageMeta {
@@ -41,6 +42,7 @@ function routeToTabId(pathname: string): string {
   if (pathname === "/privacy") return "privacy";
   if (pathname.startsWith("/posts/"))
     return `posts/${pathname.replace("/posts/", "")}`;
+  if (pathname.startsWith("/archive/")) return pathname.slice(1);
   return "welcome";
 }
 
@@ -127,7 +129,9 @@ function AppLayout() {
         ? "privacy"
         : location.pathname.startsWith("/posts/")
           ? `posts/${location.pathname.replace("/posts/", "")}`
-          : "";
+          : location.pathname.startsWith("/archive/")
+            ? location.pathname.slice(1)
+            : "";
 
   const handleMeta = useCallback((meta: PageMeta) => {
     setPageMeta(meta);
@@ -245,6 +249,10 @@ function AppLayout() {
             <Route
               path="/posts/:slug"
               element={<PostPage onMeta={handleMeta} />}
+            />
+            <Route
+              path="/archive/*"
+              element={<ArchivePage onMeta={handleMeta} />}
             />
           </Routes>
         </main>

@@ -1,4 +1,5 @@
-import { useLayoutEffect, useMemo, useRef } from "react";
+import { useCallback, useLayoutEffect, useMemo, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 
 interface MarkdownRendererProps {
   html: string;
@@ -26,9 +27,29 @@ function openExternalLinksInNewTab(raw: string): string {
 
 export function MarkdownRenderer({ html }: MarkdownRendererProps) {
   const containerRef = useRef<HTMLDivElement>(null);
+  const navigate = useNavigate();
 
   // Process HTML string before rendering — adds target/rel to external links.
   const processedHtml = useMemo(() => openExternalLinksInNewTab(html), [html]);
+
+  // Intercept clicks on internal links so they go through React Router (and
+  // open as tabs) instead of triggering a full page load.
+  const handleClick = useCallback(
+    (e: React.MouseEvent<HTMLDivElement>) => {
+      const target = (e.target as HTMLElement).closest("a");
+      if (!target) return;
+
+      const href = target.getAttribute("href");
+      if (!href) return;
+
+      // Only intercept same-origin relative paths (e.g. /archive/..., /posts/...)
+      if (href.startsWith("/")) {
+        e.preventDefault();
+        navigate(href);
+      }
+    },
+    [navigate],
+  );
 
   useLayoutEffect(() => {
     if (!containerRef.current) return;
@@ -88,6 +109,7 @@ export function MarkdownRenderer({ html }: MarkdownRendererProps) {
       <div
         ref={containerRef}
         className="markdown-body"
+        onClick={handleClick}
         dangerouslySetInnerHTML={{ __html: processedHtml }}
       />
     </>

@@ -34,3 +34,7 @@ public/content/
 
 # Generated RSS feed
 public/rss.xml
+
+# Temporary files
+temp
+plans

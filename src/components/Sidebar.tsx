@@ -1,8 +1,8 @@
-import { FileExplorer } from './FileExplorer';
-import { SearchPanel } from './SearchPanel';
+import { FileExplorer } from "./FileExplorer";
+import { SearchPanel } from "./SearchPanel";
 
 interface SidebarProps {
-  activeView: 'explorer' | 'search';
+  activeView: "explorer" | "search";
   visible: boolean;
   currentPath: string;
 }
@@ -16,17 +16,17 @@ export function Sidebar({ activeView, visible, currentPath }: SidebarProps) {
       style={{
         width: 250,
         minWidth: 250,
-        backgroundColor: 'var(--vscode-sideBar-background)',
+        backgroundColor: "var(--vscode-sideBar-background)",
       }}
     >
       <div
         className="px-4 py-2 text-xs font-semibold tracking-wider uppercase"
-        style={{ color: 'var(--vscode-tab-inactiveForeground)' }}
+        style={{ color: "var(--vscode-tab-inactiveForeground)" }}
       >
-        {activeView === 'explorer' ? 'Explorer' : 'Search'}
+        {activeView === "explorer" ? "Explorer" : "Search"}
       </div>
-      <div className="flex-1 overflow-y-auto">
-        {activeView === 'explorer' ? (
+      <div className="flex-1 overflow-hidden flex flex-col">
+        {activeView === "explorer" ? (
           <FileExplorer currentPath={currentPath} />
         ) : (
           <SearchPanel />

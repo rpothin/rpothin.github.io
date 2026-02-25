@@ -169,11 +169,14 @@ export function FileExplorer({ currentPath }: FileExplorerProps) {
                   >
                     {post.date && (
                       <span>
-                        {new Date(post.date).toLocaleDateString("en-US", {
-                          month: "short",
-                          day: "numeric",
-                          year: "numeric",
-                        })}
+                        {new Date(post.date + "T12:00:00").toLocaleDateString(
+                          "en-US",
+                          {
+                            month: "short",
+                            day: "numeric",
+                            year: "numeric",
+                          },
+                        )}
                       </span>
                     )}
                     <span>·</span>
@@ -265,7 +268,9 @@ export function FileExplorer({ currentPath }: FileExplorerProps) {
                     >
                       {entry.date && (
                         <span>
-                          {new Date(entry.date).toLocaleDateString("en-US", {
+                          {new Date(
+                            entry.date + "T12:00:00",
+                          ).toLocaleDateString("en-US", {
                             month: "short",
                             day: "numeric",
                             year: "numeric",

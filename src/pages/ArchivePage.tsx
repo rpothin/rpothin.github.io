@@ -128,7 +128,7 @@ export function ArchivePage({ onMeta }: ArchivePageProps) {
             <img
               src={buildBadgeUrl(
                 "Published",
-                new Date(meta.date).toLocaleDateString("en-US", {
+                new Date(meta.date + "T12:00:00").toLocaleDateString("en-US", {
                   year: "numeric",
                   month: "long",
                   day: "numeric",

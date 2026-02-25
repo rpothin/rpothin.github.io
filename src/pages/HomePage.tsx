@@ -178,11 +178,14 @@ export function HomePage({ onMeta }: HomePageProps) {
                           color: "var(--vscode-tab-inactiveForeground)",
                         }}
                       >
-                        {new Date(post.date).toLocaleDateString("en-US", {
-                          month: "short",
-                          day: "numeric",
-                          year: "numeric",
-                        })}
+                        {new Date(post.date + "T12:00:00").toLocaleDateString(
+                          "en-US",
+                          {
+                            month: "short",
+                            day: "numeric",
+                            year: "numeric",
+                          },
+                        )}
                       </time>
                     )}
                     {post.tags.length > 0 && (

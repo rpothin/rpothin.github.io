@@ -20,8 +20,9 @@ export function SearchPanel() {
     <div className="flex flex-col h-full">
       <div className="p-2 shrink-0">
         <input
-          type="text"
+          type="search"
           placeholder="Search..."
+          aria-label="Search posts"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           className="w-full px-2 py-1 text-sm rounded-none border-none outline-none"
@@ -31,10 +32,27 @@ export function SearchPanel() {
           }}
         />
       </div>
-      <div className="flex-1 overflow-y-auto px-2 pb-2">
+      <div
+        role="status"
+        aria-live="polite"
+        aria-atomic="true"
+        className="sr-only"
+      >
+        {!isLoading && query && results.length === 0
+          ? "No results found"
+          : !isLoading && query && results.length > 0
+            ? `${results.length} result${results.length === 1 ? "" : "s"} found`
+            : ""}
+      </div>
+      <div
+        className="flex-1 overflow-y-auto px-2 pb-2"
+        role="list"
+        aria-label="Search results"
+      >
         {isLoading && (
           <div
             className="text-xs px-2"
+            role="status"
             style={{ color: "var(--vscode-tab-inactiveForeground)" }}
           >
             Loading index...
@@ -51,6 +69,7 @@ export function SearchPanel() {
         {results.map((r) => (
           <button
             key={r.ref}
+            role="listitem"
             className="w-full text-left px-2 py-1.5 text-sm cursor-pointer block"
             style={{ color: "var(--vscode-editor-foreground)" }}
             onMouseEnter={(e) =>

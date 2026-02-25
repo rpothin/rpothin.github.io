@@ -7,7 +7,8 @@ interface MarkdownRendererProps {
 
 /**
  * Processes an HTML string so that every external link (http/https pointing to
- * a different origin) gets `target="_blank" rel="noopener noreferrer"`.
+ * a different origin) gets `target="_blank" rel="noopener noreferrer"` plus a
+ * visually-hidden indicator that it opens in a new tab.
  *
  * This runs *before* React sets innerHTML, so the links are correct from the
  * first paint — no layout-effect DOM patching required.
@@ -15,12 +16,18 @@ interface MarkdownRendererProps {
 function openExternalLinksInNewTab(raw: string): string {
   // Match opening <a …> tags that contain an href starting with http(s).
   return raw.replace(
-    /<a\s([^>]*href\s*=\s*"https?:\/\/[^"]*"[^>]*)>/gi,
-    (fullMatch, attrs: string) => {
-      // Don't touch links that already declare a target.
-      if (/\btarget\s*=/i.test(attrs)) return fullMatch;
+    /<a\s([^>]*href\s*=\s*"https?:\/\/[^"]*"[^>]*)>([\s\S]*?)<\/a>/gi,
+    (fullMatch, attrs: string, content: string) => {
+      // If the link already has a sr-only "opens in new tab" annotation, leave it alone.
+      if (/opens in new tab/i.test(content)) return fullMatch;
 
-      return `<a ${attrs} target="_blank" rel="noopener noreferrer">`;
+      // Ensure target and rel are set (may already be injected by the build script).
+      let newAttrs = attrs;
+      if (!/\btarget\s*=/i.test(attrs)) {
+        newAttrs += ' target="_blank" rel="noopener noreferrer"';
+      }
+
+      return `<a ${newAttrs}>${content}<span class="sr-only"> (opens in new tab)</span></a>`;
     },
   );
 }
@@ -71,6 +78,10 @@ export function MarkdownRenderer({ html }: MarkdownRendererProps) {
         button.textContent = "Copy";
         pre.insertBefore(button, pre.firstChild);
       }
+      // Always ensure ARIA attributes are present (button may have been
+      // injected by the build script without them).
+      button.setAttribute("aria-label", "Copy code to clipboard");
+      button.setAttribute("aria-live", "polite");
 
       if (button.dataset.copyBound === "true") return;
       button.dataset.copyBound = "true";
@@ -80,8 +91,10 @@ export function MarkdownRenderer({ html }: MarkdownRendererProps) {
         if (navigator.clipboard?.writeText) {
           navigator.clipboard.writeText(text).then(() => {
             button!.textContent = "Copied!";
+            button!.setAttribute("aria-label", "Code copied to clipboard");
             setTimeout(() => {
               button!.textContent = "Copy";
+              button!.setAttribute("aria-label", "Copy code to clipboard");
             }, 2000);
           });
           return;
@@ -97,8 +110,10 @@ export function MarkdownRenderer({ html }: MarkdownRendererProps) {
         document.execCommand("copy");
         pre.removeChild(textarea);
         button!.textContent = "Copied!";
+        button!.setAttribute("aria-label", "Code copied to clipboard");
         setTimeout(() => {
           button!.textContent = "Copy";
+          button!.setAttribute("aria-label", "Copy code to clipboard");
         }, 2000);
       });
     });

@@ -26,6 +26,7 @@ function SectionHeader({
   return (
     <button
       className="w-full text-left flex items-center gap-1 cursor-pointer select-none"
+      aria-expanded={expanded}
       style={{
         height: 22,
         paddingLeft: 8,
@@ -54,6 +55,7 @@ function SectionHeader({
         viewBox="0 0 16 16"
         fill="currentColor"
         className="flex-shrink-0"
+        aria-hidden="true"
         style={{
           transform: expanded ? "rotate(90deg)" : "rotate(0deg)",
           transition: "transform 0.1s ease",
@@ -64,6 +66,7 @@ function SectionHeader({
       <span className="truncate">{label}</span>
       <span
         className="ml-auto text-xs px-1.5 rounded-full"
+        aria-label={`${count} items`}
         style={{
           backgroundColor: "var(--vscode-badge-background)",
           color: "var(--vscode-badge-foreground)",
@@ -118,7 +121,8 @@ export function FileExplorer({ currentPath }: FileExplorerProps) {
         />
 
         {postsExpanded && (
-          <div
+          <ul
+            role="list"
             style={{ flex: 1, overflowY: "auto", minHeight: 0 }}
             className="py-0.5"
           >
@@ -127,67 +131,74 @@ export function FileExplorer({ currentPath }: FileExplorerProps) {
               const isActive = currentPath === postPath;
 
               return (
-                <button
-                  key={post.slug}
-                  className="w-full text-left cursor-pointer block"
-                  style={{
-                    paddingLeft: "20px",
-                    paddingRight: "8px",
-                    paddingTop: "6px",
-                    paddingBottom: "6px",
-                    backgroundColor: isActive
-                      ? "var(--vscode-list-activeSelectionBackground)"
-                      : undefined,
-                    color: isActive
-                      ? "var(--vscode-list-activeSelectionForeground)"
-                      : "var(--vscode-editor-foreground)",
-                  }}
-                  onMouseEnter={(e) => {
-                    if (!isActive)
-                      e.currentTarget.style.backgroundColor =
-                        "var(--vscode-list-hoverBackground)";
-                  }}
-                  onMouseLeave={(e) => {
-                    if (!isActive) e.currentTarget.style.backgroundColor = "";
-                  }}
-                  onClick={() => navigate(`/posts/${post.slug}`)}
-                >
-                  <div className="flex items-center gap-1.5 mb-0.5">
-                    <span className="flex-shrink-0 text-xs">📄</span>
-                    <span className="text-sm truncate font-medium">
-                      {post.title}
-                    </span>
-                  </div>
-                  <div
-                    className="flex items-center gap-2 text-xs ml-5"
+                <li key={post.slug}>
+                  <button
+                    className="w-full text-left cursor-pointer block"
+                    aria-current={isActive ? "page" : undefined}
                     style={{
+                      paddingLeft: "20px",
+                      paddingRight: "8px",
+                      paddingTop: "6px",
+                      paddingBottom: "6px",
+                      backgroundColor: isActive
+                        ? "var(--vscode-list-activeSelectionBackground)"
+                        : undefined,
                       color: isActive
                         ? "var(--vscode-list-activeSelectionForeground)"
-                        : "var(--vscode-tab-inactiveForeground)",
-                      opacity: isActive ? 0.85 : 1,
+                        : "var(--vscode-editor-foreground)",
                     }}
+                    onMouseEnter={(e) => {
+                      if (!isActive)
+                        e.currentTarget.style.backgroundColor =
+                          "var(--vscode-list-hoverBackground)";
+                    }}
+                    onMouseLeave={(e) => {
+                      if (!isActive) e.currentTarget.style.backgroundColor = "";
+                    }}
+                    onClick={() => navigate(`/posts/${post.slug}`)}
                   >
-                    {post.date && (
-                      <span>
-                        {new Date(post.date + "T12:00:00").toLocaleDateString(
-                          "en-US",
-                          {
-                            month: "short",
-                            day: "numeric",
-                            year: "numeric",
-                          },
-                        )}
+                    <div className="flex items-center gap-1.5 mb-0.5">
+                      <span
+                        className="flex-shrink-0 text-xs"
+                        aria-hidden="true"
+                      >
+                        📄
                       </span>
-                    )}
-                    <span>·</span>
-                    <span>
-                      {estimateReadingTime(post.description)} min read
-                    </span>
-                  </div>
-                </button>
+                      <span className="text-sm truncate font-medium">
+                        {post.title}
+                      </span>
+                    </div>
+                    <div
+                      className="flex items-center gap-2 text-xs ml-5"
+                      style={{
+                        color: isActive
+                          ? "var(--vscode-list-activeSelectionForeground)"
+                          : "var(--vscode-tab-inactiveForeground)",
+                        opacity: isActive ? 0.85 : 1,
+                      }}
+                    >
+                      {post.date && (
+                        <span>
+                          {new Date(post.date + "T12:00:00").toLocaleDateString(
+                            "en-US",
+                            {
+                              month: "short",
+                              day: "numeric",
+                              year: "numeric",
+                            },
+                          )}
+                        </span>
+                      )}
+                      <span aria-hidden="true">·</span>
+                      <span>
+                        {estimateReadingTime(post.description)} min read
+                      </span>
+                    </div>
+                  </button>
+                </li>
               );
             })}
-          </div>
+          </ul>
         )}
       </div>
 
@@ -209,7 +220,8 @@ export function FileExplorer({ currentPath }: FileExplorerProps) {
         />
 
         {archiveExpanded && (
-          <div
+          <ul
+            role="list"
             style={{ flex: 1, overflowY: "auto", minHeight: 0 }}
             className="py-0.5"
           >
@@ -226,67 +238,75 @@ export function FileExplorer({ currentPath }: FileExplorerProps) {
                 const isActive = currentPath === archivePath;
 
                 return (
-                  <button
-                    key={entry.slug}
-                    className="w-full text-left cursor-pointer block"
-                    style={{
-                      paddingLeft: "20px",
-                      paddingRight: "8px",
-                      paddingTop: "6px",
-                      paddingBottom: "6px",
-                      backgroundColor: isActive
-                        ? "var(--vscode-list-activeSelectionBackground)"
-                        : undefined,
-                      color: isActive
-                        ? "var(--vscode-list-activeSelectionForeground)"
-                        : "var(--vscode-editor-foreground)",
-                    }}
-                    onMouseEnter={(e) => {
-                      if (!isActive)
-                        e.currentTarget.style.backgroundColor =
-                          "var(--vscode-list-hoverBackground)";
-                    }}
-                    onMouseLeave={(e) => {
-                      if (!isActive) e.currentTarget.style.backgroundColor = "";
-                    }}
-                    onClick={() => navigate(`/archive/${entry.slug}`)}
-                  >
-                    <div className="flex items-center gap-1.5 mb-0.5">
-                      <span className="flex-shrink-0 text-xs">📄</span>
-                      <span className="text-sm truncate font-medium">
-                        {entry.title}
-                      </span>
-                    </div>
-                    <div
-                      className="flex items-center gap-2 text-xs ml-5"
+                  <li key={entry.slug}>
+                    <button
+                      className="w-full text-left cursor-pointer block"
+                      aria-current={isActive ? "page" : undefined}
                       style={{
+                        paddingLeft: "20px",
+                        paddingRight: "8px",
+                        paddingTop: "6px",
+                        paddingBottom: "6px",
+                        backgroundColor: isActive
+                          ? "var(--vscode-list-activeSelectionBackground)"
+                          : undefined,
                         color: isActive
                           ? "var(--vscode-list-activeSelectionForeground)"
-                          : "var(--vscode-tab-inactiveForeground)",
-                        opacity: isActive ? 0.85 : 1,
+                          : "var(--vscode-editor-foreground)",
                       }}
+                      onMouseEnter={(e) => {
+                        if (!isActive)
+                          e.currentTarget.style.backgroundColor =
+                            "var(--vscode-list-hoverBackground)";
+                      }}
+                      onMouseLeave={(e) => {
+                        if (!isActive)
+                          e.currentTarget.style.backgroundColor = "";
+                      }}
+                      onClick={() => navigate(`/archive/${entry.slug}`)}
                     >
-                      {entry.date && (
-                        <span>
-                          {new Date(
-                            entry.date + "T12:00:00",
-                          ).toLocaleDateString("en-US", {
-                            month: "short",
-                            day: "numeric",
-                            year: "numeric",
-                          })}
+                      <div className="flex items-center gap-1.5 mb-0.5">
+                        <span
+                          className="flex-shrink-0 text-xs"
+                          aria-hidden="true"
+                        >
+                          📄
                         </span>
-                      )}
-                      <span>·</span>
-                      <span>
-                        {estimateReadingTime(entry.description)} min read
-                      </span>
-                    </div>
-                  </button>
+                        <span className="text-sm truncate font-medium">
+                          {entry.title}
+                        </span>
+                      </div>
+                      <div
+                        className="flex items-center gap-2 text-xs ml-5"
+                        style={{
+                          color: isActive
+                            ? "var(--vscode-list-activeSelectionForeground)"
+                            : "var(--vscode-tab-inactiveForeground)",
+                          opacity: isActive ? 0.85 : 1,
+                        }}
+                      >
+                        {entry.date && (
+                          <span>
+                            {new Date(
+                              entry.date + "T12:00:00",
+                            ).toLocaleDateString("en-US", {
+                              month: "short",
+                              day: "numeric",
+                              year: "numeric",
+                            })}
+                          </span>
+                        )}
+                        <span aria-hidden="true">·</span>
+                        <span>
+                          {estimateReadingTime(entry.description)} min read
+                        </span>
+                      </div>
+                    </button>
+                  </li>
                 );
               })
             )}
-          </div>
+          </ul>
         )}
       </div>
     </div>

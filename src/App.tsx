@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect, useRef } from "react";
 import {
   BrowserRouter,
   Routes,
@@ -48,6 +48,7 @@ function routeToTabId(pathname: string): string {
 
 function AppLayout() {
   const { theme, toggleTheme } = useTheme();
+  const mainRef = useRef<HTMLElement>(null);
   const [sidebarView, setSidebarView] = useState<"explorer" | "search">(
     "explorer",
   );
@@ -121,6 +122,11 @@ function AppLayout() {
   }, [sidebarVisible]);
 
   const activeTabId = routeToTabId(location.pathname);
+
+  // Move focus to main content on route change for screen-reader users
+  useEffect(() => {
+    mainRef.current?.focus();
+  }, [location.pathname]);
 
   const currentPath =
     location.pathname === "/about"
@@ -238,7 +244,13 @@ function AppLayout() {
           onCloseOtherTabs={handleCloseOtherTabs}
           onCloseAllTabs={handleCloseAllTabs}
         />
-        <main className="flex-1 overflow-y-auto">
+        <main
+          id="main-content"
+          ref={mainRef}
+          tabIndex={-1}
+          className="flex-1 overflow-y-auto"
+          style={{ outline: "none" }}
+        >
           <Routes>
             <Route path="/" element={<HomePage onMeta={handleMeta} />} />
             <Route path="/about" element={<AboutPage onMeta={handleMeta} />} />

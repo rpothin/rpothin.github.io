@@ -11,7 +11,8 @@ export function Sidebar({ activeView, visible, currentPath }: SidebarProps) {
   if (!visible) return null;
 
   return (
-    <div
+    <nav
+      aria-label={activeView === "explorer" ? "File explorer" : "Search"}
       className="flex flex-col h-full overflow-hidden"
       style={{
         width: 250,
@@ -21,6 +22,7 @@ export function Sidebar({ activeView, visible, currentPath }: SidebarProps) {
     >
       <div
         className="px-4 py-2 text-xs font-semibold tracking-wider uppercase"
+        aria-hidden="true"
         style={{ color: "var(--vscode-tab-inactiveForeground)" }}
       >
         {activeView === "explorer" ? "Explorer" : "Search"}
@@ -32,6 +34,6 @@ export function Sidebar({ activeView, visible, currentPath }: SidebarProps) {
           <SearchPanel />
         )}
       </div>
-    </div>
+    </nav>
   );
 }

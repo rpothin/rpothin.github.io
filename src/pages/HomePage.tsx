@@ -54,7 +54,7 @@ export function HomePage({ onMeta }: HomePageProps) {
                 className="flex items-center gap-2 text-sm no-underline hover:underline"
                 style={{ color: "#3794ff" }}
               >
-                <span>📄</span>
+                <span aria-hidden="true">📄</span>
                 <span>Read the Welcome Post</span>
               </Link>
               <a
@@ -62,7 +62,7 @@ export function HomePage({ onMeta }: HomePageProps) {
                 className="flex items-center gap-2 text-sm no-underline hover:underline"
                 style={{ color: "#3794ff" }}
               >
-                <span>📰</span>
+                <span aria-hidden="true">📰</span>
                 <span>Subscribe via RSS</span>
               </a>
               <Link
@@ -70,7 +70,7 @@ export function HomePage({ onMeta }: HomePageProps) {
                 className="flex items-center gap-2 text-sm no-underline hover:underline"
                 style={{ color: "#3794ff" }}
               >
-                <span>👤</span>
+                <span aria-hidden="true">👤</span>
                 <span>About me</span>
               </Link>
               <Link
@@ -78,7 +78,7 @@ export function HomePage({ onMeta }: HomePageProps) {
                 className="flex items-center gap-2 text-sm no-underline hover:underline"
                 style={{ color: "#3794ff" }}
               >
-                <span>🛡️</span>
+                <span aria-hidden="true">🛡️</span>
                 <span>Privacy &amp; Analytics</span>
               </Link>
             </div>
@@ -97,7 +97,7 @@ export function HomePage({ onMeta }: HomePageProps) {
                 className="flex items-center gap-2 text-sm"
                 style={{ color: "var(--vscode-editor-foreground)" }}
               >
-                <span>📂</span>
+                <span aria-hidden="true">📂</span>
                 <span>
                   Use the <strong>Explorer</strong> sidebar to browse posts
                 </span>
@@ -106,7 +106,7 @@ export function HomePage({ onMeta }: HomePageProps) {
                 className="flex items-center gap-2 text-sm"
                 style={{ color: "var(--vscode-editor-foreground)" }}
               >
-                <span>🔍</span>
+                <span aria-hidden="true">🔍</span>
                 <span>
                   Use <strong>Search</strong> to find content across all posts
                 </span>
@@ -115,7 +115,7 @@ export function HomePage({ onMeta }: HomePageProps) {
                 className="flex items-center gap-2 text-sm"
                 style={{ color: "var(--vscode-editor-foreground)" }}
               >
-                <span>🌓</span>
+                <span aria-hidden="true">🌓</span>
                 <span>
                   Toggle <strong>dark/light theme</strong> from the activity bar
                 </span>

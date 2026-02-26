@@ -3,29 +3,32 @@ import lunr from "lunr";
 import type { PostMeta, SearchResult } from "../types";
 
 export function useSearch() {
-  const [query, setQuery] = useState("");
+  const [query, setQueryState] = useState("");
   const [results, setResults] = useState<SearchResult[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const indexRef = useRef<lunr.Index | null>(null);
-  const metaRef = useRef<PostMeta[]>([]);
   const allMetaRef = useRef<Map<string, PostMeta>>(new Map());
 
   useEffect(() => {
     async function load() {
       try {
-        const [indexRes, metaRes] = await Promise.all([
+        const [indexRes, metaRes, archiveRes] = await Promise.all([
           fetch("/search-index.json"),
           fetch("/posts-meta.json"),
+          fetch("/archive-meta.json"),
         ]);
         const indexData = await indexRes.json();
         const metaData: PostMeta[] = await metaRes.json();
+        const archiveData: PostMeta[] = await archiveRes.json();
 
         indexRef.current = lunr.Index.load(indexData);
-        metaRef.current = metaData;
 
         const map = new Map<string, PostMeta>();
         for (const post of metaData) {
           map.set(`posts/${post.slug}`, post);
+        }
+        for (const item of archiveData) {
+          map.set(`archive/${item.slug}`, item);
         }
         allMetaRef.current = map;
       } catch (e) {
@@ -37,8 +40,7 @@ export function useSearch() {
     load();
   }, []);
 
-  const search = useCallback((q: string) => {
-    setQuery(q);
+  const executeSearch = useCallback((q: string) => {
     if (!q.trim() || !indexRef.current) {
       setResults([]);
       return;
@@ -48,7 +50,6 @@ export function useSearch() {
       const mapped: SearchResult[] = lunrResults
         .map((r) => {
           const meta = allMetaRef.current.get(r.ref);
-          // Handle About page with proper title/description
           if (r.ref === "about") {
             return {
               ref: r.ref,
@@ -75,5 +76,21 @@ export function useSearch() {
     }
   }, []);
 
-  return { query, setQuery: search, results, isLoading };
+  // Re-run the search once the index finishes loading (handles the case
+  // where a query was set before the index was ready)
+  useEffect(() => {
+    if (!isLoading && query) {
+      executeSearch(query);
+    }
+  }, [isLoading, query, executeSearch]);
+
+  const setQuery = useCallback(
+    (q: string) => {
+      setQueryState(q);
+      executeSearch(q);
+    },
+    [executeSearch],
+  );
+
+  return { query, setQuery, results, isLoading };
 }

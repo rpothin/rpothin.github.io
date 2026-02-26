@@ -5,9 +5,17 @@ interface SidebarProps {
   activeView: "explorer" | "search";
   visible: boolean;
   currentPath: string;
+  pendingSearchQuery?: string;
+  onSearchQueryConsumed?: () => void;
 }
 
-export function Sidebar({ activeView, visible, currentPath }: SidebarProps) {
+export function Sidebar({
+  activeView,
+  visible,
+  currentPath,
+  pendingSearchQuery,
+  onSearchQueryConsumed,
+}: SidebarProps) {
   if (!visible) return null;
 
   return (
@@ -31,7 +39,10 @@ export function Sidebar({ activeView, visible, currentPath }: SidebarProps) {
         {activeView === "explorer" ? (
           <FileExplorer currentPath={currentPath} />
         ) : (
-          <SearchPanel />
+          <SearchPanel
+            pendingQuery={pendingSearchQuery}
+            onPendingQueryConsumed={onSearchQueryConsumed}
+          />
         )}
       </div>
     </nav>

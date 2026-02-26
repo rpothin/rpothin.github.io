@@ -441,3 +441,16 @@ main:focus {
   color: var(--shiki-light) !important;
   background-color: var(--shiki-light-bg) !important;
 }
+
+/* ── Welcome page card hover/focus ── */
+.welcome-card {
+  transition:
+    background-color 0.15s,
+    border-color 0.15s;
+}
+
+.welcome-card:hover,
+.welcome-card:focus-within {
+  background-color: var(--vscode-list-hoverBackground) !important;
+  border-color: var(--vscode-statusBar-background) !important;
+}

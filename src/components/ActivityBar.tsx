@@ -3,6 +3,7 @@ interface ActivityBarProps {
   onViewChange: (view: "explorer" | "search") => void;
   onAbout: () => void;
   onPrivacy: () => void;
+  onTips: () => void;
   theme: "dark" | "light";
   onToggleTheme: () => void;
   sidebarVisible: boolean;
@@ -14,6 +15,7 @@ export function ActivityBar({
   onViewChange,
   onAbout,
   onPrivacy,
+  onTips,
   theme,
   onToggleTheme,
   sidebarVisible,
@@ -137,6 +139,27 @@ export function ActivityBar({
           >
             <path d="M12 2l7 4v6c0 5-3 9-7 10-4-1-7-5-7-10V6l7-4z" />
             <path d="M8 12l2.5 2.5L16 9" />
+          </svg>
+        </button>
+
+        <button
+          onClick={onTips}
+          className="w-full flex items-center justify-center py-3 hover:opacity-80"
+          title="Navigation Tips"
+          aria-label="Navigation Tips"
+        >
+          <svg
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.5"
+            aria-hidden="true"
+          >
+            <path d="M9 18h6" />
+            <path d="M10 22h4" />
+            <path d="M12 2a7 7 0 0 1 4 12.7V17H8v-2.3A7 7 0 0 1 12 2z" />
           </svg>
         </button>
 

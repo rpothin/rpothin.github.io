@@ -1,9 +1,29 @@
+import { useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSearch } from "../hooks/useSearch";
 
-export function SearchPanel() {
+interface SearchPanelProps {
+  pendingQuery?: string;
+  onPendingQueryConsumed?: () => void;
+}
+
+export function SearchPanel({
+  pendingQuery,
+  onPendingQueryConsumed,
+}: SearchPanelProps) {
   const { query, setQuery, results, isLoading } = useSearch();
   const navigate = useNavigate();
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  // Pick up externally-set query (e.g. from topic click on home page)
+  useEffect(() => {
+    if (pendingQuery) {
+      setQuery(pendingQuery);
+      onPendingQueryConsumed?.();
+      // Focus the search input so the user sees what happened
+      inputRef.current?.focus();
+    }
+  }, [pendingQuery, setQuery, onPendingQueryConsumed]);
 
   const handleResultClick = (ref: string) => {
     if (ref === "about") {
@@ -20,6 +40,7 @@ export function SearchPanel() {
     <div className="flex flex-col h-full">
       <div className="p-2 shrink-0">
         <input
+          ref={inputRef}
           type="search"
           placeholder="Search..."
           aria-label="Search posts"

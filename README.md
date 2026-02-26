@@ -6,6 +6,7 @@ A VS Code–themed developer blog built with Vite, React, TypeScript, and Tailwi
 
 - **VS Code UI** – Activity Bar, Sidebar Explorer, Tab Bar, and Status Bar
 - **Dark / Light theme** – Toggle with localStorage persistence
+- **Accessible by default** – Skip link, ARIA landmarks, keyboard navigation, focus management, screen-reader live regions
 - **Shiki syntax highlighting** – Same engine VS Code uses, rendered at build time
 - **Client-side search** – Powered by Lunr.js with a pre-built JSON index
 - **Static output** – Fast CDN-friendly pages with minimal JavaScript
@@ -80,13 +81,16 @@ If `SITE_URL` is not set, the generator falls back to `https://rpothin.github.io
 ```
 ├── content/              # Markdown source files
 │   ├── about.md
+│   ├── privacy.md
+│   ├── tips.md
 │   └── posts/
+├── docs/                 # Maintenance notes (accessibility, icons, images, videos)
 ├── scripts/
 │   └── build-content.ts  # Generates file-tree, search index, rendered HTML
 ├── src/
 │   ├── components/       # ActivityBar, Sidebar, FileExplorer, etc.
 │   ├── hooks/            # useTheme, useSearch
-│   ├── pages/            # HomePage, PostPage, AboutPage
+│   ├── pages/            # HomePage, PostPage, TipsPage, AboutPage, etc.
 │   └── types.ts
 ├── .devcontainer/        # Codespaces configuration
 └── .github/workflows/    # CI/CD pipeline

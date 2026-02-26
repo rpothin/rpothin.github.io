@@ -12,7 +12,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@shikijs/markdown-it": "^3.22.0",
+    "@shikijs/markdown-it": "^3.23.0",
     "gray-matter": "^4.0.3",
     "lunr": "^2.3.9",
     "markdown-it": "^14.1.0",

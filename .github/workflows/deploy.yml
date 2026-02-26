@@ -4,13 +4,32 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches: [main]
+    paths:
+      - "content/**"
+      - "src/**"
+      - "public/**"
+      - "scripts/**"
+      - "index.html"
+      - "package*.json"
+      - "tsconfig*.json"
+      - "vite.config.ts"
+      - "eslint.config.js"
   pull_request:
     branches: [main]
+    paths:
+      - "content/**"
+      - "src/**"
+      - "public/**"
+      - "scripts/**"
+      - "index.html"
+      - "package*.json"
+      - "tsconfig*.json"
+      - "vite.config.ts"
+      - "eslint.config.js"
+  workflow_dispatch:
 
 permissions:
   contents: read
-  pages: write
-  id-token: write
 
 concurrency:
   group: "pages"
@@ -44,15 +63,18 @@ jobs:
         run: npx vite build
 
       - name: Upload artifact
-        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        if: github.ref == 'refs/heads/main' && (github.event_name == 'push' || github.event_name == 'workflow_dispatch')
         uses: actions/upload-pages-artifact@v3
         with:
           path: dist
 
   deploy:
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    if: github.ref == 'refs/heads/main' && (github.event_name == 'push' || github.event_name == 'workflow_dispatch')
     needs: build
     runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}

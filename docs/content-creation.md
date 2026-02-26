@@ -171,6 +171,17 @@ git push
 
 ## Tool reference
 
+### Content-standards skill
+
+|             |                                                                                                                                |
+| ----------- | ------------------------------------------------------------------------------------------------------------------------------ |
+| **File**    | `.github/skills/content-standards/SKILL.md`                                                                                    |
+| **Invoke**  | `/content-standards` in Copilot Chat or auto-loaded when working on content                                                    |
+| **Scope**   | `content/posts/` and `content/archive/`                                                                                        |
+| **Purpose** | Canonical content quality rules: frontmatter schemas, code blocks, alerts, link validation, slugs, media, confidence threshold |
+
+Both the content-ghostwriter and migration-ghostwriter agents reference this skill as their shared source of truth for content standards.
+
 ### Ghostwriter extension
 
 |                 |                                                                                                                                                                |
@@ -195,12 +206,12 @@ git push
 
 ### Content-ghostwriter agent
 
-|             |                                                                                                                        |
-| ----------- | ---------------------------------------------------------------------------------------------------------------------- |
-| **File**    | `.github/agents/content-ghostwriter.agent.md`                                                                          |
-| **Invoke**  | `@content-ghostwriter` in Copilot Chat                                                                                 |
-| **Scope**   | `content/posts/` only                                                                                                  |
-| **Purpose** | Post-processing: frontmatter validation, code annotation, alert formatting, link checking, voice review, build dry-run |
+|             |                                                                                                                                                        |
+| ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **File**    | `.github/agents/content-ghostwriter.agent.md`                                                                                                          |
+| **Invoke**  | `@content-ghostwriter` in Copilot Chat                                                                                                                 |
+| **Scope**   | `content/posts/` only                                                                                                                                  |
+| **Purpose** | Post-processing: applies content standards from the `content-standards` skill, plus agent-specific rules (internal links, voice review, build dry-run) |
 
 ---
 

@@ -409,6 +409,26 @@ pre {
   font-weight: 600;
 }
 
+/* ── Focus-visible outlines ── */
+/*
+  Only show focus rings for keyboard navigation (not mouse clicks).
+  We use :focus-visible for modern browsers; the outline is suppressed
+  for elements that already manage their own focused appearance
+  (e.g. the main landmark, which uses tabIndex=-1 for programmatic focus).
+*/
+
+:focus-visible {
+  outline: 2px solid var(--vscode-statusBar-background);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* Suppress the outline on the main element — it only receives programmatic
+   focus (via ref.focus()) and should never show a ring. */
+main:focus {
+  outline: none;
+}
+
 /* Shiki dual theme support */
 .shiki,
 .shiki span {
@@ -420,4 +440,17 @@ pre {
 [data-theme="light"] .shiki span {
   color: var(--shiki-light) !important;
   background-color: var(--shiki-light-bg) !important;
+}
+
+/* ── Welcome page card hover/focus ── */
+.welcome-card {
+  transition:
+    background-color 0.15s,
+    border-color 0.15s;
+}
+
+.welcome-card:hover,
+.welcome-card:focus-within {
+  background-color: var(--vscode-list-hoverBackground) !important;
+  border-color: var(--vscode-statusBar-background) !important;
 }

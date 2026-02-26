@@ -32,6 +32,27 @@
     <!-- End Cloudflare Web Analytics -->
   </head>
   <body>
+    <a
+      href="#main-content"
+      style="
+        position: absolute;
+        left: -9999px;
+        top: auto;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+        z-index: -1;
+      "
+      onfocus="
+        this.style.cssText =
+          'position:fixed;top:0;left:0;width:auto;height:auto;padding:8px 16px;background:#007acc;color:#fff;font-size:14px;z-index:9999;border:none;text-decoration:none;'
+      "
+      onblur="
+        this.style.cssText =
+          'position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden;z-index:-1;'
+      "
+      >Skip to main content</a
+    >
     <div id="root"></div>
     <script>
       // Hash-based URL backward compatibility handler

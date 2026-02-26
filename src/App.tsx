@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect, useRef } from "react";
 import {
   BrowserRouter,
   Routes,
@@ -15,6 +15,7 @@ import { HomePage } from "./pages/HomePage";
 import { PostPage } from "./pages/PostPage";
 import { AboutPage } from "./pages/AboutPage";
 import { PrivacyPage } from "./pages/PrivacyPage";
+import { TipsPage } from "./pages/TipsPage";
 import { ArchivePage } from "./pages/ArchivePage";
 import { useTheme } from "./hooks/useTheme";
 
@@ -40,6 +41,7 @@ const WELCOME_TAB: Tab = {
 function routeToTabId(pathname: string): string {
   if (pathname === "/about") return "about";
   if (pathname === "/privacy") return "privacy";
+  if (pathname === "/tips") return "tips";
   if (pathname.startsWith("/posts/"))
     return `posts/${pathname.replace("/posts/", "")}`;
   if (pathname.startsWith("/archive/")) return pathname.slice(1);
@@ -48,9 +50,11 @@ function routeToTabId(pathname: string): string {
 
 function AppLayout() {
   const { theme, toggleTheme } = useTheme();
+  const mainRef = useRef<HTMLElement>(null);
   const [sidebarView, setSidebarView] = useState<"explorer" | "search">(
     "explorer",
   );
+  const [pendingSearchQuery, setPendingSearchQuery] = useState("");
   // Initialize sidebar visibility based on responsive logic (see useEffect below)
   const [sidebarVisible, setSidebarVisible] = useState(() => {
     // Guard against SSR
@@ -122,16 +126,23 @@ function AppLayout() {
 
   const activeTabId = routeToTabId(location.pathname);
 
+  // Move focus to main content on route change for screen-reader users
+  useEffect(() => {
+    mainRef.current?.focus();
+  }, [location.pathname]);
+
   const currentPath =
     location.pathname === "/about"
       ? "about"
       : location.pathname === "/privacy"
         ? "privacy"
-        : location.pathname.startsWith("/posts/")
-          ? `posts/${location.pathname.replace("/posts/", "")}`
-          : location.pathname.startsWith("/archive/")
-            ? location.pathname.slice(1)
-            : "";
+        : location.pathname === "/tips"
+          ? "tips"
+          : location.pathname.startsWith("/posts/")
+            ? `posts/${location.pathname.replace("/posts/", "")}`
+            : location.pathname.startsWith("/archive/")
+              ? location.pathname.slice(1)
+              : "";
 
   const handleMeta = useCallback((meta: PageMeta) => {
     setPageMeta(meta);
@@ -219,6 +230,7 @@ function AppLayout() {
         onViewChange={setSidebarView}
         onAbout={() => navigate("/about")}
         onPrivacy={() => navigate("/privacy")}
+        onTips={() => navigate("/tips")}
         theme={theme}
         onToggleTheme={toggleTheme}
         sidebarVisible={sidebarVisible}
@@ -228,6 +240,8 @@ function AppLayout() {
         activeView={sidebarView}
         visible={sidebarVisible}
         currentPath={currentPath}
+        pendingSearchQuery={pendingSearchQuery}
+        onSearchQueryConsumed={() => setPendingSearchQuery("")}
       />
       <div className="flex flex-col flex-1 min-w-0">
         <TabBar
@@ -238,14 +252,33 @@ function AppLayout() {
           onCloseOtherTabs={handleCloseOtherTabs}
           onCloseAllTabs={handleCloseAllTabs}
         />
-        <main className="flex-1 overflow-y-auto">
+        <main
+          id="main-content"
+          ref={mainRef}
+          tabIndex={-1}
+          className="flex-1 overflow-y-auto"
+          style={{ outline: "none" }}
+        >
           <Routes>
-            <Route path="/" element={<HomePage onMeta={handleMeta} />} />
+            <Route
+              path="/"
+              element={
+                <HomePage
+                  onMeta={handleMeta}
+                  onSearchTopic={(tag) => {
+                    setPendingSearchQuery(tag);
+                    setSidebarView("search");
+                    if (!sidebarVisible) setSidebarVisible(true);
+                  }}
+                />
+              }
+            />
             <Route path="/about" element={<AboutPage onMeta={handleMeta} />} />
             <Route
               path="/privacy"
               element={<PrivacyPage onMeta={handleMeta} />}
             />
+            <Route path="/tips" element={<TipsPage onMeta={handleMeta} />} />
             <Route
               path="/posts/:slug"
               element={<PostPage onMeta={handleMeta} />}

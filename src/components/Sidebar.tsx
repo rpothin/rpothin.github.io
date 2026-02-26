@@ -5,13 +5,22 @@ interface SidebarProps {
   activeView: "explorer" | "search";
   visible: boolean;
   currentPath: string;
+  pendingSearchQuery?: string;
+  onSearchQueryConsumed?: () => void;
 }
 
-export function Sidebar({ activeView, visible, currentPath }: SidebarProps) {
+export function Sidebar({
+  activeView,
+  visible,
+  currentPath,
+  pendingSearchQuery,
+  onSearchQueryConsumed,
+}: SidebarProps) {
   if (!visible) return null;
 
   return (
-    <div
+    <nav
+      aria-label={activeView === "explorer" ? "File explorer" : "Search"}
       className="flex flex-col h-full overflow-hidden"
       style={{
         width: 250,
@@ -21,6 +30,7 @@ export function Sidebar({ activeView, visible, currentPath }: SidebarProps) {
     >
       <div
         className="px-4 py-2 text-xs font-semibold tracking-wider uppercase"
+        aria-hidden="true"
         style={{ color: "var(--vscode-tab-inactiveForeground)" }}
       >
         {activeView === "explorer" ? "Explorer" : "Search"}
@@ -29,9 +39,12 @@ export function Sidebar({ activeView, visible, currentPath }: SidebarProps) {
         {activeView === "explorer" ? (
           <FileExplorer currentPath={currentPath} />
         ) : (
-          <SearchPanel />
+          <SearchPanel
+            pendingQuery={pendingSearchQuery}
+            onPendingQueryConsumed={onSearchQueryConsumed}
+          />
         )}
       </div>
-    </div>
+    </nav>
   );
 }

@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 
 export interface Tab {
   id: string;
@@ -29,6 +29,7 @@ export function TabBar({
     tabId: string;
   } | null>(null);
   const menuRef = useRef<HTMLDivElement>(null);
+  const tabListRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
@@ -43,8 +44,49 @@ export function TabBar({
     }
   }, [contextMenu]);
 
+  // Close context menu on Escape key
+  useEffect(() => {
+    function handleKeyDown(e: KeyboardEvent) {
+      if (e.key === "Escape" && contextMenu) {
+        setContextMenu(null);
+      }
+    }
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [contextMenu]);
+
+  // Arrow-key navigation between tabs
+  const handleTabKeyDown = useCallback(
+    (e: React.KeyboardEvent, tabId: string) => {
+      const currentIndex = tabs.findIndex((t) => t.id === tabId);
+      if (e.key === "ArrowRight") {
+        e.preventDefault();
+        const nextIndex = (currentIndex + 1) % tabs.length;
+        onSelectTab(tabs[nextIndex].id);
+        // Move focus to the newly selected tab element
+        const tabEls =
+          tabListRef.current?.querySelectorAll<HTMLElement>("[role='tab']");
+        tabEls?.[nextIndex]?.focus();
+      } else if (e.key === "ArrowLeft") {
+        e.preventDefault();
+        const prevIndex = (currentIndex - 1 + tabs.length) % tabs.length;
+        onSelectTab(tabs[prevIndex].id);
+        const tabEls =
+          tabListRef.current?.querySelectorAll<HTMLElement>("[role='tab']");
+        tabEls?.[prevIndex]?.focus();
+      } else if (e.key === "Delete" || e.key === "Backspace") {
+        e.preventDefault();
+        onCloseTab(tabId);
+      }
+    },
+    [tabs, onSelectTab, onCloseTab],
+  );
+
   return (
     <div
+      ref={tabListRef}
+      role="tablist"
+      aria-label="Open tabs"
       className="flex items-center h-9 overflow-x-auto relative"
       style={{ backgroundColor: "var(--vscode-tab-inactiveBackground)" }}
     >
@@ -53,6 +95,10 @@ export function TabBar({
         return (
           <div
             key={tab.id}
+            role="tab"
+            aria-selected={isActive}
+            tabIndex={isActive ? 0 : -1}
+            id={`tab-${tab.id}`}
             className="group flex items-center gap-1 px-3 h-full text-sm whitespace-nowrap cursor-pointer select-none"
             style={{
               backgroundColor: isActive
@@ -67,12 +113,22 @@ export function TabBar({
               borderRight: "1px solid var(--vscode-editor-background)",
             }}
             onClick={() => onSelectTab(tab.id)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                onSelectTab(tab.id);
+              } else {
+                handleTabKeyDown(e, tab.id);
+              }
+            }}
             onContextMenu={(e) => {
               e.preventDefault();
               setContextMenu({ x: e.clientX, y: e.clientY, tabId: tab.id });
             }}
           >
-            <span className="text-xs">📄</span>
+            <span className="text-xs" aria-hidden="true">
+              📄
+            </span>
             <span className="max-w-40 truncate">{tab.title}</span>
             {/* Close button - always visible for active tab, on hover for others */}
             <button
@@ -88,9 +144,11 @@ export function TabBar({
                 e.stopPropagation();
                 onCloseTab(tab.id);
               }}
-              title="Close"
+              title={`Close ${tab.title}`}
+              aria-label={`Close ${tab.title}`}
+              tabIndex={-1}
             >
-              ✕
+              <span aria-hidden="true">✕</span>
             </button>
           </div>
         );
@@ -100,6 +158,8 @@ export function TabBar({
       {contextMenu && (
         <div
           ref={menuRef}
+          role="menu"
+          aria-label="Tab options"
           className="fixed z-50 py-1 rounded shadow-lg text-sm min-w-44"
           style={{
             left: contextMenu.x,
@@ -110,6 +170,7 @@ export function TabBar({
           }}
         >
           <button
+            role="menuitem"
             className="w-full text-left px-3 py-1 hover:opacity-80"
             style={{ color: "var(--vscode-input-foreground)" }}
             onMouseEnter={(e) =>
@@ -125,6 +186,7 @@ export function TabBar({
             Close
           </button>
           <button
+            role="menuitem"
             className="w-full text-left px-3 py-1 hover:opacity-80"
             style={{ color: "var(--vscode-input-foreground)" }}
             onMouseEnter={(e) =>
@@ -140,6 +202,7 @@ export function TabBar({
             Close Others
           </button>
           <button
+            role="menuitem"
             className="w-full text-left px-3 py-1 hover:opacity-80"
             style={{ color: "var(--vscode-input-foreground)" }}
             onMouseEnter={(e) =>

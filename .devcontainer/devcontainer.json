@@ -25,7 +25,8 @@
         "dbaeumer.vscode-eslint",
         "esbenp.prettier-vscode",
         "bradlc.vscode-tailwindcss",
-        "davidanson.vscode-markdownlint"
+        "davidanson.vscode-markdownlint",
+        "eliostruyf.vscode-ghostwriter"
       ],
       "settings": {
         "editor.defaultFormatter": "esbenp.prettier-vscode",

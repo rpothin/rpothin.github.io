@@ -20,6 +20,15 @@ Raw posts live in `temp/`. They share a common structure exported from Medium:
 - **No YAML frontmatter**
 - Some posts have `**Tags:**` lines; most don't
 
+## Content Standards
+
+Read `.github/skills/content-standards/SKILL.md` — it describes two modes:
+
+1. **Preparation mode** — at the start of your workflow, read `references/quality-standards.md` (linked from the skill) to load the detailed rules before making any changes.
+2. **Review mode** — when you consider a post publishable, invoke a review sub-agent using the prompt template in the skill. Pass context notes about intentional choices (e.g., images removed per migration rules, TODO comments left for the author).
+
+Use the **archive 6-field schema** (with `archived: true` and `originalUrl`). If a learned pattern recurs across multiple posts, apply it to subsequent posts without re-asking.
+
 ## Target Format
 
 Each output file must have this structure:
@@ -42,18 +51,20 @@ originalUrl: "https://medium.com/rapha%C3%ABl-pothin/<original-slug>"
 
 ## Transformation Rules
 
+Apply the content standards from the skill (frontmatter field rules, first heading removal, code blocks, alerts, link validation, slug naming, confidence threshold), plus these migration-specific rules:
+
 ### 1. Frontmatter Generation
 
 - **title**: Extract from the first `# heading`. Keep the original wording.
 - **date**: Parse from `**Publication Date:**` or `*Published on*` lines. Output as `YYYY-MM-DD`.
-- **tags**: Infer freely from the post content. Use lowercase kebab-case. Aim for 3-5 tags per post.
-- **description**: Write a genuine 1-2 sentence summary of the post. Do not copy the first paragraph verbatim — synthesise.
+- **tags**: Infer from content. 3–5 lowercase kebab-case tags.
+- **description**: 1–2 sentence synthesis — do not copy the first paragraph.
 - **archived**: Always `true`.
-- **originalUrl**: Construct from the post title using Medium's URL pattern for the author `rapha%C3%ABl-pothin`.
+- **originalUrl**: Construct from the post title using Medium's URL pattern for author `rapha%C3%ABl-pothin`.
 
 ### 2. Remove Embedded Metadata
 
-Strip these lines from the body entirely (they are now in frontmatter):
+Strip these lines from the body (now captured in frontmatter):
 
 - `**Estimated Reading Duration:** ...`
 - `**Publication Date:** ...`
@@ -68,59 +79,14 @@ Strip these lines from the body entirely (they are now in frontmatter):
 - Remove lines matching `![Image description: "..."]` or similar `![...]` patterns with no URL.
 - **Critical**: After removing an image, review the surrounding text for dangling references like "as shown in the image above", "see the illustration below", "the screenshot shows...", etc. Rewrite those sentences to make sense without the image — either remove the reference or rephrase to describe the concept inline.
 
-### 4. Code Block Classification and Language Hints
-
-Before adding language annotations, first **classify** each bare ` ``` ` block:
-
-**Is it actually code?** A block is code if it contains syntax from a programming or markup language, a command-line instruction, a configuration file, or a structured data format (JSON, YAML, XML, etc.).
-
-**Is it formatted prose?** Medium authors often abuse code blocks as a visual callout — for option lists, notes, warnings, or inline instructions. These blocks typically contain plain English sentences, bullet-style lists with no code syntax, or labels like "Notes:", "Warning:", "Example:". **Convert these to proper Markdown instead of annotating them as code:**
-
-| Prose block type           | Convert to                                                   |
-| -------------------------- | ------------------------------------------------------------ |
-| Warning / important note   | `> [!WARNING]\n> ...` GitHub alert                           |
-| Informational note / aside | `> [!NOTE]\n> ...` GitHub alert                              |
-| Tip or best practice       | `> [!TIP]\n> ...` GitHub alert                               |
-| Critical prerequisite      | `> [!IMPORTANT]\n> ...` GitHub alert                         |
-| Dangerous/irreversible     | `> [!CAUTION]\n> ...` GitHub alert                           |
-| List of options or values  | Regular Markdown bullet list, under a short lead-in sentence |
-| Example narration          | Plain paragraph                                              |
-
-Available alert types: `NOTE` (blue), `TIP` (green), `IMPORTANT` (purple), `WARNING` (amber), `CAUTION` (red).
-
-For blocks that **are** code, add language annotations where the language is identifiable:
-
-- PowerShell, Bash, TypeScript, JavaScript, JSON, YAML, CSS, HTML, C#, XML, OData, PowerFx, Markdown
-- If the language is genuinely ambiguous, leave the block unannotated rather than guessing wrong.
-
-### 5. Cross-Link Fixing
+### 4. Cross-Link Fixing
 
 - Replace links to `medium.com/raphaël-pothin/...` or `medium.com/rapha%C3%ABl-pothin/...` that point to other posts **in the temp/ folder** with internal `/archive/<slug>` links.
 - For cross-links to posts NOT in temp/ (external Medium posts by other authors), leave them as-is.
 
-### 6. Archive Notice
+### 5. Archive Notice
 
 Insert the archive notice blockquote immediately after the frontmatter, before the body content. The publication date is shown via badges rendered by the ArchivePage component, so do **not** include it in the notice text.
-
-### 7. First Heading
-
-**Remove the first `# heading`** from the body — it duplicates the `title` field and will be rendered by the ArchivePage component.
-
-### 8. Link Validation
-
-Use the `web` tool to check **every external link** in the post. Apply the following based on the result:
-
-| Result                                                                                                                      | Action                                                                                                                                                                                                                                                                                            |
-| --------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **200 OK** (same content)                                                                                                   | Keep the link as-is.                                                                                                                                                                                                                                                                              |
-| **Permanent redirect** (301/308, or the page loads at a different URL — e.g., `docs.microsoft.com` → `learn.microsoft.com`) | **Update the URL** silently to the final destination.                                                                                                                                                                                                                                             |
-| **404 / Gone / unreachable**                                                                                                | **Remove the link markup** but keep the anchor text as plain text. If the surrounding sentence only makes sense as a "click here" reference, rewrite it to describe the concept inline instead. Add a `<!-- TODO: review — dead link removed: <original-url> -->` comment so the user can verify. |
-| **Soft 404** (page loads but content is clearly unrelated — e.g., a generic "page not found" body, a domain-parked page)    | Treat the same as a 404.                                                                                                                                                                                                                                                                          |
-| **Timeout / network error**                                                                                                 | Do **not** assume the link is dead. Keep it as-is but add `<!-- TODO: review — link could not be verified: <url> -->`.                                                                                                                                                                            |
-
-**Important**: When multiple links redirect to the same new domain pattern (e.g., all `docs.microsoft.com` links redirect to `learn.microsoft.com`), apply the pattern to remaining links in the same post without re-fetching each one individually — only verify a sample to confirm the pattern holds, then apply it.
-
-Do **not** modify anchor text when updating a URL — only the `href` changes.
 
 ## Series Handling
 
@@ -169,26 +135,7 @@ The current post's line should be bold (not a link) with a " ← _you are here_"
 
 ### Standalone Posts
 
-All other posts go directly under `content/archive/` with a kebab-case slug derived from the filename (strip the date prefix and convert underscores/spaces to hyphens).
-
-## Slug Rules
-
-- Strip the `YYYYMMDD_` date prefix from the filename.
-- Convert to lowercase kebab-case.
-- Remove trailing underscores or special characters.
-- Examples:
-  - `20210804_Tracking_changes_in_open_source_projects.md` → `tracking-changes-in-open-source-projects.md`
-  - `20230213_Am_I_a_Site_Reliability_Engineer_.md` → `am-i-a-site-reliability-engineer.md`
-
-## Confidence & Asking Questions
-
-Operate on a **confidence threshold**:
-
-- **High confidence** (clear date, obvious tags, unambiguous code language): proceed silently.
-- **Medium confidence** (reasonable guess but could be wrong): proceed but add a `<!-- TODO: review — <reason> -->` HTML comment above the uncertain element.
-- **Low confidence** (genuinely unsure — e.g., post topic doesn't map to clear tags, code language truly ambiguous, a sentence references a removed image in a way that's hard to rephrase): **stop and ask** using `#tool:vscode_askQuestions` before continuing.
-
-If a pattern recurs across multiple posts (e.g., you discover a consistent way to handle a certain image reference style), apply that pattern to all subsequent posts without re-asking.
+All other posts go directly under `content/archive/` with a kebab-case slug derived from the filename (strip the date prefix and convert underscores/spaces to hyphens). See the content-standards skill for slug naming rules.
 
 ## Migration Tracker Update
 
@@ -208,16 +155,19 @@ Apply all four changes in a single edit to the file. Do this **after** the archi
 
 ## Workflow
 
-1. Read the specified `temp/` post(s).
-2. Use the todo list to track each post's conversion progress.
-3. For each post:
+1. Read `.github/skills/content-standards/SKILL.md` for the two-mode overview and procedure checklist.
+2. **Preparation mode** — read `.github/skills/content-standards/references/quality-standards.md` to load the detailed rules.
+3. Read the specified `temp/` post(s).
+4. Use the todo list to track each post's conversion progress.
+5. For each post:
    a. Parse metadata (title, date, tags if present).
    b. Determine target path (standalone vs. series subfolder).
    c. Apply all transformation rules (including link validation via the `web` tool).
    d. Write the output file to `content/archive/<path>`.
-   e. Update the Archive Migration Tracker in `plans/medium-posts-migration.md` (see Migration Tracker Update section).
-4. After each post, briefly confirm what was written, note the updated tracker counts, and flag any TODO comments left for review.
-5. After the batch is complete, provide a summary table: post title, target path, tags assigned, and any items flagged for review.
+   e. **Review mode** — if the post is in a publishable state, invoke the review sub-agent using the prompt template from the skill. Pass context notes (e.g., "Images removed per migration rules", "Archive notice inserted"). Handle the report: fix issues (max 2 review cycles), then proceed.
+   f. Update the Archive Migration Tracker in `plans/medium-posts-migration.md` (see Migration Tracker Update section).
+6. After each post, briefly confirm what was written, note the updated tracker counts, the review outcome, and flag any TODO comments left for review.
+7. After the batch is complete, provide a summary table: post title, target path, tags assigned, review outcome, and any items flagged for review.
 
 ## Constraints
 

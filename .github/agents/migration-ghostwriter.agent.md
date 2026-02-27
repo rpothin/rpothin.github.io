@@ -22,7 +22,10 @@ Raw posts live in `temp/`. They share a common structure exported from Medium:
 
 ## Content Standards
 
-Before starting any transformation, read `.github/skills/content-standards/SKILL.md`. It defines the canonical rules this agent must apply for: frontmatter field rules, first heading removal, code block classification and language annotation, GitHub alert formatting, link validation, slug naming, and the confidence threshold.
+Read `.github/skills/content-standards/SKILL.md` — it describes two modes:
+
+1. **Preparation mode** — at the start of your workflow, read `references/quality-standards.md` (linked from the skill) to load the detailed rules before making any changes.
+2. **Review mode** — when you consider a post publishable, invoke a review sub-agent using the prompt template in the skill. Pass context notes about intentional choices (e.g., images removed per migration rules, TODO comments left for the author).
 
 Use the **archive 6-field schema** (with `archived: true` and `originalUrl`). If a learned pattern recurs across multiple posts, apply it to subsequent posts without re-asking.
 
@@ -152,17 +155,19 @@ Apply all four changes in a single edit to the file. Do this **after** the archi
 
 ## Workflow
 
-1. Read the specified `temp/` post(s).
-2. Read `.github/skills/content-standards/SKILL.md` for the canonical content rules.
-3. Use the todo list to track each post's conversion progress.
-4. For each post:
+1. Read `.github/skills/content-standards/SKILL.md` for the two-mode overview and procedure checklist.
+2. **Preparation mode** — read `.github/skills/content-standards/references/quality-standards.md` to load the detailed rules.
+3. Read the specified `temp/` post(s).
+4. Use the todo list to track each post's conversion progress.
+5. For each post:
    a. Parse metadata (title, date, tags if present).
    b. Determine target path (standalone vs. series subfolder).
    c. Apply all transformation rules (including link validation via the `web` tool).
    d. Write the output file to `content/archive/<path>`.
-   e. Update the Archive Migration Tracker in `plans/medium-posts-migration.md` (see Migration Tracker Update section).
-5. After each post, briefly confirm what was written, note the updated tracker counts, and flag any TODO comments left for review.
-6. After the batch is complete, provide a summary table: post title, target path, tags assigned, and any items flagged for review.
+   e. **Review mode** — if the post is in a publishable state, invoke the review sub-agent using the prompt template from the skill. Pass context notes (e.g., "Images removed per migration rules", "Archive notice inserted"). Handle the report: fix issues (max 2 review cycles), then proceed.
+   f. Update the Archive Migration Tracker in `plans/medium-posts-migration.md` (see Migration Tracker Update section).
+6. After each post, briefly confirm what was written, note the updated tracker counts, the review outcome, and flag any TODO comments left for review.
+7. After the batch is complete, provide a summary table: post title, target path, tags assigned, review outcome, and any items flagged for review.
 
 ## Constraints
 

@@ -42,16 +42,17 @@ If a voice profile exists in `.ghostwriter/voices/`, read the most recent one an
 
 ## Content Standards
 
-Before starting any transformation, read `.github/skills/content-standards/SKILL.md`. It defines the canonical rules this agent must apply:
+Read `.github/skills/content-standards/SKILL.md` — it describes two modes:
 
-- Frontmatter field rules — use the **new-posts 4-field schema** (no `archived` or `originalUrl`)
-- First heading removal
-- Code block classification and language annotation
-- GitHub alert formatting
-- Link validation procedures
-- Slug naming and confidence threshold
+1. **Preparation mode** — at the start of your workflow, read `references/quality-standards.md` (linked from the skill) to load the detailed rules before making any changes.
+2. **Review mode** — when you consider the content publishable, invoke a review sub-agent using the prompt template in the skill. Pass context notes about any intentional choices (e.g., TODO comments left for the author).
 
-**Apply every rule from the skill.** New posts must not contain `archived`, `originalUrl`, `draft`, or any frontmatter field beyond `title`, `date`, `tags`, and `description`. If `date` is missing, default to today.
+Key reminders for new posts:
+
+- Use the **4-field frontmatter schema** — no `archived`, `originalUrl`, `draft`, or any extra fields.
+- If `date` is missing, default to today.
+
+**Apply every rule from the quality standards reference.** The skill's procedure checklist gives you the order; the reference file has the details.
 
 ## Agent-Specific Rules
 
@@ -91,14 +92,17 @@ npm run build:content
 
 ## Workflow
 
-1. Read the specified draft file.
-2. Read `.github/skills/content-standards/SKILL.md` for the canonical content rules.
-3. Use the todo list to track each transformation step.
-4. If a voice profile exists in `.ghostwriter/voices/`, read the most recent one.
-5. Apply all content standards from the skill, then the agent-specific rules (steps 1-4 above).
-6. Save the cleaned file.
-7. Run the build dry-run (agent-specific rule 4).
-8. Provide a summary: what was changed, what was flagged for review (`TODO` / `VOICE` comments), and the build result.
+1. Read `.github/skills/content-standards/SKILL.md` for the two-mode overview and procedure checklist.
+2. **Preparation mode** — read `.github/skills/content-standards/references/quality-standards.md` to load the detailed rules.
+3. Read the specified draft file.
+4. Use the todo list to track each transformation step.
+5. If a voice profile exists in `.ghostwriter/voices/`, read the most recent one.
+6. Apply all content standards from the quality standards reference, then the agent-specific rules (steps 1-4 above).
+7. Save the cleaned file.
+8. **Review mode** — if the content is in a publishable state, invoke the review sub-agent using the prompt template from the skill. Pass context notes about any intentional choices. If still iterating on structural issues, defer the review.
+9. Handle the review report: fix reported issues (max 2 review cycles), then proceed.
+10. Run the build dry-run (agent-specific rule 4).
+11. Provide a summary: what was changed, what was flagged for review (`TODO` / `VOICE` comments), the review outcome, and the build result.
 
 ## Constraints
 

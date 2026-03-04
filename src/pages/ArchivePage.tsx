@@ -17,6 +17,17 @@ function slugToTitle(slug: string): string {
     .join(" ");
 }
 
+function extractFirstH1Text(html: string): string | null {
+  try {
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(html, "text/html");
+    const text = doc.querySelector("h1")?.textContent?.trim() || "";
+    return text || null;
+  } catch {
+    return null;
+  }
+}
+
 const buildBadgeUrl = (
   label: string,
   message: string,
@@ -109,10 +120,7 @@ export function ArchivePage({ onMeta }: ArchivePageProps) {
   const title =
     meta?.title ||
     (() => {
-      const h1Match = html.match(/<h1[^>]*>([\s\S]*?)<\/h1>/i);
-      return h1Match
-        ? h1Match[1].replace(/<[^>]*>/g, "").trim()
-        : slugToTitle(archivePath || "");
+      return extractFirstH1Text(html) || slugToTitle(archivePath || "");
     })();
 
   return (

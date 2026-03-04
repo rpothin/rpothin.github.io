@@ -19,14 +19,19 @@ So when you write an image in Markdown, it becomes:
 
 For a post with slug `<slug>` (the filename under `content/posts/`, without `.md`), put images here:
 
-- `public/content/posts/<slug>/...`
+- `content/posts/<slug>/...`
+
+> [!IMPORTANT]
+> Store files under `content/`, **not** `public/content/`. The `public/content/` directory is generated at build time and is listed in `.gitignore` — files placed there directly will not be committed to the repository.
+
+The build script copies all non-Markdown files from `content/` to `public/content/` recursively, so the images will be accessible under `/content/posts/<slug>/...` in the browser.
 
 Example:
 
 ```
+content/posts/getting-started-with-github-actions/workflow.png
+content/posts/getting-started-with-github-actions/runner-logs.png
 content/posts/getting-started-with-github-actions.md
-public/content/posts/getting-started-with-github-actions/workflow.png
-public/content/posts/getting-started-with-github-actions/runner-logs.png
 ```
 
 ### Referencing the images from Markdown
@@ -63,14 +68,14 @@ Those pages also render HTML from `public/content/*.html`.
 
 A simple convention that matches the URL space is:
 
-- `public/content/about/<files>` → reference as `/content/about/<files>`
-- `public/content/privacy/<files>` → reference as `/content/privacy/<files>`
+- `content/about/<files>` → reference as `/content/about/<files>`
+- `content/privacy/<files>` → reference as `/content/privacy/<files>`
 
 Example:
 
 ```
 content/about.md
-public/content/about/headshot.jpg
+content/about/headshot.jpg
 ```
 
 Markdown:

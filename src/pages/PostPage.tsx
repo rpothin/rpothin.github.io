@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
+import { AudioPlayer } from "../components/AudioPlayer";
 import { MarkdownRenderer } from "../components/MarkdownRenderer";
 import type { PostMeta } from "../types";
 
@@ -129,6 +130,7 @@ export function PostPage({ onMeta }: PostPageProps) {
           </div>
         </div>
       )}
+      {meta?.audioUrl && <AudioPlayer src={meta.audioUrl} title={meta.title} />}
       <MarkdownRenderer html={processedHtml} />
     </div>
   );

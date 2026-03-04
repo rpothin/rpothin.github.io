@@ -5,6 +5,7 @@ tags: [power-platform, security, generative-ai, responsible-ai, copilot-studio]
 description: "An overview of Generative AI security risks — prompt injection, plugin vulnerabilities, indirect injection — alongside the community knowledge bases and practical Power Platform-specific mitigations for Copilots and prompts."
 archived: true
 originalUrl: "https://medium.com/rapha%C3%ABl-pothin/power-platforms-protection-building-secure-and-responsible-generative-ai-solutions"
+audioUrl: /content/archive/power-platform-protection/07-building-secure-and-responsible-generative-ai-solutions.m4a
 ---
 
 > [!NOTE]

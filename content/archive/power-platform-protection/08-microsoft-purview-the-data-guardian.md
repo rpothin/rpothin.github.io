@@ -5,6 +5,7 @@ tags: [power-platform, security, microsoft-purview, dataverse, data-governance]
 description: "How Microsoft Purview's Data Map, Unified Catalog, and DSPM for AI can be used to classify and govern Dataverse data — including scanning tables for sensitivity labels, onboarding Fabric for Data Quality monitoring, and monitoring AI activity."
 archived: true
 originalUrl: "https://medium.com/rapha%C3%ABl-pothin/power-platforms-protection-microsoft-purview-the-data-guardian"
+audioUrl: /content/archive/power-platform-protection/08-microsoft-purview-the-data-guardian.m4a
 ---
 
 > [!NOTE]

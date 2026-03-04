@@ -54,7 +54,7 @@ export function AudioPlayer({ src, title }: AudioPlayerProps) {
 
   return (
     <div
-      className="flex items-center gap-3 rounded px-4 py-3 mb-6"
+      className="flex flex-col gap-2 rounded px-4 py-3 mb-6 sm:flex-row sm:items-center sm:gap-3"
       style={{
         background: "var(--vscode-editor-inactiveSelectionBackground)",
         border: "1px solid var(--vscode-panel-border)",
@@ -75,71 +75,77 @@ export function AudioPlayer({ src, title }: AudioPlayerProps) {
         onLoadedMetadata={handleLoadedMetadata}
       />
 
-      {/* Play / Pause button */}
-      <button
-        onClick={togglePlayPause}
-        aria-label={playing ? "Pause audio" : "Play audio"}
-        className="shrink-0 flex items-center justify-center w-8 h-8 rounded-full focus:outline-none focus-visible:ring-2"
-        style={{
-          background: "var(--vscode-button-background)",
-          color: "var(--vscode-button-foreground)",
-        }}
-      >
-        {playing ? (
-          /* Pause icon */
-          <svg
-            width="14"
-            height="14"
-            viewBox="0 0 14 14"
-            fill="currentColor"
-            aria-hidden="true"
-          >
-            <rect x="2" y="1" width="4" height="12" rx="1" />
-            <rect x="8" y="1" width="4" height="12" rx="1" />
-          </svg>
-        ) : (
-          /* Play icon */
-          <svg
-            width="14"
-            height="14"
-            viewBox="0 0 14 14"
-            fill="currentColor"
-            aria-hidden="true"
-          >
-            <polygon points="2,1 13,7 2,13" />
-          </svg>
-        )}
-      </button>
+      {/* Row 1 (mobile): Play/Pause button + Label */}
+      <div className="flex items-center gap-2 min-w-0">
+        {/* Play / Pause button */}
+        <button
+          onClick={togglePlayPause}
+          aria-label={playing ? "Pause audio" : "Play audio"}
+          className="shrink-0 flex items-center justify-center w-8 h-8 rounded-full focus:outline-none focus-visible:ring-2"
+          style={{
+            background: "var(--vscode-button-background)",
+            color: "var(--vscode-button-foreground)",
+          }}
+        >
+          {playing ? (
+            /* Pause icon */
+            <svg
+              width="14"
+              height="14"
+              viewBox="0 0 14 14"
+              fill="currentColor"
+              aria-hidden="true"
+            >
+              <rect x="2" y="1" width="4" height="12" rx="1" />
+              <rect x="8" y="1" width="4" height="12" rx="1" />
+            </svg>
+          ) : (
+            /* Play icon */
+            <svg
+              width="14"
+              height="14"
+              viewBox="0 0 14 14"
+              fill="currentColor"
+              aria-hidden="true"
+            >
+              <polygon points="2,1 13,7 2,13" />
+            </svg>
+          )}
+        </button>
 
-      {/* Label */}
-      <span
-        className="shrink-0 text-xs font-medium"
-        style={{ color: "var(--vscode-descriptionForeground)" }}
-      >
-        {title ?? "Audio deep dive"}
-      </span>
+        {/* Label */}
+        <span
+          className="truncate min-w-0 flex-1 text-xs font-medium"
+          style={{ color: "var(--vscode-descriptionForeground)" }}
+        >
+          {title ?? "Audio deep dive"}
+        </span>
+      </div>
 
-      {/* Seek bar */}
-      <input
-        type="range"
-        min={0}
-        max={100}
-        step={0.1}
-        value={progress}
-        onChange={handleSeek}
-        aria-label="Seek"
-        className="flex-1 h-1 cursor-pointer accent-(--vscode-button-background)"
-        style={{ accentColor: "var(--vscode-button-background)" }}
-      />
+      {/* Row 2 (mobile): Seek bar + Time display */}
+      <div className="flex items-center gap-2 flex-1 min-w-0">
+        {/* Seek bar */}
+        <input
+          type="range"
+          min={0}
+          max={100}
+          step={0.1}
+          value={progress}
+          onChange={handleSeek}
+          aria-label="Seek"
+          className="flex-1 h-1 cursor-pointer accent-(--vscode-button-background)"
+          style={{ accentColor: "var(--vscode-button-background)" }}
+        />
 
-      {/* Time display */}
-      <span
-        className="shrink-0 text-xs tabular-nums"
-        style={{ color: "var(--vscode-descriptionForeground)" }}
-        aria-live="off"
-      >
-        {formatTime(currentTime)}&nbsp;/&nbsp;{formatTime(duration)}
-      </span>
+        {/* Time display */}
+        <span
+          className="shrink-0 text-xs tabular-nums"
+          style={{ color: "var(--vscode-descriptionForeground)" }}
+          aria-live="off"
+        >
+          {formatTime(currentTime)}&nbsp;/&nbsp;{formatTime(duration)}
+        </span>
+      </div>
     </div>
   );
 }

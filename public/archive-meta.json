@@ -52,7 +52,8 @@
       "dataverse",
       "azure"
     ],
-    "description": "Why Managed Identity is the right identity choice for Dataverse plug-ins integrating with Azure resources, how to configure the end-to-end setup, and the considerations needed to adopt it at scale — from assembly organization to ALM and governance."
+    "description": "Why Managed Identity is the right identity choice for Dataverse plug-ins integrating with Azure resources, how to configure the end-to-end setup, and the considerations needed to adopt it at scale — from assembly organization to ALM and governance.",
+    "audioUrl": "/content/archive/power-platform-protection/06-managed-identity-for-dataverse-plug-ins.mp3"
   },
   {
     "slug": "power-platform-protection/05-virtual-network-integration",

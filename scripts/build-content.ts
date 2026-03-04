@@ -47,6 +47,7 @@ interface PostMeta {
   date: string;
   tags: string[];
   description: string;
+  audioUrl?: string;
 }
 
 interface DocEntry {
@@ -315,7 +316,7 @@ async function main() {
     if (relPath.startsWith("posts/") || relPath.startsWith("posts\\")) {
       const postSlug = slug.replace(/^posts\//, "");
       postPlainTextBySlug.set(postSlug, stripHtml(html));
-      postsMeta.push({
+      const postMeta: PostMeta = {
         slug: postSlug,
         title: (frontmatter.title as string) || postSlug,
         date: frontmatter.date
@@ -323,13 +324,17 @@ async function main() {
           : "",
         tags: (frontmatter.tags as string[]) || [],
         description: (frontmatter.description as string) || "",
-      });
+      };
+      if (frontmatter.audioUrl) {
+        postMeta.audioUrl = frontmatter.audioUrl as string;
+      }
+      postsMeta.push(postMeta);
     }
 
     // Collect archive metadata (only for archive/ directory)
     if (relPath.startsWith("archive/") || relPath.startsWith("archive\\")) {
       const archiveSlug = slug.replace(/^archive\//, "");
-      archiveMeta.push({
+      const archiveEntry: PostMeta = {
         slug: archiveSlug,
         title: (frontmatter.title as string) || archiveSlug,
         date: frontmatter.date
@@ -337,7 +342,11 @@ async function main() {
           : "",
         tags: (frontmatter.tags as string[]) || [],
         description: (frontmatter.description as string) || "",
-      });
+      };
+      if (frontmatter.audioUrl) {
+        archiveEntry.audioUrl = frontmatter.audioUrl as string;
+      }
+      archiveMeta.push(archiveEntry);
     }
 
     // Collect search documents

@@ -5,6 +5,7 @@ tags: [power-platform, security, microsoft-sentinel, siem, dynamics-365]
 description: "A guide to Microsoft Sentinel's growing coverage of Microsoft Business Apps — setting up workspace infrastructure with Bicep and PowerShell, exploring the ASIM parsers, analytics rules, playbooks, hunting queries, and workbooks, and strategies for Power Platform teams to collaborate with security teams."
 archived: true
 originalUrl: "https://medium.com/rapha%C3%ABl-pothin/power-platforms-protection-microsoft-sentinel-the-watchtower"
+audioUrl: /content/archive/power-platform-protection/09-microsoft-sentinel-the-watchtower.m4a
 ---
 
 > [!NOTE]

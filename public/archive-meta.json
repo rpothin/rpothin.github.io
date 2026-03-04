@@ -10,7 +10,8 @@
       "siem",
       "dynamics-365"
     ],
-    "description": "A guide to Microsoft Sentinel's growing coverage of Microsoft Business Apps — setting up workspace infrastructure with Bicep and PowerShell, exploring the ASIM parsers, analytics rules, playbooks, hunting queries, and workbooks, and strategies for Power Platform teams to collaborate with security teams."
+    "description": "A guide to Microsoft Sentinel's growing coverage of Microsoft Business Apps — setting up workspace infrastructure with Bicep and PowerShell, exploring the ASIM parsers, analytics rules, playbooks, hunting queries, and workbooks, and strategies for Power Platform teams to collaborate with security teams.",
+    "audioUrl": "/content/archive/power-platform-protection/09-microsoft-sentinel-the-watchtower.m4a"
   },
   {
     "slug": "power-platform-protection/08-microsoft-purview-the-data-guardian",
@@ -23,7 +24,8 @@
       "dataverse",
       "data-governance"
     ],
-    "description": "How Microsoft Purview's Data Map, Unified Catalog, and DSPM for AI can be used to classify and govern Dataverse data — including scanning tables for sensitivity labels, onboarding Fabric for Data Quality monitoring, and monitoring AI activity."
+    "description": "How Microsoft Purview's Data Map, Unified Catalog, and DSPM for AI can be used to classify and govern Dataverse data — including scanning tables for sensitivity labels, onboarding Fabric for Data Quality monitoring, and monitoring AI activity.",
+    "audioUrl": "/content/archive/power-platform-protection/08-microsoft-purview-the-data-guardian.m4a"
   },
   {
     "slug": "power-platform-protection/07-building-secure-and-responsible-generative-ai-solutions",
@@ -36,7 +38,8 @@
       "responsible-ai",
       "copilot-studio"
     ],
-    "description": "An overview of Generative AI security risks — prompt injection, plugin vulnerabilities, indirect injection — alongside the community knowledge bases and practical Power Platform-specific mitigations for Copilots and prompts."
+    "description": "An overview of Generative AI security risks — prompt injection, plugin vulnerabilities, indirect injection — alongside the community knowledge bases and practical Power Platform-specific mitigations for Copilots and prompts.",
+    "audioUrl": "/content/archive/power-platform-protection/07-building-secure-and-responsible-generative-ai-solutions.m4a"
   },
   {
     "slug": "power-platform-protection/06-managed-identity-for-dataverse-plug-ins",
@@ -49,7 +52,8 @@
       "dataverse",
       "azure"
     ],
-    "description": "Why Managed Identity is the right identity choice for Dataverse plug-ins integrating with Azure resources, how to configure the end-to-end setup, and the considerations needed to adopt it at scale — from assembly organization to ALM and governance."
+    "description": "Why Managed Identity is the right identity choice for Dataverse plug-ins integrating with Azure resources, how to configure the end-to-end setup, and the considerations needed to adopt it at scale — from assembly organization to ALM and governance.",
+    "audioUrl": "/content/archive/power-platform-protection/06-managed-identity-for-dataverse-plug-ins.mp3"
   },
   {
     "slug": "power-platform-protection/05-virtual-network-integration",

@@ -146,7 +146,7 @@ export function ArchivePage({ onMeta }: ArchivePageProps) {
                 "calendar",
               )}
               alt={`Published ${meta.date}`}
-              className="h-5"
+              className="h-5 max-w-full"
             />
           )}
           {readingTime && (
@@ -158,20 +158,27 @@ export function ArchivePage({ onMeta }: ArchivePageProps) {
                 "clock",
               )}
               alt={`${readingTime} min read`}
-              className="h-5"
+              className="h-5 max-w-full"
             />
           )}
           {meta?.tags && meta.tags.length > 0 && (
-            <img
-              src={buildBadgeUrl(
-                "Tags",
-                meta.tags.join(" • "),
-                "8e44ad",
-                "tag",
-              )}
-              alt={`Tags: ${meta.tags.join(" • ")}`}
-              className="h-5"
-            />
+            <>
+              <span
+                className="text-xs"
+                style={{ color: "var(--vscode-descriptionForeground)" }}
+              >
+                Tags
+              </span>
+              {meta.tags.map((tag) => (
+                <span
+                  key={tag}
+                  className="inline-flex items-center text-xs px-2 py-0.5 rounded"
+                  style={{ background: "#8e44ad", color: "white" }}
+                >
+                  {tag}
+                </span>
+              ))}
+            </>
           )}
         </div>
       </div>

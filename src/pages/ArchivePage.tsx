@@ -110,9 +110,13 @@ export function ArchivePage({ onMeta }: ArchivePageProps) {
     meta?.title ||
     (() => {
       const h1Match = html.match(/<h1[^>]*>([\s\S]*?)<\/h1>/i);
-      return h1Match
-        ? h1Match[1].replace(/<[^>]*>/g, "").trim()
-        : slugToTitle(archivePath || "");
+      if (!h1Match) {
+        return slugToTitle(archivePath || "");
+      }
+      const h1Inner = h1Match[1];
+      const withoutTags = h1Inner.replace(/<[^>]*>/g, "");
+      const fullySanitized = withoutTags.replace(/[<>]/g, "").trim();
+      return fullySanitized;
     })();
 
   return (

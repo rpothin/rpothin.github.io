@@ -62,7 +62,7 @@ The voice profile teaches the AI what your writing sounds like so drafts match y
 2. Click **Generate Voice**.
 3. Select a Copilot model (e.g. GPT-4o).
 4. Click **Generate Voice Profile**.
-5. When prompted, select the `content/` folder — this gives the AI access to your published posts (both `posts/` and `archive/`) as writing samples.
+5. When prompted, select the `content/` folder — this gives the AI access to your published posts in `content/posts/` as writing samples.
 6. The profile is saved to `.ghostwriter/voices/voice-YYYY-MM-DD.md`.
 7. Review the generated profile and tweak anything that feels off.
 
@@ -177,7 +177,7 @@ git push
 | ----------- | ------------------------------------------------------------------------------------------------------------------------------ |
 | **File**    | `.github/skills/content-standards/SKILL.md`                                                                                    |
 | **Invoke**  | `/content-standards` in Copilot Chat or auto-loaded when working on content                                                    |
-| **Scope**   | `content/posts/` and `content/archive/`                                                                                        |
+| **Scope**   | `content/posts/`                                                                                                               |
 | **Purpose** | Canonical content quality rules: frontmatter schemas, code blocks, alerts, link validation, slugs, media, confidence threshold |
 
 Both the content-ghostwriter and migration-ghostwriter agents reference this skill as their shared source of truth for content standards.
@@ -217,7 +217,7 @@ Both the content-ghostwriter and migration-ghostwriter agents reference this ski
 
 ## Frontmatter schema
 
-Every post in `content/posts/` must have exactly these four fields:
+Every post in `content/posts/` must have exactly these fields:
 
 ```yaml
 ---
@@ -225,17 +225,21 @@ title: "Post Title"
 date: YYYY-MM-DD
 tags: [lowercase-kebab-case, tag-two, tag-three]
 description: "A 1-2 sentence synthesis of the post (not a copy of the opening paragraph)"
+originalUrl: "https://medium.com/..."   # optional — only for migrated posts
+originalPlatform: "Medium"              # optional — only for migrated posts
 ---
 ```
 
-| Field         | Type         | Rules                                                                    |
-| ------------- | ------------ | ------------------------------------------------------------------------ |
-| `title`       | String       | Required. Keep original wording.                                         |
-| `date`        | `YYYY-MM-DD` | Required. Publication date.                                              |
-| `tags`        | Array        | 3-5 lowercase kebab-case strings.                                        |
-| `description` | String       | 1-2 sentences. Used in RSS feed and metadata. Must be a genuine summary. |
+| Field               | Type         | Rules                                                                    |
+| ------------------- | ------------ | ------------------------------------------------------------------------ |
+| `title`             | String       | Required. Keep original wording.                                         |
+| `date`              | `YYYY-MM-DD` | Required. Publication date.                                              |
+| `tags`              | Array        | 3-5 lowercase kebab-case strings.                                        |
+| `description`       | String       | 1-2 sentences. Used in RSS feed and metadata. Must be a genuine summary. |
+| `originalUrl`       | String       | Optional. Original URL for posts migrated from another platform.         |
+| `originalPlatform`  | String       | Optional. Name of origin platform (e.g. "Medium") for migrated posts.   |
 
-Do **not** add additional fields like `draft`, `archived`, or `originalUrl` — those are only for archive posts.
+Do **not** add additional fields like `draft` or `archived`.
 
 ---
 

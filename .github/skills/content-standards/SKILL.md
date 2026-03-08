@@ -1,6 +1,6 @@
 ---
 name: content-standards
-description: "Content quality standards for this developer blog. Two modes: preparation (load standards before writing content) and review (validate content via sub-agent after writing). Covers frontmatter schemas, code-block annotation, GitHub alerts, link validation, slug naming, media rules, and confidence thresholds. Use when creating, polishing, reviewing, or migrating Markdown content under content/posts/ or content/archive/."
+description: "Content quality standards for this developer blog. Two modes: preparation (load standards before writing content) and review (validate content via sub-agent after writing). Covers frontmatter schemas, code-block annotation, GitHub alerts, link validation, slug naming, media rules, and confidence thresholds. Use when creating, polishing, reviewing, or migrating Markdown content under content/posts/."
 ---
 
 # Content Standards
@@ -27,7 +27,7 @@ Validate content **after** writing, when you consider it ready for review. Spin 
 
 Apply these checks in order when creating or polishing a Markdown file. Full details for each rule are in [references/quality-standards.md](references/quality-standards.md).
 
-1. **Validate frontmatter** — enforce the correct schema (new-post or archive).
+1. **Validate frontmatter** — enforce the correct schema (with optional provenance fields for migrated posts).
 2. **Remove duplicate first heading** — if the body starts with a `#` that matches the title.
 3. **Classify and annotate code blocks** — distinguish code from prose-in-fences; add language tags or convert to alerts/lists.
 4. **Format GitHub alerts** — convert callout-style content to `[!NOTE]`, `[!TIP]`, etc. where it genuinely fits.
@@ -65,7 +65,7 @@ Pass a brief note to the review sub-agent so it does not flag intentional choice
 
 - "3 `<!-- TODO: review -->` comments were left intentionally for author review."
 - "No voice profile exists; voice consistency was skipped."
-- "Images were deliberately removed per migration rules (archived post)."
+- "Images were deliberately removed per migration rules."
 
 ### Handling the review report
 

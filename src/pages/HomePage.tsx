@@ -216,7 +216,7 @@ export function HomePage({ onMeta, onSearchTopic }: HomePageProps) {
               </ul>
             </section>
 
-            {/* Recent content — unified posts + archive list */}
+            {/* Recent content — unified posts list */}
             <section aria-labelledby="recent-heading">
               <h2
                 id="recent-heading"

@@ -12,23 +12,18 @@ export function useSearch() {
   useEffect(() => {
     async function load() {
       try {
-        const [indexRes, metaRes, archiveRes] = await Promise.all([
+        const [indexRes, metaRes] = await Promise.all([
           fetch("/search-index.json"),
           fetch("/posts-meta.json"),
-          fetch("/archive-meta.json"),
         ]);
         const indexData = await indexRes.json();
         const metaData: PostMeta[] = await metaRes.json();
-        const archiveData: PostMeta[] = await archiveRes.json();
 
         indexRef.current = lunr.Index.load(indexData);
 
         const map = new Map<string, PostMeta>();
         for (const post of metaData) {
           map.set(`posts/${post.slug}`, post);
-        }
-        for (const item of archiveData) {
-          map.set(`archive/${item.slug}`, item);
         }
         allMetaRef.current = map;
       } catch (e) {

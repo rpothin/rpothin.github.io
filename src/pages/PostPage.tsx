@@ -135,6 +135,23 @@ export function PostPage({ onMeta }: PostPageProps) {
               </>
             )}
           </div>
+          {meta.originalUrl && meta.originalPlatform && (
+            <p
+              className="text-xs mt-1"
+              style={{ color: "var(--vscode-descriptionForeground)" }}
+            >
+              Originally published on{" "}
+              <a
+                href={meta.originalUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{ color: "var(--vscode-textLink-foreground)" }}
+              >
+                {meta.originalPlatform}
+              </a>{" "}
+              · Migrated to this site as part of my writing history
+            </p>
+          )}
         </div>
       )}
       {meta?.audioUrl && <AudioPlayer src={meta.audioUrl} title={meta.title} />}

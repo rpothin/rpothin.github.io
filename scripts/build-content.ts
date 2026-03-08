@@ -48,6 +48,8 @@ interface PostMeta {
   tags: string[];
   description: string;
   audioUrl?: string;
+  originalUrl?: string;
+  originalPlatform?: string;
 }
 
 interface DocEntry {
@@ -292,7 +294,6 @@ async function main() {
 
   const markdownFiles = collectMarkdownFiles(CONTENT_DIR);
   const postsMeta: PostMeta[] = [];
-  const archiveMeta: PostMeta[] = [];
   const searchDocs: DocEntry[] = [];
   const postPlainTextBySlug = new Map<string, string>();
 
@@ -328,25 +329,13 @@ async function main() {
       if (frontmatter.audioUrl) {
         postMeta.audioUrl = frontmatter.audioUrl as string;
       }
-      postsMeta.push(postMeta);
-    }
-
-    // Collect archive metadata (only for archive/ directory)
-    if (relPath.startsWith("archive/") || relPath.startsWith("archive\\")) {
-      const archiveSlug = slug.replace(/^archive\//, "");
-      const archiveEntry: PostMeta = {
-        slug: archiveSlug,
-        title: (frontmatter.title as string) || archiveSlug,
-        date: frontmatter.date
-          ? new Date(frontmatter.date as string).toISOString().split("T")[0]
-          : "",
-        tags: (frontmatter.tags as string[]) || [],
-        description: (frontmatter.description as string) || "",
-      };
-      if (frontmatter.audioUrl) {
-        archiveEntry.audioUrl = frontmatter.audioUrl as string;
+      if (frontmatter.originalUrl) {
+        postMeta.originalUrl = frontmatter.originalUrl as string;
       }
-      archiveMeta.push(archiveEntry);
+      if (frontmatter.originalPlatform) {
+        postMeta.originalPlatform = frontmatter.originalPlatform as string;
+      }
+      postsMeta.push(postMeta);
     }
 
     // Collect search documents
@@ -362,8 +351,8 @@ async function main() {
   // Sort posts by date descending
   postsMeta.sort((a, b) => b.date.localeCompare(a.date));
 
-  // Sort archive by date descending
-  archiveMeta.sort((a, b) => b.date.localeCompare(a.date));
+  // Generate RSS feed (original posts only — exclude migrated posts that have originalUrl)
+  const rssPostsMeta = postsMeta.filter((p) => !p.originalUrl);
 
   // Generate RSS feed (posts only)
   const channelTitle = "Raphael Pothin - Developer Blog";
@@ -372,7 +361,7 @@ async function main() {
     "Raphael Pothin's developer blog about Power Platform, GitHub, and open source";
   const lastBuildDate = new Date().toUTCString();
 
-  const rssItemsXml = postsMeta
+  const rssItemsXml = rssPostsMeta
     .slice(0, RSS_ITEM_LIMIT)
     .map((post) => {
       const postUrl = `${siteUrl}/posts/${encodeURIComponent(post.slug)}`;
@@ -452,11 +441,6 @@ async function main() {
     JSON.stringify(postsMeta, null, 2),
     "utf-8",
   );
-  fs.writeFileSync(
-    path.join(PUBLIC_DIR, "archive-meta.json"),
-    JSON.stringify(archiveMeta, null, 2),
-    "utf-8",
-  );
 
   // Copy non-Markdown assets (images, etc.) from content/ to public/content/
   const copiedAssets = copyContentAssets(CONTENT_DIR, OUTPUT_CONTENT_DIR);
@@ -467,10 +451,7 @@ async function main() {
   console.log(`✅ Generated search-index.json`);
   console.log(`✅ Generated posts-meta.json with ${postsMeta.length} posts`);
   console.log(
-    `✅ Generated archive-meta.json with ${archiveMeta.length} archive entries`,
-  );
-  console.log(
-    `✅ Generated rss.xml with ${Math.min(postsMeta.length, RSS_ITEM_LIMIT)} posts`,
+    `✅ Generated rss.xml with ${Math.min(rssPostsMeta.length, RSS_ITEM_LIMIT)} posts`,
   );
 }
 

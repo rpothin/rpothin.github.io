@@ -12,6 +12,8 @@ export interface PostMeta {
   tags: string[];
   description: string;
   audioUrl?: string;
+  originalUrl?: string;
+  originalPlatform?: string;
 }
 
 export interface SearchResult {

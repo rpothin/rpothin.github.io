@@ -10,10 +10,9 @@ Here's how to find your way around.
 
 ## Explorer sidebar
 
-Click the **folder icon** in the activity bar (the narrow strip on the far left) to toggle the Explorer sidebar. It shows two collapsible sections:
+Click the **folder icon** in the activity bar (the narrow strip on the far left) to toggle the Explorer sidebar. It shows a single collapsible section:
 
-- **POSTS** — original blog posts, newest first
-- **ARCHIVE** — past Medium articles, organized by topic and series
+- **POSTS** — all blog posts, newest first. Posts originally published on another platform include a note at the top with a link to the original.
 
 Click any title to open it as a tab, just like opening a file in your editor.
 

@@ -18,7 +18,7 @@ Click any title to open it as a tab, just like opening a file in your editor.
 
 ## Search
 
-Click the **magnifying glass icon** in the activity bar to open the Search panel. Type a keyword and results will appear instantly — the index covers all posts and archive content.
+Click the **magnifying glass icon** in the activity bar to open the Search panel. Type a keyword and results will appear instantly — the index covers all posts and pages.
 
 ## Tabs
 

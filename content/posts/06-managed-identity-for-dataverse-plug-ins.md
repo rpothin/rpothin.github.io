@@ -5,7 +5,7 @@ tags: [power-platform, security, managed-identity, dataverse, azure, series-powe
 description: "Why Managed Identity is the right identity choice for Dataverse plug-ins integrating with Azure resources, how to configure the end-to-end setup, and the considerations needed to adopt it at scale — from assembly organization to ALM and governance."
 originalUrl: "https://medium.com/rapha%C3%ABl-pothin/power-platforms-protection-managed-identity-for-dataverse-plug-ins"
 originalPlatform: "Medium"
-audioUrl: /content/posts/power-platform-protection/06-managed-identity-for-dataverse-plug-ins.mp3
+audioUrl: /content/posts/06-managed-identity-for-dataverse-plug-ins.mp3
 ---
 
 Power Platform has taken a big step forward with Virtual Network support to secure communication with Azure resources in a private network. While this is a crucial advancement, it's only one piece of the puzzle. To truly fortify the integration of Power Platform solutions with Azure resources, we also need to enhance security on the identity side.
@@ -54,7 +54,7 @@ Now that the reasons why using managed identities from Dataverse plug-ins is ben
 
 Here are the steps to achieve an operational Dataverse plug-in that authenticates to an Azure resource using a managed identity:
 
-![Overview of what is involved in the configuration of Managed Identities for Dataverse Plug-ins](/content/posts/power-platform-protection/06-managed-identity-overview.png)
+![Overview of what is involved in the configuration of Managed Identities for Dataverse Plug-ins](/content/posts/06-managed-identity-overview.png)
 
 1. **Initialize the Dataverse Plug-in**: Use the `pac plugin init` Power Platform CLI command.
 2. **Replace some code in `PluginBase.cs`**: Add in the `PluginBase.cs` file the elements related to `IManagedIdentityService` (source: Scott Durow's article).
@@ -422,11 +422,11 @@ If you typically have most of your Dataverse plug-ins code in a single assembly,
 
 In scenarios where Dataverse plug-ins integrate independently with different Azure resources, avoid concentrating all plug-ins in one assembly integrated with different Azure resources using only one managed identity.
 
-![Single Assembly: Dataverse plug-ins in one assembly integrated with different Azure resources using only one managed identity](/content/posts/power-platform-protection/06-managed-identity-single-assembly.png)
+![Single Assembly: Dataverse plug-ins in one assembly integrated with different Azure resources using only one managed identity](/content/posts/06-managed-identity-single-assembly.png)
 
 Instead, follow a pattern of specialized assemblies where Dataverse plug-ins focus on integration with only one Azure resource through a dedicated managed identity.
 
-![Specialized Assemblies: Dataverse plug-ins in specialized assemblies focusing on integration with only one Azure resource through a dedicated managed identity](/content/posts/power-platform-protection/06-managed-identity-specialized-assemblies.png)
+![Specialized Assemblies: Dataverse plug-ins in specialized assemblies focusing on integration with only one Azure resource through a dedicated managed identity](/content/posts/06-managed-identity-specialized-assemblies.png)
 
 ### ALM story for Dataverse plug-ins with Managed Identities
 

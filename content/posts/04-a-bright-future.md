@@ -20,7 +20,7 @@ Yet, as she stares at her screen, Maya faces an unexpected challenge: the intang
 
 With determination and a steaming cup of coffee, Maya steps out for a walk. Perhaps answers will come to her while she frees her mind with a relaxing outdoor activity.
 
-![Maya stepping out of the office for a walk hoping answers will come to her while she frees her mind](/content/posts/infrastructure-as-code/04-maya-stepping-out-for-walk.jpeg)
+![Maya stepping out of the office for a walk hoping answers will come to her while she frees her mind](/content/posts/04-maya-stepping-out-for-walk.jpeg)
 
 ## Preparing the team
 
@@ -38,13 +38,13 @@ Then, an idea strikes her. If she is correct, there is a team within the organiz
 
 Quickly noting down this promising idea, Maya stands up and continues her walk in the park. It doesn't take long for her to realize that obtaining the skills is only the first step. She still needs to identify a clear path to transition the management of DLP policies from the Power Platform Admin Center portal to an infrastructure as code approach.
 
-![Maya sitting on a bench in a park, quickly noting the interesting approach she found to upskill her team](/content/posts/infrastructure-as-code/04-maya-sitting-on-bench.jpeg)
+![Maya sitting on a bench in a park, quickly noting the interesting approach she found to upskill her team](/content/posts/04-maya-sitting-on-bench.jpeg)
 
 ## Manage it like a migration initiative
 
 Continuing her walk, Maya passes an abandoned water mill with a board sharing its history. A few years ago, this mill powered the park's electricity needs. Then, a decision was made to replace it and gradually connect the park's electrical elements to the city's network, which fortunately is based on renewable energies. According to the board, they took a progressive approach, tackling different elements in groups to avoid a global electric outage in the park and to manage the work with a small team focusing on a few elements at a time. Impressively, they completed their project in a short amount of time without any major issues.
 
-![Maya discovering the story of an abandoned water mill in the park where she takes a walk](/content/posts/infrastructure-as-code/04-maya-water-mill.jpeg)
+![Maya discovering the story of an abandoned water mill in the park where she takes a walk](/content/posts/04-maya-water-mill.jpeg)
 
 Such an approach reminds Maya of a well-executed IT migration initiative. However, thinking about the "lift-and-shift" strategies many companies followed to move to the cloud, she knows there are more details to consider than just handling small groups if she wants to maximize this opportunity.
 
@@ -66,7 +66,7 @@ This plan is undeniably ambitious and will require time to implement, but it app
 
 ## Unexpected benefits
 
-![Maya deciding to enjoy quick ice cream near a fountain before going back to the office](/content/posts/infrastructure-as-code/04-maya-ice-cream.jpeg)
+![Maya deciding to enjoy quick ice cream near a fountain before going back to the office](/content/posts/04-maya-ice-cream.jpeg)
 
 As she nears the end of her walk, Maya begins to realize that adopting an infrastructure as code approach offers several unexpected benefits that could further strengthen her case.
 

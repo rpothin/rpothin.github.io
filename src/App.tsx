@@ -48,11 +48,11 @@ function routeToTabId(pathname: string): string {
   return "welcome";
 }
 
-/** Redirect /archive/<series>/<slug> or /archive/<slug> to /posts/<slug> */
+/** Redirect /archive/<slug> to /posts/<slug> */
 function ArchiveRedirect() {
   const { "*": archivePath } = useParams<{ "*": string }>();
-  // Extract just the last segment (filename) to get the flattened slug
-  const slug = (archivePath || "").split("/").pop() || "";
+  // archivePath may be "slug" or "series-folder/slug" (legacy URLs); always use the last segment
+  const slug = (archivePath || "").split("/").filter(Boolean).pop() || "";
   return <Navigate to={`/posts/${slug}`} replace />;
 }
 

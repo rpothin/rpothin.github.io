@@ -48,7 +48,7 @@ export function HomePage({ onMeta, onSearchTopic }: HomePageProps) {
     .slice(0, CONTENT_LIST_LIMIT);
 
   // Derive series info from tag-based approach (tags starting with "series-")
-  const seriesMap = new Map<string, SeriesInfo>();
+  const seriesMap = new Map<string, SeriesInfo & { earliestDate: string }>();
   for (const post of posts) {
     for (const tag of post.tags) {
       if (tag.startsWith("series-")) {
@@ -56,13 +56,9 @@ export function HomePage({ onMeta, onSearchTopic }: HomePageProps) {
         if (existing) {
           existing.count++;
           if (post.date > existing.latestDate) existing.latestDate = post.date;
-          if (post.date < existing.latestDate || existing.firstSlug === "") {
-            // Keep the earliest post as the entry point
-          }
-          // Track earliest post for linking to first post
-          if (!existing.firstSlug || post.date < existing.latestDate) {
-            // We'll use the post with the lowest slug (alphabetically earliest) as first
-            if (post.slug < existing.firstSlug) existing.firstSlug = post.slug;
+          if (post.date < existing.earliestDate) {
+            existing.earliestDate = post.date;
+            existing.firstSlug = post.slug;
           }
         } else {
           const label = tag
@@ -74,6 +70,7 @@ export function HomePage({ onMeta, onSearchTopic }: HomePageProps) {
             label,
             count: 1,
             latestDate: post.date,
+            earliestDate: post.date,
             firstSlug: post.slug,
           });
         }

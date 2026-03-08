@@ -14,7 +14,7 @@ Her colleagues lean forward, intrigued. Maya's progress has been nothing short o
 
 "Maya," one of her teammates says, "this could change everything for us. Imagine the efficiency gains, the consistency, and the ability to scale beyond manual configurations."
 
-![Maya presenting her progress on her experimentation and getting support from her team](/content/posts/infrastructure-as-code/03-maya-presenting-progress.jpeg)
+![Maya presenting her progress on her experimentation and getting support from her team](/content/posts/03-maya-presenting-progress.jpeg)
 
 "Absolutely," another chimes in. "But we must tread carefully. Breaking an existing DLP policy — even unintentionally — could have serious consequences for the business."
 
@@ -390,7 +390,7 @@ jobs:
 
 Maya sets up everything to create a first DLP policy swiftly. The GitHub workflow performs like a well-oiled machine, deploying a fresh DLP policy with the expected configuration in mere minutes. She's astounded by its efficiency.
 
-![Maya really happy with the result of her first DLP policy deployment with Terraform](/content/posts/infrastructure-as-code/03-maya-happy-dlp-deployment.jpeg)
+![Maya really happy with the result of her first DLP policy deployment with Terraform](/content/posts/03-maya-happy-dlp-deployment.jpeg)
 
 And then, fueled by curiosity, Maya adds another connector — found in what seems to be an up-to-date extract of connectors available in the platform from the same GitHub repository. The deployment goes flawlessly. She laughs — a contagious, triumphant sound — leaving her colleagues wondering if she's worked too hard or simply discovered the magic of code.
 
@@ -543,7 +543,7 @@ But alas, reality diverged from her expectations. The result is not as anticipat
 
 What had she missed? She did not yet know, but the urgency weighed on her. To make this infrastructure-as-code approach viable for her organization, she must uncover the missing link — a bridge between the old and the new.
 
-![Maya finding her onboarding process of DLP policies in infrastructure as code is not working as expected](/content/posts/infrastructure-as-code/03-maya-onboarding-not-working.jpeg)
+![Maya finding her onboarding process of DLP policies in infrastructure as code is not working as expected](/content/posts/03-maya-onboarding-not-working.jpeg)
 
 ## The missing piece of the puzzle
 
@@ -680,7 +680,7 @@ Encouraged by this breakthrough, she dares to give the "plan and apply" process 
 
 It is the end of a long and emotional day closing on an important achievement for Maya. The lines of code she wrote today aren't mere syntax, they're bridges connecting possibility to reality.
 
-![Maya leaving the office full of hope after her recent achievements](/content/posts/infrastructure-as-code/03-maya-leaving-office-hopeful.jpeg)
+![Maya leaving the office full of hope after her recent achievements](/content/posts/03-maya-leaving-office-hopeful.jpeg)
 
 But as the office quiets, Maya knows this is still only the beginning. Tomorrow awaits — the rollout strategy, the training sessions, and the unexpected synergies. And beyond that, a new journey — the one that will reveal not just lines of infrastructure as code, but the beating heart of their operational excellence transformation.
 

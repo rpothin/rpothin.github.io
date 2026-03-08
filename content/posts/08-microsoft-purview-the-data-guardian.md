@@ -5,7 +5,7 @@ tags: [power-platform, security, microsoft-purview, dataverse, data-governance, 
 description: "How Microsoft Purview's Data Map, Unified Catalog, and DSPM for AI can be used to classify and govern Dataverse data — including scanning tables for sensitivity labels, onboarding Fabric for Data Quality monitoring, and monitoring AI activity."
 originalUrl: "https://medium.com/rapha%C3%ABl-pothin/power-platforms-protection-microsoft-purview-the-data-guardian"
 originalPlatform: "Medium"
-audioUrl: /content/posts/power-platform-protection/08-microsoft-purview-the-data-guardian.m4a
+audioUrl: /content/posts/08-microsoft-purview-the-data-guardian.m4a
 ---
 
 With Microsoft Ignite 2024 behind us, it's evident that Microsoft Purview has become an indispensable tool for organizations striving to adopt AI safely, efficiently, and successfully.
@@ -29,7 +29,7 @@ However, as your organization scales and more teams adopt Dataverse to create bu
 
 Microsoft Purview's journey began a few years ago under the name of Azure Purview. Over the years, it has evolved into a unified data governance and compliance platform, integrating capabilities from Microsoft Compliance Center. Today, Microsoft Purview comprises a comprehensive set of solutions that cover the entire data estate, offering:
 
-![Microsoft Purview pillars](/content/posts/power-platform-protection/08-purview-pillars.png)
+![Microsoft Purview pillars](/content/posts/08-purview-pillars.png)
 
 - **Unified data governance solutions** that manage data across on-premises, multicloud, and SaaS environments, including Azure, Fabric (aka Power BI), SQL, and Amazon S3. This ensures that your data is consistently governed and easily accessible, regardless of where it resides.
 - **Robust data security solutions** to discover and protect sensitive information, ensuring comprehensive coverage across your data estate. This helps safeguard your valuable data assets against potential threats and breaches.
@@ -44,7 +44,7 @@ But what does this mean concretely for Dataverse and Dynamics 365? Are all Micro
 > [!NOTE]
 > For the rest of this blog article, we will assume you already have a valid account type in Microsoft Purview with sufficient permissions to follow along.
 
-![Microsoft Purview account type check](/content/posts/power-platform-protection/08-purview-account-type-check.png)
+![Microsoft Purview account type check](/content/posts/08-purview-account-type-check.png)
 
 One element not explicitly called out in Microsoft documentation regarding connecting Dataverse in Microsoft Purview is the fact that to get the best from this capability, you will need to have the following elements from the Information Protection solution ready to use:
 
@@ -310,7 +310,7 @@ if ($createNewDomain.ToUpper() -eq "Y") {
 
 2. Under your considered Domain, create a new Collection if needed — for example, it could be for the assets related to a single Dataverse environment.
 
-![Microsoft Purview Data Map collection](/content/posts/power-platform-protection/08-purview-data-map-collection.png)
+![Microsoft Purview Data Map collection](/content/posts/08-purview-data-map-collection.png)
 
 ```powershell
 # microsoft-purview-create-collection-if-needed.ps1
@@ -427,7 +427,7 @@ if ($createNewCollection.ToUpper() -eq "Y") {
 
 3. Register the considered Dataverse environment as a Data Source under the considered Collection.
 
-![Microsoft Purview Dataverse data source](/content/posts/power-platform-protection/08-purview-dataverse-data-source.png)
+![Microsoft Purview Dataverse data source](/content/posts/08-purview-dataverse-data-source.png)
 
 ```powershell
 # microsoft-purview-register-dataverse-data-source-if-needed.ps1
@@ -728,20 +728,20 @@ $response = Invoke-RestMethod -UseBasicParsing -Uri $scanUrl -Method "POST" -Hea
 
 After a successful scan, you will see schema classifications and sensitivity labels applied to the columns of your scanned Dataverse tables.
 
-![Microsoft Purview collection overview](/content/posts/power-platform-protection/08-purview-collection-overview.png)
+![Microsoft Purview collection overview](/content/posts/08-purview-collection-overview.png)
 
-![Microsoft Purview Dataverse table after scan](/content/posts/power-platform-protection/08-purview-dataverse-table-after-scan.png)
+![Microsoft Purview Dataverse table after scan](/content/posts/08-purview-dataverse-table-after-scan.png)
 
-![Microsoft Purview column sensitivity label](/content/posts/power-platform-protection/08-purview-column-sensitivity-label.png)
+![Microsoft Purview column sensitivity label](/content/posts/08-purview-column-sensitivity-label.png)
 
 > [!TIP]
 > Doing these steps in the Microsoft Purview portal is also an option. I just have a preference for code alternatives because it feels more reliable and easier to repeat.
 
 In addition to the availability of scanning Dataverse tables, another crucial capability of Microsoft Purview is examining the available Regulations in the Compliance Manager solution. By applying a filter on Service, you can find regulations relevant to the Dynamics 365 context, and create Assessments to evaluate your compliance against selected regulations.
 
-![Microsoft Purview Compliance Manager](/content/posts/power-platform-protection/08-purview-compliance-manager.png)
+![Microsoft Purview Compliance Manager](/content/posts/08-purview-compliance-manager.png)
 
-![Microsoft Purview regulation example](/content/posts/power-platform-protection/08-purview-regulation-example.png)
+![Microsoft Purview regulation example](/content/posts/08-purview-regulation-example.png)
 
 By maintaining a classified inventory of Dataverse tables and applying sensitivity labels to critical columns, organizations establish a foundation for robust data governance. However, Microsoft Purview has more to offer for enhancing data quality and extending governance capabilities further. This is where the integration of Microsoft Purview with Fabric offers exciting new opportunities.
 
@@ -756,7 +756,7 @@ At a high level, the process of onboarding Fabric to Microsoft Purview will be s
 
 First, register Fabric as a Data Source under the considered Domain.
 
-![Microsoft Purview Fabric data source](/content/posts/power-platform-protection/08-purview-fabric-data-source.png)
+![Microsoft Purview Fabric data source](/content/posts/08-purview-fabric-data-source.png)
 
 ```powershell
 # microsoft-purview-register-fabric-data-source-if-needed.ps1
@@ -826,7 +826,7 @@ Then configure Microsoft Purview to scan a Fabric workspace:
 >
 > Lastly, and importantly, 'metadata harvest for Fabric' still appears to be in preview.
 
-![Microsoft Purview identity type documentation](/content/posts/power-platform-protection/08-purview-identity-type-documentation.png)
+![Microsoft Purview identity type documentation](/content/posts/08-purview-identity-type-documentation.png)
 
 Configure a service principal with access to Fabric for Data Map scans:
 
@@ -1064,7 +1064,7 @@ Add-PowerBIWorkspaceUser -Id $workspaceId -AccessRight Contributor -PrincipalTyp
 
 Configure and run a Data Map scan for the Fabric Data Source by selecting the Workspace with the Lakehouse related to the considered Dataverse environment (capability currently in Preview).
 
-![Microsoft Purview Fabric domain overview](/content/posts/power-platform-protection/08-purview-fabric-domain-overview.png)
+![Microsoft Purview Fabric domain overview](/content/posts/08-purview-fabric-domain-overview.png)
 
 ```powershell
 # microsoft-purview-create-scan-for-fabric-data-source-if-needed.ps1
@@ -1224,7 +1224,7 @@ $response = Invoke-RestMethod -UseBasicParsing -Uri $scanUrl -Method "POST" -Hea
 > [!NOTE]
 > As mentioned in the Microsoft documentation, classification and labelling are not currently supported for the Fabric Data Source. It is why from my perspective it is interesting to consider a combination with the Dataverse Data Source to benefit from more Microsoft Purview capabilities.
 
-![Microsoft Purview Lakehouse column no classifications](/content/posts/power-platform-protection/08-purview-lakehouse-column-no-classifications.png)
+![Microsoft Purview Lakehouse column no classifications](/content/posts/08-purview-lakehouse-column-no-classifications.png)
 
 Once the Fabric assets related to the considered Dataverse environment are ready in the Data Map solution of Microsoft Purview, we can switch to the Unified Catalog solution where we will be able to set up the monitoring of the quality of our data:
 
@@ -1293,7 +1293,7 @@ if ($createNewBusinessDomain.ToUpper() -eq "Y") {
 
 2. Set up a Data product under the considered Governance domain if needed.
 
-![Microsoft Purview data product in Unified Catalog](/content/posts/power-platform-protection/08-purview-data-product-unified-catalog.png)
+![Microsoft Purview data product in Unified Catalog](/content/posts/08-purview-data-product-unified-catalog.png)
 
 ```powershell
 # microsoft-purview-create-data-product-if-needed.ps1
@@ -1385,7 +1385,7 @@ if ($createNewDataProduct.ToUpper() -eq "Y") {
 
 3. In the considered Data Product, add the Lakehouse tables related to the considered Dataverse environment you want to analyze as data assets.
 
-![Microsoft Purview Lakehouse table as data asset](/content/posts/power-platform-protection/08-purview-lakehouse-table-data-asset.png)
+![Microsoft Purview Lakehouse table as data asset](/content/posts/08-purview-lakehouse-table-data-asset.png)
 
 ```powershell
 # microsoft-purview-add-lakehouse-table-as-data-asset-under-data-product.ps1
@@ -2026,7 +2026,7 @@ if ($createNewDataQualityRule.ToUpper() -eq "Y") {
 }
 ```
 
-![Microsoft Purview data quality rules](/content/posts/power-platform-protection/08-purview-data-quality-rules.png)
+![Microsoft Purview data quality rules](/content/posts/08-purview-data-quality-rules.png)
 
 6. Run a Data Quality Scan for the considered Dataverse table.
 
@@ -2060,9 +2060,9 @@ $triggerDataQualityScanResponse = Invoke-RestMethod -UseBasicParsing -Uri $trigg
 
 7. Analyze the result of the scan and the quality of your data.
 
-![Microsoft Purview data asset overview](/content/posts/power-platform-protection/08-purview-data-asset-overview.png)
+![Microsoft Purview data asset overview](/content/posts/08-purview-data-asset-overview.png)
 
-![Microsoft Purview data quality rule focus](/content/posts/power-platform-protection/08-purview-data-quality-rule-focus.png)
+![Microsoft Purview data quality rule focus](/content/posts/08-purview-data-quality-rule-focus.png)
 
 And if you don't know where to start regarding the rules for the Data Quality scans, Microsoft Purview also offers a capability to profile data in a Data Asset and get insights to help decide how Data Quality scans should be configured.
 
@@ -2143,7 +2143,7 @@ $body = @{
 $profileDataResponse = Invoke-RestMethod -UseBasicParsing -Uri $profileDataUrl -Method "POST" -Headers @{Authorization = "Bearer $token"; "Content-Type" = "application/json"} -Body ($body | ConvertTo-Json -Depth 4)
 ```
 
-![Microsoft Purview profiling report](/content/posts/power-platform-protection/08-purview-profiling-report.png)
+![Microsoft Purview profiling report](/content/posts/08-purview-profiling-report.png)
 
 The insights gathered following this track will enable you to plan actions to improve your data quality state in Dataverse, which will have multiple beneficial impacts — from the quality of the service to your customers to the efficiency of the AI applications leveraging Dataverse data as knowledge.
 
@@ -2156,15 +2156,15 @@ When it comes to proactively monitoring AI activity in your organization, the Da
 
 The Get Started section of the Overview page of the DSPM solution offers guidance on how to properly secure AI activity using Microsoft Purview, particularly the installation of the Microsoft Purview Compliance browser extension which "collects signals that help you detect" when browsing and sharing sensitive data with AI websites.
 
-![Microsoft Purview Compliance extension - DSPM](/content/posts/power-platform-protection/08-purview-compliance-extension-dspm.png)
+![Microsoft Purview Compliance extension - DSPM](/content/posts/08-purview-compliance-extension-dspm.png)
 
 The Reports page of DSPM AI offers diagrams to help you track AI adoption, identify insider risks, and understand how AI is used to detect potentially risky behaviors that require attention. These visuals allow you to form hypotheses about AI activity within your organization.
 
-![Microsoft Purview DSPM AI diagrams](/content/posts/power-platform-protection/08-purview-dspm-ai-diagrams.png)
+![Microsoft Purview DSPM AI diagrams](/content/posts/08-purview-dspm-ai-diagrams.png)
 
 Once you have identified trends from the Reports section, you will be able to dive deeper by exploring the activity logs under Activity Explorer to confirm your hypotheses and track the efficiency of your remediations.
 
-![Microsoft Purview DSPM activity explorer](/content/posts/power-platform-protection/08-purview-dspm-activity-explorer.png)
+![Microsoft Purview DSPM activity explorer](/content/posts/08-purview-dspm-activity-explorer.png)
 
 Currently, the experience in DSPM for AI seems mainly focused on users' interactions with AI. The future will tell us if this approach will adapt to the era of autonomous agents.
 

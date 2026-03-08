@@ -10,7 +10,7 @@ originalPlatform: "Medium"
 
 Maya, a brilliant young engineer, steps into her new role on the Power Platform team at a sprawling corporate giant. Their mission? To oversee the administration and governance of this critical platform. The stakes are high — the company's Power Platform consumption is already substantial.
 
-![Maya's first day in her new job ready to tackle any challenge](/content/posts/infrastructure-as-code/02-maya-first-day.png)
+![Maya's first day in her new job ready to tackle any challenge](/content/posts/02-maya-first-day.png)
 
 With a background in generalist IT administration, Maya brings a fresh perspective to the team. Her penchant for innovation is palpable, and her colleagues eagerly anticipate the creative solutions she'll introduce.
 
@@ -50,7 +50,7 @@ With all prerequisites in place — an Azure subscription for storing state file
 
 Exporting the current state of the DLP policies as code in the repository would represent a significant milestone. This success would demonstrate to Maya's team that using infrastructure as code could be the way to enhance their Power Platform management experience.
 
-!["This is the way" meme from The Mandalorian regarding Infrastructure as Code for Power Platform](/content/posts/infrastructure-as-code/02-this-is-the-way.jpg)
+!["This is the way" meme from The Mandalorian regarding Infrastructure as Code for Power Platform](/content/posts/02-this-is-the-way.jpg)
 
 To achieve that, Maya utilized resources from the rpothin/PowerPlatform-Governance-With-Terraform repository, which included:
 

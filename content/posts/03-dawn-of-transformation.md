@@ -2,7 +2,7 @@
 title: "The Power Platform Infrastructure as Code journey — Dawn of transformation"
 date: 2024-07-19
 tags:
-  [power-platform, infrastructure-as-code, terraform, dlp-policies, governance]
+  [power-platform, infrastructure-as-code, terraform, dlp-policies, governance, series-infrastructure-as-code-journey]
 description: "Maya pushes DLP policy changes from code into Power Platform, converts existing policies to Terraform variable files, and discovers the critical 'terraform import' step needed to onboard already-managed resources without duplicates."
 originalUrl: "https://medium.com/rapha%C3%ABl-pothin/the-power-platform-infrastructure-as-code-journey-dawn-of-transformation"
 originalPlatform: "Medium"

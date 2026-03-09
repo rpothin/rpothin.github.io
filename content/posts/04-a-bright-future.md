@@ -8,6 +8,7 @@ tags:
     terraform,
     governance,
     organizational-change,
+    series-infrastructure-as-code-journey,
   ]
 description: "Maya prepares to present her DLP policy IaC strategy to IT leadership — covering how to upskill the team, plan the progressive migration of existing policies, and unlock unexpected benefits like automated testing, reduced privileged access, and risk audits."
 originalUrl: "https://medium.com/rapha%C3%ABl-pothin/the-power-platform-infrastructure-as-code-journey-a-bright-future"

@@ -24,11 +24,26 @@
     />
     <title>Raphael Pothin - Developer Blog</title>
     <!-- Cloudflare Web Analytics -->
-    <script
-      defer
-      src="https://static.cloudflareinsights.com/beacon.min.js"
-      data-cf-beacon='{"token": "8eca68669141408280ac5239a48bdd24"}'
-    ></script>
+    <script>
+      (function () {
+        const hostname = window.location.hostname;
+        const isLocalPreview =
+          hostname === "localhost" || hostname === "127.0.0.1";
+
+        if (isLocalPreview) {
+          return;
+        }
+
+        const script = document.createElement("script");
+        script.defer = true;
+        script.src = "https://static.cloudflareinsights.com/beacon.min.js";
+        script.setAttribute(
+          "data-cf-beacon",
+          '{"token": "8eca68669141408280ac5239a48bdd24"}',
+        );
+        document.head.appendChild(script);
+      })();
+    </script>
     <!-- End Cloudflare Web Analytics -->
   </head>
   <body>

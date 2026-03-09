@@ -34,7 +34,7 @@ Apply these checks in order when creating or polishing a Markdown file. Full det
 5. **Validate links** — check every external URL; update redirects, remove dead links.
 6. **Verify slug and media conventions** — confirm naming and image/video references follow the rules.
 
-After each step, briefly note what changed (or that nothing was needed). Use the [Confidence Threshold](#confidence-threshold) throughout to decide whether to proceed, flag for review, or ask the user.
+After each step, briefly note what changed (or that nothing was needed). Use the Confidence Threshold section below throughout to decide whether to proceed, flag for review, or ask the user.
 
 ## Review Sub-Agent
 

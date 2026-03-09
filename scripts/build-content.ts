@@ -10,6 +10,7 @@ import lunr from "lunr";
 const CONTENT_DIR = path.resolve("content");
 const PUBLIC_DIR = path.resolve("public");
 const OUTPUT_CONTENT_DIR = path.join(PUBLIC_DIR, "content");
+const LEGACY_ARCHIVE_META_PATH = path.join(PUBLIC_DIR, "archive-meta.json");
 
 const RSS_OUTPUT_PATH = path.join(PUBLIC_DIR, "rss.xml");
 const RSS_ITEM_LIMIT = 20;
@@ -188,6 +189,11 @@ function copyContentAssets(srcDir: string, destDir: string): number {
   return count;
 }
 
+function cleanGeneratedContentOutput() {
+  fs.rmSync(OUTPUT_CONTENT_DIR, { recursive: true, force: true });
+  fs.rmSync(LEGACY_ARCHIVE_META_PATH, { force: true });
+}
+
 function buildFileTree(files: string[]): TreeNode[] {
   const root: TreeNode[] = [];
 
@@ -296,6 +302,8 @@ async function main() {
   const postsMeta: PostMeta[] = [];
   const searchDocs: DocEntry[] = [];
   const postPlainTextBySlug = new Map<string, string>();
+
+  cleanGeneratedContentOutput();
 
   // Ensure output directories exist
   fs.mkdirSync(OUTPUT_CONTENT_DIR, { recursive: true });

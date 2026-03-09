@@ -40,8 +40,8 @@ export function SearchPanel({
         <input
           ref={inputRef}
           type="search"
-          placeholder="Search..."
-          aria-label="Search posts"
+          placeholder="Search posts and pages..."
+          aria-label="Search posts and pages"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           className="w-full px-2 py-1 text-sm rounded-none border-none outline-none"

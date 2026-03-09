@@ -8,6 +8,7 @@ tags:
     defender-for-cloud-apps,
     dataverse,
     session-controls,
+    series-power-platforms-protection,
   ]
 description: "An exploration of how Defender for Cloud Apps, acting as a Cloud Access Security Broker (CASB), can complement Azure AD Conditional Access to control access to and activities within Dataverse and model-driven applications."
 originalUrl: "https://medium.com/rapha%C3%ABl-pothin/power-platforms-protection-defender-for-cloud-apps"

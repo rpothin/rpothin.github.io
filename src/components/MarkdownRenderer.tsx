@@ -49,7 +49,7 @@ export function MarkdownRenderer({ html }: MarkdownRendererProps) {
       const href = target.getAttribute("href");
       if (!href) return;
 
-      // Only intercept same-origin relative paths (e.g. /archive/..., /posts/...)
+      // Only intercept same-origin relative paths (e.g. /posts/..., /about, ...)
       if (href.startsWith("/")) {
         e.preventDefault();
         navigate(href);

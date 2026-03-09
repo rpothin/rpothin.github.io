@@ -16,22 +16,9 @@ Detailed rules for all Markdown content on this developer blog. This is the cano
 
 ## Frontmatter
 
-Two schemas exist depending on content type.
+A single schema exists for all posts in `content/posts/`.
 
-### New posts (`content/posts/`)
-
-```yaml
----
-title: "Post Title"
-date: YYYY-MM-DD
-tags: [tag-one, tag-two, tag-three]
-description: "1-2 sentence synthesis of the post."
----
-```
-
-Exactly these four fields. No extras (`draft`, `archived`, `originalUrl`).
-
-### Archive posts (`content/archive/`)
+### All posts (`content/posts/`)
 
 ```yaml
 ---
@@ -39,23 +26,23 @@ title: "Post Title"
 date: YYYY-MM-DD
 tags: [tag-one, tag-two, tag-three]
 description: "1-2 sentence synthesis of the post."
-archived: true
-originalUrl: "https://medium.com/rapha%C3%ABl-pothin/<slug>"
+originalUrl: "https://medium.com/rapha%C3%ABl-pothin/<slug>"  # optional — migrated posts only
+originalPlatform: "Medium"                                      # optional — migrated posts only
 ---
 ```
 
-Six fields. `archived` is always `true`. `originalUrl` links to the original Medium publication.
+Required fields: `title`, `date`, `tags`, `description`. The `originalUrl` and `originalPlatform` fields are only present for posts migrated from another platform.
 
 ### Field rules
 
-| Field         | Type         | Rules                                                                |
-| ------------- | ------------ | -------------------------------------------------------------------- |
-| `title`       | String       | Keep the author's wording. Only fix typographical errors.            |
-| `date`        | `YYYY-MM-DD` | Publication date. For new posts, use today if missing.               |
-| `tags`        | Array        | 3–5 items, lowercase kebab-case. Infer from content if missing.      |
-| `description` | String       | 1–2 sentences. Genuine synthesis — never copy the opening paragraph. |
-| `archived`    | Boolean      | Archive only. Always `true`.                                         |
-| `originalUrl` | String       | Archive only. Medium URL for the original post.                      |
+| Field              | Type         | Rules                                                                |
+| ------------------ | ------------ | -------------------------------------------------------------------- |
+| `title`            | String       | Keep the author's wording. Only fix typographical errors.            |
+| `date`             | `YYYY-MM-DD` | Publication date. For new posts, use today if missing.               |
+| `tags`             | Array        | 3–5 items, lowercase kebab-case. Infer from content if missing.      |
+| `description`      | String       | 1–2 sentences. Genuine synthesis — never copy the opening paragraph. |
+| `originalUrl`      | String       | Optional. Original URL for posts migrated from another platform.     |
+| `originalPlatform` | String       | Optional. Name of origin platform (e.g. "Medium") for migrated posts.|
 
 ## First Heading
 

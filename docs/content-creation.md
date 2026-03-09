@@ -62,7 +62,7 @@ The voice profile teaches the AI what your writing sounds like so drafts match y
 2. Click **Generate Voice**.
 3. Select a Copilot model (e.g. GPT-4o).
 4. Click **Generate Voice Profile**.
-5. When prompted, select the `content/` folder — this gives the AI access to your published posts (both `posts/` and `archive/`) as writing samples.
+5. When prompted, select the `content/` folder — this gives the AI access to your published posts in `content/posts/` as writing samples.
 6. The profile is saved to `.ghostwriter/voices/voice-YYYY-MM-DD.md`.
 7. Review the generated profile and tweak anything that feels off.
 
@@ -93,14 +93,16 @@ The voice profile teaches the AI what your writing sounds like so drafts match y
    - **Headings:** Enabled
    - **SEO:** Enabled if desired, with relevant keywords
    - **Frontmatter template** — use this template to match the site's schema:
-     ```yaml
-     ---
-     title: ""
-     date: ""
-     tags: []
-     description: ""
-     ---
-     ```
+
+   ```yaml
+   ---
+   title: ""
+   date: ""
+   tags: []
+   description: ""
+   ---
+   ```
+
 6. Select your Copilot model and click **Start Writing**.
 7. Watch the draft stream in real-time.
 
@@ -137,7 +139,7 @@ If you configured workspace settings for default save location and filename temp
 
 This is where the custom `@content-ghostwriter` agent takes over. In Copilot Chat:
 
-```
+```text
 @content-ghostwriter Polish content/posts/my-new-post.md
 ```
 
@@ -177,7 +179,7 @@ git push
 | ----------- | ------------------------------------------------------------------------------------------------------------------------------ |
 | **File**    | `.github/skills/content-standards/SKILL.md`                                                                                    |
 | **Invoke**  | `/content-standards` in Copilot Chat or auto-loaded when working on content                                                    |
-| **Scope**   | `content/posts/` and `content/archive/`                                                                                        |
+| **Scope**   | `content/posts/`                                                                                                               |
 | **Purpose** | Canonical content quality rules: frontmatter schemas, code blocks, alerts, link validation, slugs, media, confidence threshold |
 
 Both the content-ghostwriter and migration-ghostwriter agents reference this skill as their shared source of truth for content standards.
@@ -217,7 +219,7 @@ Both the content-ghostwriter and migration-ghostwriter agents reference this ski
 
 ## Frontmatter schema
 
-Every post in `content/posts/` must have exactly these four fields:
+Every post in `content/posts/` must include the four core fields below. Migrated posts may also include optional provenance fields.
 
 ```yaml
 ---
@@ -225,17 +227,19 @@ title: "Post Title"
 date: YYYY-MM-DD
 tags: [lowercase-kebab-case, tag-two, tag-three]
 description: "A 1-2 sentence synthesis of the post (not a copy of the opening paragraph)"
+originalUrl: "https://medium.com/..." # optional — only for migrated posts
+originalPlatform: "Medium" # optional — only for migrated posts
 ---
 ```
 
-| Field         | Type         | Rules                                                                    |
-| ------------- | ------------ | ------------------------------------------------------------------------ |
-| `title`       | String       | Required. Keep original wording.                                         |
-| `date`        | `YYYY-MM-DD` | Required. Publication date.                                              |
-| `tags`        | Array        | 3-5 lowercase kebab-case strings.                                        |
-| `description` | String       | 1-2 sentences. Used in RSS feed and metadata. Must be a genuine summary. |
+- `title` _(string)_ — Required. Keep original wording.
+- `date` _(`YYYY-MM-DD`)_ — Required. Publication date.
+- `tags` _(array)_ — 3-5 lowercase kebab-case strings.
+- `description` _(string)_ — 1-2 sentences. Used in RSS feed and metadata. Must be a genuine summary.
+- `originalUrl` _(string)_ — Optional. Original URL for posts migrated from another platform.
+- `originalPlatform` _(string)_ — Optional. Name of origin platform (for example, `Medium`) for migrated posts.
 
-Do **not** add additional fields like `draft`, `archived`, or `originalUrl` — those are only for archive posts.
+Do **not** add additional fields like `draft` or `archived`.
 
 ---
 
@@ -243,7 +247,7 @@ Do **not** add additional fields like `draft`, `archived`, or `originalUrl` — 
 
 The extension creates a `.ghostwriter/` folder in the workspace root:
 
-```
+```text
 .ghostwriter/
 ├── transcripts/     # Interview transcripts (.md) and session metadata (.json)
 ├── voices/          # Voice/style profiles (.md)
@@ -279,7 +283,7 @@ This means `voices/`, `interviewer/`, and `writer/` folders **are** tracked in g
 
 ## Tips
 
-- **Frontmatter template in Ghostwriter:** Set up the 4-field template once in Writer mode → Writing Options → Add Frontmatter Template. It persists across sessions.
+- **Frontmatter template in Ghostwriter:** Set up the 4-field template once in Writer mode → Writing Options → Add Frontmatter Template. Keep provenance fields out of the template unless you are adapting a migrated post.
 - **Save location settings:** Configure `vscode-ghostwriter.defaultSaveLocation` and `vscode-ghostwriter.filenameTemplate` in workspace settings so articles land in `content/posts/` automatically.
 - **Voice profile refresh:** Regenerate your voice profile every few months, or after writing several new posts, so the AI stays calibrated to your current style.
 - **Interviewer agents:** Create custom interviewer prompts in `.ghostwriter/interviewer/` for different content types (tutorials, opinion pieces, deep dives).

@@ -84,9 +84,7 @@ function SectionHeader({
 
 export function FileExplorer({ currentPath }: FileExplorerProps) {
   const [posts, setPosts] = useState<PostMeta[]>([]);
-  const [archiveEntries, setArchiveEntries] = useState<PostMeta[]>([]);
   const [postsExpanded, setPostsExpanded] = useState(true);
-  const [archiveExpanded, setArchiveExpanded] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -94,16 +92,11 @@ export function FileExplorer({ currentPath }: FileExplorerProps) {
       .then((r) => r.json())
       .then(setPosts)
       .catch(console.error);
-
-    fetch("/archive-meta.json")
-      .then((r) => r.json())
-      .then(setArchiveEntries)
-      .catch(console.error);
   }, []);
 
   return (
     <div className="flex flex-col h-full">
-      {/* ── POSTS section: always flex-1, pushes archive to bottom ── */}
+      {/* ── POSTS section ── */}
       <div
         style={{
           display: "flex",
@@ -198,114 +191,6 @@ export function FileExplorer({ currentPath }: FileExplorerProps) {
                 </li>
               );
             })}
-          </ul>
-        )}
-      </div>
-
-      {/* ── ARCHIVE section: fixed 22px when collapsed, flex-1 when expanded ── */}
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          flex: archiveExpanded ? "1 1 0" : "0 0 22px",
-          minHeight: 22,
-          overflow: "hidden",
-        }}
-      >
-        <SectionHeader
-          label="Archive"
-          count={archiveEntries.length}
-          expanded={archiveExpanded}
-          onToggle={() => setArchiveExpanded((v) => !v)}
-        />
-
-        {archiveExpanded && (
-          <ul
-            role="list"
-            style={{ flex: 1, overflowY: "auto", minHeight: 0 }}
-            className="py-0.5"
-          >
-            {archiveEntries.length === 0 ? (
-              <div
-                className="text-xs px-5 py-2"
-                style={{ color: "var(--vscode-tab-inactiveForeground)" }}
-              >
-                No archived posts yet.
-              </div>
-            ) : (
-              archiveEntries.map((entry) => {
-                const archivePath = `archive/${entry.slug}`;
-                const isActive = currentPath === archivePath;
-
-                return (
-                  <li key={entry.slug}>
-                    <button
-                      className="w-full text-left cursor-pointer block"
-                      aria-current={isActive ? "page" : undefined}
-                      style={{
-                        paddingLeft: "20px",
-                        paddingRight: "8px",
-                        paddingTop: "6px",
-                        paddingBottom: "6px",
-                        backgroundColor: isActive
-                          ? "var(--vscode-list-activeSelectionBackground)"
-                          : undefined,
-                        color: isActive
-                          ? "var(--vscode-list-activeSelectionForeground)"
-                          : "var(--vscode-editor-foreground)",
-                      }}
-                      onMouseEnter={(e) => {
-                        if (!isActive)
-                          e.currentTarget.style.backgroundColor =
-                            "var(--vscode-list-hoverBackground)";
-                      }}
-                      onMouseLeave={(e) => {
-                        if (!isActive)
-                          e.currentTarget.style.backgroundColor = "";
-                      }}
-                      onClick={() => navigate(`/archive/${entry.slug}`)}
-                    >
-                      <div className="flex items-center gap-1.5 mb-0.5">
-                        <span
-                          className="flex-shrink-0 text-xs"
-                          aria-hidden="true"
-                        >
-                          📄
-                        </span>
-                        <span className="text-sm truncate font-medium">
-                          {entry.title}
-                        </span>
-                      </div>
-                      <div
-                        className="flex items-center gap-2 text-xs ml-5"
-                        style={{
-                          color: isActive
-                            ? "var(--vscode-list-activeSelectionForeground)"
-                            : "var(--vscode-tab-inactiveForeground)",
-                          opacity: isActive ? 0.85 : 1,
-                        }}
-                      >
-                        {entry.date && (
-                          <span>
-                            {new Date(
-                              entry.date + "T12:00:00",
-                            ).toLocaleDateString("en-US", {
-                              month: "short",
-                              day: "numeric",
-                              year: "numeric",
-                            })}
-                          </span>
-                        )}
-                        <span aria-hidden="true">·</span>
-                        <span>
-                          {estimateReadingTime(entry.description)} min read
-                        </span>
-                      </div>
-                    </button>
-                  </li>
-                );
-              })
-            )}
           </ul>
         )}
       </div>

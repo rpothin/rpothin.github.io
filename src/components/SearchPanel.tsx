@@ -31,8 +31,6 @@ export function SearchPanel({
     } else if (ref.startsWith("posts/")) {
       const slug = ref.replace("posts/", "");
       navigate(`/posts/${slug}`);
-    } else if (ref.startsWith("archive/")) {
-      navigate(`/${ref}`);
     }
   };
 
@@ -42,8 +40,8 @@ export function SearchPanel({
         <input
           ref={inputRef}
           type="search"
-          placeholder="Search..."
-          aria-label="Search posts"
+          placeholder="Search posts and pages..."
+          aria-label="Search posts and pages"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           className="w-full px-2 py-1 text-sm rounded-none border-none outline-none"

@@ -3,8 +3,10 @@ import {
   BrowserRouter,
   Routes,
   Route,
+  Navigate,
   useNavigate,
   useLocation,
+  useParams,
 } from "react-router-dom";
 import { ActivityBar } from "./components/ActivityBar";
 import { Sidebar } from "./components/Sidebar";
@@ -16,7 +18,6 @@ import { PostPage } from "./pages/PostPage";
 import { AboutPage } from "./pages/AboutPage";
 import { PrivacyPage } from "./pages/PrivacyPage";
 import { TipsPage } from "./pages/TipsPage";
-import { ArchivePage } from "./pages/ArchivePage";
 import { useTheme } from "./hooks/useTheme";
 
 interface PageMeta {
@@ -44,8 +45,15 @@ function routeToTabId(pathname: string): string {
   if (pathname === "/tips") return "tips";
   if (pathname.startsWith("/posts/"))
     return `posts/${pathname.replace("/posts/", "")}`;
-  if (pathname.startsWith("/archive/")) return pathname.slice(1);
   return "welcome";
+}
+
+/** Redirect /archive/<slug> to /posts/<slug> */
+function ArchiveRedirect() {
+  const { "*": archivePath } = useParams<{ "*": string }>();
+  // archivePath may be "slug" or "series-folder/slug" (legacy URLs); always use the last segment
+  const slug = (archivePath || "").split("/").filter(Boolean).pop() || "";
+  return <Navigate to={`/posts/${slug}`} replace />;
 }
 
 function AppLayout() {
@@ -140,9 +148,7 @@ function AppLayout() {
           ? "tips"
           : location.pathname.startsWith("/posts/")
             ? `posts/${location.pathname.replace("/posts/", "")}`
-            : location.pathname.startsWith("/archive/")
-              ? location.pathname.slice(1)
-              : "";
+            : "";
 
   const handleMeta = useCallback((meta: PageMeta) => {
     setPageMeta(meta);
@@ -285,7 +291,7 @@ function AppLayout() {
             />
             <Route
               path="/archive/*"
-              element={<ArchivePage onMeta={handleMeta} />}
+              element={<ArchiveRedirect />}
             />
           </Routes>
         </main>

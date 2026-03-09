@@ -72,6 +72,9 @@ export function PostPage({ onMeta }: PostPageProps) {
 
   // Remove the first h1 from rendered HTML since we display the title ourselves
   const processedHtml = html.replace(/^\s*<h1[^>]*>.*?<\/h1>\s*/i, "");
+  const visibleTags = (meta?.tags || []).filter(
+    (tag) => !tag.startsWith("series-"),
+  );
 
   return (
     <div className="max-w-4xl mx-auto p-8">
@@ -115,7 +118,7 @@ export function PostPage({ onMeta }: PostPageProps) {
                 className="h-5 max-w-full"
               />
             )}
-            {meta.tags.length > 0 && (
+            {visibleTags.length > 0 && (
               <>
                 <span
                   className="text-xs"
@@ -123,7 +126,7 @@ export function PostPage({ onMeta }: PostPageProps) {
                 >
                   Tags
                 </span>
-                {meta.tags.map((tag) => (
+                {visibleTags.map((tag) => (
                   <span
                     key={tag}
                     className="inline-flex items-center text-xs px-2 py-0.5 rounded"
@@ -135,6 +138,23 @@ export function PostPage({ onMeta }: PostPageProps) {
               </>
             )}
           </div>
+          {meta.originalUrl && meta.originalPlatform && (
+            <p
+              className="text-xs mt-1"
+              style={{ color: "var(--vscode-descriptionForeground)" }}
+            >
+              Originally published on{" "}
+              <a
+                href={meta.originalUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{ color: "var(--vscode-textLink-foreground)" }}
+              >
+                {meta.originalPlatform}
+              </a>{" "}
+              · Migrated to this site as part of my writing history
+            </p>
+          )}
         </div>
       )}
       {meta?.audioUrl && <AudioPlayer src={meta.audioUrl} title={meta.title} />}

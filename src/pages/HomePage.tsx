@@ -2,16 +2,8 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import type { PostMeta } from "../types";
 
-interface ArchiveMeta {
-  slug: string;
-  title: string;
-  date: string;
-  tags: string[];
-  description: string;
-}
-
 interface SeriesInfo {
-  folder: string;
+  tag: string;
   label: string;
   count: number;
   latestDate: string;
@@ -23,7 +15,6 @@ interface ContentEntry {
   slug: string;
   title: string;
   date: string;
-  archived: boolean;
   route: string;
 }
 
@@ -36,7 +27,6 @@ const CONTENT_LIST_LIMIT = 10;
 
 export function HomePage({ onMeta, onSearchTopic }: HomePageProps) {
   const [posts, setPosts] = useState<PostMeta[]>([]);
-  const [archive, setArchive] = useState<ArchiveMeta[]>([]);
 
   useEffect(() => {
     onMeta({ title: "Welcome", path: "", readingTime: 0 });
@@ -44,55 +34,46 @@ export function HomePage({ onMeta, onSearchTopic }: HomePageProps) {
       .then((r) => r.json())
       .then(setPosts)
       .catch(console.error);
-    fetch("/archive-meta.json")
-      .then((r) => r.json())
-      .then(setArchive)
-      .catch(console.error);
   }, [onMeta]);
 
-  // Build unified content list (posts + archive), sorted newest-first
-  const allContent: ContentEntry[] = [
-    ...posts.map((p) => ({
+  // Build unified content list sorted newest-first
+  const allContent: ContentEntry[] = posts
+    .map((p) => ({
       slug: p.slug,
       title: p.title,
       date: p.date,
-      archived: false,
       route: `/posts/${p.slug}`,
-    })),
-    ...archive.map((a) => ({
-      slug: a.slug,
-      title: a.title,
-      date: a.date,
-      archived: true,
-      route: `/archive/${a.slug}`,
-    })),
-  ]
+    }))
     .sort((a, b) => b.date.localeCompare(a.date))
     .slice(0, CONTENT_LIST_LIMIT);
 
-  // Derive series info from archive
-  const seriesMap = new Map<string, SeriesInfo>();
-  for (const item of archive) {
-    const slashIdx = item.slug.indexOf("/");
-    if (slashIdx > 0) {
-      const folder = item.slug.slice(0, slashIdx);
-      const existing = seriesMap.get(folder);
-      if (existing) {
-        existing.count++;
-        if (item.date > existing.latestDate) existing.latestDate = item.date;
-        // Track earliest slug for linking to first post
-        if (item.slug < existing.firstSlug) existing.firstSlug = item.slug;
-      } else {
-        const label = folder
-          .replace(/-/g, " ")
-          .replace(/\b\w/g, (c) => c.toUpperCase());
-        seriesMap.set(folder, {
-          folder,
-          label,
-          count: 1,
-          latestDate: item.date,
-          firstSlug: item.slug,
-        });
+  // Derive series info from tag-based approach (tags starting with "series-")
+  const seriesMap = new Map<string, SeriesInfo & { earliestDate: string }>();
+  for (const post of posts) {
+    for (const tag of post.tags) {
+      if (tag.startsWith("series-")) {
+        const existing = seriesMap.get(tag);
+        if (existing) {
+          existing.count++;
+          if (post.date > existing.latestDate) existing.latestDate = post.date;
+          if (post.date < existing.earliestDate) {
+            existing.earliestDate = post.date;
+            existing.firstSlug = post.slug;
+          }
+        } else {
+          const label = tag
+            .replace(/^series-/, "")
+            .replace(/-/g, " ")
+            .replace(/\b\w/g, (c) => c.toUpperCase());
+          seriesMap.set(tag, {
+            tag,
+            label,
+            count: 1,
+            latestDate: post.date,
+            earliestDate: post.date,
+            firstSlug: post.slug,
+          });
+        }
       }
     }
   }
@@ -100,11 +81,13 @@ export function HomePage({ onMeta, onSearchTopic }: HomePageProps) {
     b.latestDate.localeCompare(a.latestDate),
   );
 
-  // Collect all tags across posts and archive for topic display
+  // Collect all tags across posts for topic display (exclude series- tags)
   const tagCounts = new Map<string, number>();
-  for (const item of [...posts, ...archive]) {
+  for (const item of posts) {
     for (const tag of item.tags) {
-      tagCounts.set(tag, (tagCounts.get(tag) || 0) + 1);
+      if (!tag.startsWith("series-")) {
+        tagCounts.set(tag, (tagCounts.get(tag) || 0) + 1);
+      }
     }
   }
   const topTags = Array.from(tagCounts.entries())
@@ -230,7 +213,7 @@ export function HomePage({ onMeta, onSearchTopic }: HomePageProps) {
               </ul>
             </section>
 
-            {/* Recent content — unified posts + archive list */}
+            {/* Recent content — unified posts list */}
             <section aria-labelledby="recent-heading">
               <h2
                 id="recent-heading"
@@ -249,7 +232,7 @@ export function HomePage({ onMeta, onSearchTopic }: HomePageProps) {
                         style={{
                           color: "var(--vscode-textLink-foreground, #3794ff)",
                         }}
-                        aria-label={`${entry.title}${entry.archived ? " (archived)" : ""}${entry.date ? `, ${new Date(entry.date + "T12:00:00").toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}` : ""}`}
+                        aria-label={`${entry.title}${entry.date ? `, ${new Date(entry.date + "T12:00:00").toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}` : ""}`}
                       >
                         <span className="truncate">{entry.title}</span>
                         {entry.date && (
@@ -270,19 +253,6 @@ export function HomePage({ onMeta, onSearchTopic }: HomePageProps) {
                           </time>
                         )}
                       </Link>
-                      {entry.archived && (
-                        <span
-                          className="shrink-0 text-xs px-1.5 py-0 rounded"
-                          style={{
-                            backgroundColor: "var(--vscode-badge-background)",
-                            color: "var(--vscode-badge-foreground)",
-                            fontSize: "10px",
-                          }}
-                          aria-label="Archived post"
-                        >
-                          archived
-                        </span>
-                      )}
                     </li>
                   ))}
                 </ul>
@@ -312,8 +282,8 @@ export function HomePage({ onMeta, onSearchTopic }: HomePageProps) {
                 <div className="space-y-3">
                   {series.map((s) => (
                     <Link
-                      key={s.folder}
-                      to={`/archive/${s.firstSlug}`}
+                      key={s.tag}
+                      to={`/posts/${s.firstSlug}`}
                       className="welcome-card block p-4 rounded no-underline border"
                       style={{
                         backgroundColor: "var(--vscode-sideBar-background)",

@@ -94,14 +94,14 @@ The voice profile teaches the AI what your writing sounds like so drafts match y
    - **SEO:** Enabled if desired, with relevant keywords
    - **Frontmatter template** — use this template to match the site's schema:
 
-    ```yaml
-    ---
-    title: ""
-    date: ""
-    tags: []
-    description: ""
-    ---
-    ```
+   ```yaml
+   ---
+   title: ""
+   date: ""
+   tags: []
+   description: ""
+   ---
+   ```
 
 6. Select your Copilot model and click **Start Writing**.
 7. Watch the draft stream in real-time.
@@ -227,8 +227,8 @@ title: "Post Title"
 date: YYYY-MM-DD
 tags: [lowercase-kebab-case, tag-two, tag-three]
 description: "A 1-2 sentence synthesis of the post (not a copy of the opening paragraph)"
-originalUrl: "https://medium.com/..."   # optional — only for migrated posts
-originalPlatform: "Medium"              # optional — only for migrated posts
+originalUrl: "https://medium.com/..." # optional — only for migrated posts
+originalPlatform: "Medium" # optional — only for migrated posts
 ---
 ```
 

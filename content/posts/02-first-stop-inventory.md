@@ -2,7 +2,14 @@
 title: "The Power Platform Infrastructure as Code journey — First stop: Inventory"
 date: 2024-07-01
 tags:
-  [power-platform, infrastructure-as-code, terraform, dlp-policies, governance, series-infrastructure-as-code-journey]
+  [
+    power-platform,
+    infrastructure-as-code,
+    terraform,
+    dlp-policies,
+    governance,
+    series-infrastructure-as-code-journey,
+  ]
 description: "Following Maya, a fictional engineer, as she identifies the pain points of managing DLP policies through the Power Platform Admin Center UI, discovers the Terraform provider, and builds a proof of concept to export existing policies as code."
 originalUrl: "https://medium.com/rapha%C3%ABl-pothin/the-power-platform-infrastructure-as-code-journey-first-stop-inventory"
 originalPlatform: "Medium"

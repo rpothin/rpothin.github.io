@@ -171,7 +171,7 @@ If a migration planning document is in active use, update it only if the user ex
 
 After processing a batch, output a table like:
 
-| #   | Title                                                     | Target Path                                                           | Tags                                                   | Links                      | Flags                 |
-| --- | --------------------------------------------------------- | --------------------------------------------------------------------- | ------------------------------------------------------ | -------------------------- | --------------------- |
-| 1   | Tracking changes in open source projects                  | `posts/tracking-changes-in-open-source-projects.md`                 | changelog, open-source, github, git                    | 3 OK, 1 updated            | —                     |
-| 2   | Power Platform's protection — Azure AD Conditional Access | `posts/01-azure-ad-conditional-access.md`                           | power-platform, security, azure-ad, conditional-access | 5 OK, 2 updated, 1 removed | 1 TODO: code language |
+| #   | Title                                                     | Target Path                                         | Tags                                                   | Links                      | Flags                 |
+| --- | --------------------------------------------------------- | --------------------------------------------------- | ------------------------------------------------------ | -------------------------- | --------------------- |
+| 1   | Tracking changes in open source projects                  | `posts/tracking-changes-in-open-source-projects.md` | changelog, open-source, github, git                    | 3 OK, 1 updated            | —                     |
+| 2   | Power Platform's protection — Azure AD Conditional Access | `posts/01-azure-ad-conditional-access.md`           | power-platform, security, azure-ad, conditional-access | 5 OK, 2 updated, 1 removed | 1 TODO: code language |

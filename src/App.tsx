@@ -18,6 +18,7 @@ import { PostPage } from "./pages/PostPage";
 import { AboutPage } from "./pages/AboutPage";
 import { PrivacyPage } from "./pages/PrivacyPage";
 import { TipsPage } from "./pages/TipsPage";
+import { ResumePage } from "./pages/ResumePage";
 import { useTheme } from "./hooks/useTheme";
 
 interface PageMeta {
@@ -43,6 +44,7 @@ function routeToTabId(pathname: string): string {
   if (pathname === "/about") return "about";
   if (pathname === "/privacy") return "privacy";
   if (pathname === "/tips") return "tips";
+  if (pathname === "/resume") return "resume";
   if (pathname.startsWith("/posts/"))
     return `posts/${pathname.replace("/posts/", "")}`;
   return "welcome";
@@ -146,9 +148,11 @@ function AppLayout() {
         ? "privacy"
         : location.pathname === "/tips"
           ? "tips"
-          : location.pathname.startsWith("/posts/")
-            ? `posts/${location.pathname.replace("/posts/", "")}`
-            : "";
+          : location.pathname === "/resume"
+            ? "resume"
+            : location.pathname.startsWith("/posts/")
+              ? `posts/${location.pathname.replace("/posts/", "")}`
+              : "";
 
   const handleMeta = useCallback((meta: PageMeta) => {
     setPageMeta(meta);
@@ -285,6 +289,10 @@ function AppLayout() {
               element={<PrivacyPage onMeta={handleMeta} />}
             />
             <Route path="/tips" element={<TipsPage onMeta={handleMeta} />} />
+            <Route
+              path="/resume"
+              element={<ResumePage onMeta={handleMeta} />}
+            />
             <Route
               path="/posts/:slug"
               element={<PostPage onMeta={handleMeta} />}

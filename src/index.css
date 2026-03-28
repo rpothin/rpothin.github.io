@@ -454,3 +454,86 @@ main:focus {
   background-color: var(--vscode-list-hoverBackground) !important;
   border-color: var(--vscode-statusBar-background) !important;
 }
+
+/* ── Print / PDF export styles ── */
+@media print {
+  /* Hide chrome — activity bar, sidebar, tab bar, status bar */
+  nav[aria-label="Activity bar"],
+  aside,
+  [class*="TabBar"],
+  footer[role="contentinfo"] {
+    display: none !important;
+  }
+
+  /* Let the main content fill the page */
+  #root,
+  #root > div,
+  #root > div > div {
+    display: block !important;
+    height: auto !important;
+    overflow: visible !important;
+  }
+
+  body {
+    background: white !important;
+    color: #1e1e1e !important;
+    font-size: 11pt;
+    line-height: 1.4;
+  }
+
+  .max-w-4xl {
+    max-width: 100% !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  /* Force readable print colours */
+  .markdown-body,
+  .markdown-body h1,
+  .markdown-body h2,
+  .markdown-body h3,
+  .markdown-body p,
+  .markdown-body li,
+  .markdown-body td,
+  .markdown-body th {
+    color: #1e1e1e !important;
+  }
+
+  .markdown-body a {
+    color: #0060c0 !important;
+    text-decoration: underline !important;
+  }
+
+  .markdown-body h1 {
+    border-bottom-color: #ccc !important;
+  }
+
+  .markdown-body h2 {
+    border-bottom-color: #ddd !important;
+  }
+
+  .markdown-body th {
+    background: #f5f5f5 !important;
+  }
+
+  .markdown-body td,
+  .markdown-body th {
+    border-color: #ccc !important;
+  }
+
+  /* Avoid page breaks inside sections */
+  .markdown-body h2,
+  .markdown-body h3 {
+    break-after: avoid;
+  }
+
+  .markdown-body table,
+  .markdown-body li {
+    break-inside: avoid;
+  }
+
+  /* Elements with print:hidden utility class */
+  .print\:hidden {
+    display: none !important;
+  }
+}

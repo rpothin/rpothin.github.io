@@ -66,6 +66,8 @@ If you're new here, **start with my [posts](/posts)** — they're where the subs
 
 If you'd like to chat about **Power Platform governance**, **AI native software engineering**, **platform engineering**, or **security**, feel free to reach out.
 
+Looking for a quick overview of my background? **[View my resume](/resume)**.
+
 <p align="center">
     <a href="https://github.com/rpothin" alt="GitHub Badge" style="display:inline-block; margin:0 8px;">
         <img src="https://img.shields.io/badge/GitHub-%23121011.svg?logo=github&logoColor=white" /></a>

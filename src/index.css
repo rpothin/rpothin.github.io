@@ -461,6 +461,7 @@ main:focus {
   nav[aria-label="Activity bar"],
   aside,
   [class*="TabBar"],
+  [role="tablist"],
   footer[role="contentinfo"] {
     display: none !important;
   }

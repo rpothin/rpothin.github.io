@@ -1,13 +1,17 @@
 ---
 title: My Resume
-description: Resume of Raphael Pothin — Microsoft MVP, Power Platform governance & security expert, AI native software engineering explorer
+description: Resume of Raphaël Pothin — Power Platform Technical Leader, Microsoft MVP, governance & security expert
 ---
 
-# Raphael Pothin
+# Raphaël Pothin
 
-**Microsoft MVP — Business Applications** | Power Platform Governance & Security | AI Native Software Engineering
+**Power Platform Technical Leader | Microsoft MVP**
+
+Montreal, QC, Canada
 
 <p align="center">
+    <a href="mailto:raphael.pothin@gmail.com" alt="Email Badge" style="display:inline-block; margin:0 8px;">
+        <img src="https://img.shields.io/badge/Email-raphael.pothin%40gmail.com-D14836?logo=gmail&logoColor=white" /></a>
     <a href="https://github.com/rpothin" alt="GitHub Badge" style="display:inline-block; margin:0 8px;">
         <img src="https://img.shields.io/badge/GitHub-%23121011.svg?logo=github&logoColor=white" /></a>
     <a href="https://www.linkedin.com/in/raphael-pothin-642bb657/?locale=en_US" alt="LinkedIn Badge" style="display:inline-block; margin:0 8px;">
@@ -16,67 +20,48 @@ description: Resume of Raphael Pothin — Microsoft MVP, Power Platform governan
         <img src="https://img.shields.io/badge/Blog-rpothin.github.io-007acc?logo=visual-studio-code&logoColor=white" /></a>
 </p>
 
-## Summary
+## Professional Summary
 
-Software engineer and **Microsoft MVP (Business Applications)** with deep expertise in **Power Platform governance, security, and developer experience**. Proven track record of pioneering enterprise-grade patterns — from ALM and DevOps for Power Platform to infrastructure-as-code with Terraform — often well before these approaches became mainstream.
+Power Platform technical leader and **Microsoft Business Applications MVP** (5+ years) with deep expertise in enterprise governance, security, and developer experience. Proven architect of enterprise-scale Power Platform solutions across financial services and regulated industries. Pioneer in Infrastructure as Code for Power Platform governance using Terraform. Currently exploring AI-assisted development paradigms to enhance enterprise development workflows. Recognized thought leader with extensive conference speaking experience and open-source contributions.
 
-Currently exploring the intersection of **AI native software engineering** and **platform engineering**, bringing lessons learned from low-code governance to the emerging challenge of adopting AI with engineering rigor.
+## Core Skills
 
-## Core competencies
+- **Power Platform** — Governance, Security, ALM & DevOps, Solution Architecture, Dataverse, Power Apps, Power Automate and Copilot Studio
+- **Cloud & Infrastructure** — Terraform, Infrastructure as Code, Azure Integration, Azure Functions and Event-Driven Architecture
+- **Security & Compliance** — Microsoft Defender, Microsoft Purview, Microsoft Sentinel, Microsoft Entra ID, Zero Trust Architecture and Power Platform VNet Integration
+- **DevOps & Developer Experience** — Git, GitHub Actions, Azure DevOps, Pipelines in Power Platform, AI-Assisted Development and Automation
+- **Leadership & Community** — Technical Leadership, Enterprise Architecture, Developer Enablement, Public Speaking, Mentoring and Open Source
 
-- **Power Platform governance & security** — guardrails and patterns that enable rather than block, from ALM to threat detection
-- **Platform engineering** — applying infrastructure-as-code and developer experience principles to low-code and enterprise platforms
-- **AI native software engineering** — integrating AI coding agents into engineering workflows with rigor and confidence
-- **DevOps & ALM** — CI/CD pipelines, source control strategies, and release management for Power Platform and beyond
-- **Community leadership** — international conference speaker, open-source contributor, technical blogger
+## Professional Experience
 
-## Professional experience
+### Lead Power Platform Reliability Engineer
 
-### Power Platform "SRE" & Technical Lead
+_Manulife — Montreal, QC, Canada_
 
-*Large institution*
+- Lead enterprise governance initiative implementing Power Platform solution for automated compliance monitoring, policy enforcement, and security oversight across Power Platform and Microsoft Fabric
+- Provide solution architecture guidance and conduct design reviews for mission-critical applications, ensuring alignment with enterprise standards and security requirements
 
-- Shifted focus from delivery to building tooling and patterns that helped delivery teams move faster and with more confidence
-- Designed and implemented governance frameworks for Power Platform at enterprise scale
-- Pioneered security patterns for Power Platform environments before dedicated security solutions became mainstream
-- Built internal developer experience tooling to streamline Power Platform development workflows
+### Power Platform / Dynamics 365 CE Specialist
 
-### Technical Product Owner
+_Desjardins — Montreal, QC, Canada_
 
-*Human-sized organization*
+- Architected and implemented comprehensive ALM strategy supporting enterprise Dynamics 365 Customer Engagement transformation initiative
+- Developed Bicep infrastructure as code to automate Azure resources provisioning and enable hybrid Power Platform-Azure integrations
+- Provided technical leadership and solution architecture for multiple Dynamics 365 CE projects, ensuring scalability and maintainability
+- Launched inaugural Power Platform governance initiative, establishing policies and standards for enterprise adoption
 
-- Led a small team shaping product direction hands-on
-- Bridged technical implementation with business strategy
-- Managed full product lifecycle from requirements to delivery
+## Recognition & Community
 
-### CRM Consultant
+- **Microsoft Business Applications MVP** — [Awarded since 2020, 5+ years](https://mvp.microsoft.com/en-US/MVP/profile/f724ed87-7976-eb11-a812-000d3a8dfe0d)
+- **Conference Speaker** — Power Platform Community Conference (PPCC), DynamicsMinds, Canadian Cloud Summit, and Power Platform French Summit; topics: Governance, Security, Infrastructure as Code, Architecture, AI Integration, ALM Best Practices — [Discover more](https://github.com/rpothin/Presentations)
+- **Technical Writer** — "Power Platform's Protection" series covering security architecture, governance, and AI implementations; previously on [Medium](https://medium.com/rapha%C3%ABl-pothin), now at [rpothin.github.io](https://rpothin.github.io)
+- **Podcast Guest** — Microsoft Innovation Podcast and XrmToolCast
 
-*Early career*
+## Education
 
-- Learned enterprise software delivery fundamentals in a fast-paced environment
-- Benefited from strong peers and mentors who set a solid engineering foundation
-- Gained hands-on experience with Microsoft Dynamics CRM implementation and customization
+- **Engineer's Degree in Information Technology** — INSA Lyon | Lyon, France
+- **Engineer's Degree in Information Technology** — Luleå University of Technology | Luleå, Sweden
 
-## Recognition & community
+## Languages
 
-- **Microsoft MVP (Business Applications)** — Awarded since March 2021 ([MVP profile](https://mvp.microsoft.com/en-US/MVP/profile/f724ed87-7976-eb11-a812-000d3a8dfe0d))
-- **International conference speaker** — Delivered talks across multiple countries ([presentations archive](https://github.com/rpothin/Presentations))
-- **Open-source contributor** — Maintained and contributed to projects in the Power Platform ecosystem
-- **Technical blogger** — Previously on [Medium](https://medium.com/rapha%C3%ABl-pothin), now at [rpothin.github.io](https://rpothin.github.io)
-
-## Current focus areas
-
-- **Terraform + Power Platform** — Applying platform engineering principles to enhance governance, security, and developer experience
-- **AI native software engineering** — Unlocking the true potential of AI coding agents without compromising on engineering rigor and governance
-- **AI Coding Agent Experience** — Exploring how to make AI-assisted development more accessible and effective for enterprise teams
-
-## Technical skills
-
-| Area | Technologies & Tools |
-|---|---|
-| **Power Platform** | Power Apps, Power Automate, Dataverse, Power Pages, Copilot Studio |
-| **DevOps & CI/CD** | GitHub Actions, Azure DevOps, Git |
-| **Infrastructure as Code** | Terraform, Bicep |
-| **Cloud** | Microsoft Azure, Microsoft 365 |
-| **Languages** | TypeScript, C#, PowerShell, YAML, HCL |
-| **Practices** | Platform engineering, SRE principles, governance at scale, security-first design |
+**English:** Professional Fluency | **French:** Professional Fluency

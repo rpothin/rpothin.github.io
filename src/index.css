@@ -103,6 +103,12 @@
 
 /* ── Body ── */
 
+html,
+body {
+  height: 100%;
+  overflow: hidden;
+}
+
 body {
   font-family: "Segoe UI", system-ui, sans-serif;
   background: var(--vscode-editor-background);
@@ -459,20 +465,27 @@ main:focus {
 @media print {
   /* Hide chrome — activity bar, sidebar, tab bar, status bar */
   nav[aria-label="Activity bar"],
-  aside,
-  [class*="TabBar"],
+  nav[aria-label="File explorer"],
+  nav[aria-label="Search"],
   [role="tablist"],
   footer[role="contentinfo"] {
     display: none !important;
   }
 
-  /* Let the main content fill the page */
+  /* Let the main content fill the page without clipping */
+  html,
+  body,
   #root,
   #root > div,
-  #root > div > div {
+  #root > div > div,
+  main#main-content {
     display: block !important;
+    width: 100% !important;
     height: auto !important;
+    min-height: unset !important;
+    max-height: unset !important;
     overflow: visible !important;
+    flex: none !important;
   }
 
   body {

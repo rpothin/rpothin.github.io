@@ -40,7 +40,7 @@ export function PostPage({ onMeta, scrollContainerRef }: PostPageProps) {
     if (!html) return;
     const container = scrollContainerRef?.current;
     if (container) {
-      container.scrollTop = pendingScroll.current;
+      container.scrollTo(0, pendingScroll.current);
     } else {
       window.scrollTo(0, pendingScroll.current);
     }

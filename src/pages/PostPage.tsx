@@ -13,6 +13,8 @@ export function PostPage({ onMeta }: PostPageProps) {
   const [html, setHtml] = useState("");
   const [meta, setMeta] = useState<PostMeta | null>(null);
   const [readingTime, setReadingTime] = useState<number | null>(null);
+  const discussionsUrl =
+    "https://github.com/rpothin/rpothin.github.io/discussions";
 
   const buildBadgeUrl = (
     label: string,
@@ -159,6 +161,43 @@ export function PostPage({ onMeta }: PostPageProps) {
       )}
       {meta?.audioUrl && <AudioPlayer src={meta.audioUrl} title={meta.title} />}
       <MarkdownRenderer html={processedHtml} />
+      <section
+        aria-labelledby="post-discussions-heading"
+        className="mt-10 rounded-md p-5"
+        style={{
+          background: "var(--vscode-sideBar-background)",
+          border: "1px solid var(--vscode-badge-background)",
+        }}
+      >
+        <h2
+          id="post-discussions-heading"
+          className="text-base font-semibold mb-2"
+          style={{ color: "var(--vscode-editor-foreground)" }}
+        >
+          Questions, comments, or feedback?
+        </h2>
+        <p
+          className="text-sm mb-4"
+          style={{ color: "var(--vscode-tab-inactiveForeground)" }}
+        >
+          If this post sparked an idea or a question, join the conversation in
+          the repository discussions.
+        </p>
+        <a
+          href={discussionsUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-2 rounded px-3 py-2 text-sm font-medium no-underline hover:underline"
+          aria-label="Open GitHub Discussions for this repository in a new tab"
+          style={{
+            background: "var(--vscode-statusBar-background)",
+            color: "var(--vscode-statusBar-foreground)",
+          }}
+        >
+          Visit GitHub Discussions
+          <span className="sr-only"> (opens in a new tab)</span>
+        </a>
+      </section>
     </div>
   );
 }

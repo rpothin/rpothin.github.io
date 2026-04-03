@@ -295,12 +295,11 @@ function AppLayout() {
             />
             <Route
               path="/posts/:slug"
-              element={<PostPage onMeta={handleMeta} />}
+              element={
+                <PostPage onMeta={handleMeta} scrollContainerRef={mainRef} />
+              }
             />
-            <Route
-              path="/archive/*"
-              element={<ArchiveRedirect />}
-            />
+            <Route path="/archive/*" element={<ArchiveRedirect />} />
           </Routes>
         </main>
         <StatusBar

@@ -1,4 +1,5 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
+import type React from "react";
 import { useParams } from "react-router-dom";
 import { AudioPlayer } from "../components/AudioPlayer";
 import { MarkdownRenderer } from "../components/MarkdownRenderer";
@@ -7,13 +8,43 @@ import type { PostMeta } from "../types";
 
 interface PostPageProps {
   onMeta: (meta: { title: string; path: string; readingTime: number }) => void;
+  scrollContainerRef?: React.RefObject<HTMLElement | null>;
 }
 
-export function PostPage({ onMeta }: PostPageProps) {
+export function PostPage({ onMeta, scrollContainerRef }: PostPageProps) {
   const { slug } = useParams<{ slug: string }>();
   const [html, setHtml] = useState("");
   const [meta, setMeta] = useState<PostMeta | null>(null);
   const [readingTime, setReadingTime] = useState<number | null>(null);
+
+  // Persists scroll positions per slug across tab switches
+  const scrollPositions = useRef<Map<string, number>>(new Map());
+  // Holds the scroll position to apply once the incoming post's content loads
+  const pendingScroll = useRef<number>(0);
+
+  // When the slug changes: save the current position and set the pending
+  // position for the new slug (0 for a fresh post, saved value for a revisit)
+  useEffect(() => {
+    pendingScroll.current = scrollPositions.current.get(slug ?? "") ?? 0;
+    return () => {
+      const container = scrollContainerRef?.current;
+      scrollPositions.current.set(
+        slug ?? "",
+        container ? container.scrollTop : window.scrollY,
+      );
+    };
+  }, [slug, scrollContainerRef]);
+
+  // Apply the pending scroll position only after the new content has rendered
+  useEffect(() => {
+    if (!html) return;
+    const container = scrollContainerRef?.current;
+    if (container) {
+      container.scrollTop = pendingScroll.current;
+    } else {
+      window.scrollTo(0, pendingScroll.current);
+    }
+  }, [html, scrollContainerRef]);
 
   const buildBadgeUrl = (
     label: string,

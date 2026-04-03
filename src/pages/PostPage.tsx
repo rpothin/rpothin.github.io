@@ -187,7 +187,6 @@ export function PostPage({ onMeta }: PostPageProps) {
           target="_blank"
           rel="noopener noreferrer"
           className="inline-flex items-center gap-2 rounded px-3 py-2 text-sm font-medium no-underline hover:underline"
-          aria-label="Open GitHub Discussions for this repository in a new tab"
           style={{
             background: "var(--vscode-statusBar-background)",
             color: "var(--vscode-statusBar-foreground)",

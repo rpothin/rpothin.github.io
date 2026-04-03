@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { AudioPlayer } from "../components/AudioPlayer";
 import { MarkdownRenderer } from "../components/MarkdownRenderer";
+import { REPOSITORY_DISCUSSIONS_URL } from "../config";
 import type { PostMeta } from "../types";
 
 interface PostPageProps {
@@ -13,8 +14,6 @@ export function PostPage({ onMeta }: PostPageProps) {
   const [html, setHtml] = useState("");
   const [meta, setMeta] = useState<PostMeta | null>(null);
   const [readingTime, setReadingTime] = useState<number | null>(null);
-  const discussionsUrl =
-    "https://github.com/rpothin/rpothin.github.io/discussions";
 
   const buildBadgeUrl = (
     label: string,
@@ -184,7 +183,7 @@ export function PostPage({ onMeta }: PostPageProps) {
           the repository discussions.
         </p>
         <a
-          href={discussionsUrl}
+          href={REPOSITORY_DISCUSSIONS_URL}
           target="_blank"
           rel="noopener noreferrer"
           className="inline-flex items-center gap-2 rounded px-3 py-2 text-sm font-medium no-underline hover:underline"

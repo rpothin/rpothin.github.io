@@ -192,7 +192,7 @@ export function PostPage({ onMeta }: PostPageProps) {
             color: "var(--vscode-statusBar-foreground)",
           }}
         >
-          Visit GitHub Discussions
+          Visit GitHub Discussions (opens in new tab)
         </a>
       </section>
     </div>

@@ -1,18 +1,50 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
+import type React from "react";
 import { useParams } from "react-router-dom";
 import { AudioPlayer } from "../components/AudioPlayer";
 import { MarkdownRenderer } from "../components/MarkdownRenderer";
+import { REPOSITORY_DISCUSSIONS_URL } from "../config";
 import type { PostMeta } from "../types";
 
 interface PostPageProps {
   onMeta: (meta: { title: string; path: string; readingTime: number }) => void;
+  scrollContainerRef?: React.RefObject<HTMLElement | null>;
 }
 
-export function PostPage({ onMeta }: PostPageProps) {
+export function PostPage({ onMeta, scrollContainerRef }: PostPageProps) {
   const { slug } = useParams<{ slug: string }>();
   const [html, setHtml] = useState("");
   const [meta, setMeta] = useState<PostMeta | null>(null);
   const [readingTime, setReadingTime] = useState<number | null>(null);
+
+  // Persists scroll positions per slug across tab switches
+  const scrollPositions = useRef<Map<string, number>>(new Map());
+  // Holds the scroll position to apply once the incoming post's content loads
+  const pendingScroll = useRef<number>(0);
+
+  // When the slug changes: save the current position and set the pending
+  // position for the new slug (0 for a fresh post, saved value for a revisit)
+  useEffect(() => {
+    pendingScroll.current = scrollPositions.current.get(slug ?? "") ?? 0;
+    return () => {
+      const container = scrollContainerRef?.current;
+      scrollPositions.current.set(
+        slug ?? "",
+        container ? container.scrollTop : window.scrollY,
+      );
+    };
+  }, [slug, scrollContainerRef]);
+
+  // Apply the pending scroll position only after the new content has rendered
+  useEffect(() => {
+    if (!html) return;
+    const container = scrollContainerRef?.current;
+    if (container) {
+      container.scrollTo(0, pendingScroll.current);
+    } else {
+      window.scrollTo(0, pendingScroll.current);
+    }
+  }, [html, scrollContainerRef]);
 
   const buildBadgeUrl = (
     label: string,
@@ -159,6 +191,41 @@ export function PostPage({ onMeta }: PostPageProps) {
       )}
       {meta?.audioUrl && <AudioPlayer src={meta.audioUrl} title={meta.title} />}
       <MarkdownRenderer html={processedHtml} />
+      <section
+        aria-labelledby="post-discussions-heading"
+        className="mt-10 rounded-md p-5"
+        style={{
+          background: "var(--vscode-sideBar-background)",
+          border: "1px solid var(--vscode-badge-background)",
+        }}
+      >
+        <h2
+          id="post-discussions-heading"
+          className="text-base font-semibold mb-2"
+          style={{ color: "var(--vscode-editor-foreground)" }}
+        >
+          Questions, comments, or feedback?
+        </h2>
+        <p
+          className="text-sm mb-4"
+          style={{ color: "var(--vscode-tab-inactiveForeground)" }}
+        >
+          If this post sparked an idea or a question, join the conversation in
+          the repository discussions.
+        </p>
+        <a
+          href={REPOSITORY_DISCUSSIONS_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-2 rounded px-3 py-2 text-sm font-medium no-underline hover:underline"
+          style={{
+            background: "var(--vscode-statusBar-background)",
+            color: "var(--vscode-statusBar-foreground)",
+          }}
+        >
+          Visit GitHub Discussions (opens in new tab)
+        </a>
+      </section>
     </div>
   );
 }

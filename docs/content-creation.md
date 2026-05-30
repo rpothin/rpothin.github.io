@@ -1,12 +1,20 @@
 # Content creation
 
-This site uses a **hybrid content creation approach** that pairs the [Ghostwriter for VS Code](https://marketplace.visualstudio.com/items?itemName=eliostruyf.vscode-ghostwriter) extension with a custom Copilot agent (`@content-ghostwriter`) for post-processing. The extension handles the creative phase (brainstorming, interviewing, drafting); the agent handles the mechanical phase (validation, formatting, link checking, build verification).
+This site uses a **hybrid content creation approach** that pairs AI-assisted Ghostwriter writing agents with a custom Copilot agent (`@content-ghostwriter`) for post-processing. The writing agents handle the creative phase (brainstorming, interviewing, drafting); the finishing agent handles the mechanical phase (validation, formatting, link checking, build verification).
+
+Two complementary paths lead to the same pipeline:
+
+- **VS Code path** — the [Ghostwriter for VS Code](https://marketplace.visualstudio.com/items?itemName=eliostruyf.vscode-ghostwriter) extension provides a dedicated sidebar with interview, writing, and draft-iteration modes. Transcripts and drafts are auto-saved as files in `.ghostwriter/`.
+- **Copilot App path** — a [Ghostwriter extension bridge](.github/extensions/ghostwriter/extension.mjs) registers the same agents as chat tools (`ghostwriter`, `ghostwriter_list`) inside the Copilot app, so the full writing workflow runs without leaving the app.
+
+Both paths converge once a draft lands in `content/posts/`: the `@content-ghostwriter` agent validates and formats it for publication.
 
 ## Table of contents
 
 - [Philosophy](#philosophy)
 - [Prerequisites](#prerequisites)
-- [End-to-end workflow](#end-to-end-workflow)
+- [Which approach?](#which-approach)
+- [VS Code workflow](#vs-code-workflow)
   - [Phase 1 — Generate a voice profile (one-time setup)](#phase-1--generate-a-voice-profile-one-time-setup)
   - [Phase 2 — Interview](#phase-2--interview)
   - [Phase 3 — Write a first draft](#phase-3--write-a-first-draft)
@@ -14,8 +22,16 @@ This site uses a **hybrid content creation approach** that pairs the [Ghostwrite
   - [Phase 5 — Save to workspace](#phase-5--save-to-workspace)
   - [Phase 6 — Polish with the content-ghostwriter agent](#phase-6--polish-with-the-content-ghostwriter-agent)
   - [Phase 7 — Final review and publish](#phase-7--final-review-and-publish)
+- [Copilot App workflow](#copilot-app-workflow)
+  - [Phase A — Discover available agents](#phase-a--discover-available-agents)
+  - [Phase B — Brainstorm (optional)](#phase-b--brainstorm-optional)
+  - [Phase C — Interview in chat](#phase-c--interview-in-chat)
+  - [Phase D — Write and iterate in chat](#phase-d--write-and-iterate-in-chat)
+  - [Phase E — Save, polish, and publish](#phase-e--save-polish-and-publish)
 - [Tool reference](#tool-reference)
-  - [Ghostwriter extension](#ghostwriter-extension)
+  - [Ghostwriter extension bridge](#ghostwriter-extension-bridge)
+  - [Content-standards skill](#content-standards-skill)
+  - [Ghostwriter for VS Code](#ghostwriter-extension)
   - [Content-ghostwriter agent](#content-ghostwriter-agent)
 - [Frontmatter schema](#frontmatter-schema)
 - [Ghostwriter file structure](#ghostwriter-file-structure)
@@ -40,19 +56,76 @@ Background reading: [Ghostwriter for VS Code: your AI interviewer in your editor
 
 ## Prerequisites
 
-| Requirement                                                                                                    | Notes                                                       |
-| -------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------- |
-| **VS Code ≥ 1.108.1**                                                                                          | The extension requires this minimum version                 |
-| **GitHub Copilot subscription**                                                                                | The extension uses the Copilot Chat API for all AI features |
-| **GitHub Copilot extension**                                                                                   | Must be installed and signed in                             |
-| **[Ghostwriter extension](https://marketplace.visualstudio.com/items?itemName=eliostruyf.vscode-ghostwriter)** | Install from the VS Code marketplace                        |
-| **Node.js**                                                                                                    | Needed for the build pipeline (`npm run build:content`)     |
+### Shared (both paths)
+
+| Requirement                     | Notes                                                                 |
+| ------------------------------- | --------------------------------------------------------------------- |
+| **GitHub Copilot subscription** | Required for all AI features in both paths                            |
+| **Node.js**                     | Needed for the polish step's build pipeline (`npm run build:content`) |
+
+### VS Code path
+
+| Requirement                                                                                                       | Notes                                                       |
+| ----------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------- |
+| **VS Code ≥ 1.108.1**                                                                                             | The extension requires this minimum version                 |
+| **GitHub Copilot extension**                                                                                      | Must be installed and signed in                             |
+| **[Ghostwriter for VS Code](https://marketplace.visualstudio.com/items?itemName=eliostruyf.vscode-ghostwriter)** | Install from the VS Code marketplace                        |
+
+### Copilot App path
+
+| Requirement                      | Notes                                                                                   |
+| -------------------------------- | --------------------------------------------------------------------------------------- |
+| **Ghostwriter extension bridge** | Already present in this repo at `.github/extensions/ghostwriter/extension.mjs`         |
+| **Ghostwriter agents installed** | Run `npx @estruyf/ghostwriter --copilot` once — drops agents into `~/.copilot/agents/` |
 
 ---
 
-## End-to-end workflow
+## Which approach?
 
-The workflow has seven phases. Phases 1 is a one-time setup; phases 2-7 repeat for each new post.
+Both workflows use the same [ghostwriter-agents-ai](https://github.com/estruyf/ghostwriter-agents-ai) agents and end at the same `@content-ghostwriter` polish step. Choose based on where you are working.
+
+```mermaid
+flowchart LR
+    subgraph vsc ["VS Code path"]
+        direction TB
+        V1["Interview (sidebar)"] --> V2["Write & iterate (sidebar)"] --> V3["Export to\ncontent/posts/"]
+    end
+    subgraph cop ["Copilot App path"]
+        direction TB
+        C1["Interview (chat)"] --> C2["Write & iterate (chat)"] --> C3["Save to\ncontent/posts/"]
+    end
+    V3 --> PO
+    C3 --> PO
+    PO["@content-ghostwriter\nPolish + validate"] --> PB(["Commit & push"])
+```
+
+| Situation | Recommended path |
+| --------- | ---------------- |
+| Working in VS Code with the repo open | **VS Code** — richer sidebar UX, transcripts and drafts auto-saved to `.ghostwriter/` |
+| Working in the Copilot app without VS Code open | **Copilot App** — no context switch, everything stays in the chat |
+| You want a persistent transcript and revision history | **VS Code** — auto-saves `.ghostwriter/transcripts/*.md` and draft revisions |
+| Quick brainstorm or exploratory draft | **Copilot App** — fast to start, no sidebar setup needed |
+
+> [!NOTE]
+> The Copilot App path does **not** provide automatic transcript files, draft revision history, or a built-in resume flow. The conversation window is your working artifact — save it manually if you want to preserve it across sessions.
+
+---
+
+## VS Code workflow
+
+The VS Code workflow uses the Ghostwriter for VS Code extension and has seven phases. Phase 1 is a one-time setup; phases 2-7 repeat for each new post.
+
+```mermaid
+flowchart TD
+    VP["Phase 1: Generate voice profile\n(one-time setup)"] -.->|style reference| W
+    B(["Start new post"]) --> I
+    I["Phase 2: Interview\ntranscript auto-saved"] --> W
+    W["Phase 3: Write first draft\nfrom transcript + voice"] --> R
+    R["Phase 4: Iterate draft\nin sidebar"] --> E
+    E["Phase 5: Export to\ncontent/posts/"] --> P
+    P["Phase 6: @content-ghostwriter\nPolish + validate"] --> F
+    F["Phase 7: Review comments\nand commit & push"]
+```
 
 ### Phase 1 — Generate a voice profile (one-time setup)
 
@@ -171,7 +244,204 @@ git push
 
 ---
 
+## Copilot App workflow
+
+The Copilot App path uses the [Ghostwriter extension bridge](.github/extensions/ghostwriter/extension.mjs) — a lightweight ES module that registers the ghostwriter-agents-ai agents as chat tools. Unlike the VS Code path, there are no transcript files or draft revisions; the conversation itself is the working artifact.
+
+> [!IMPORTANT]
+> **Session-scoped behaviour:** activating an agent reprograms the LLM for the current session only. Closing the session resets to the default persona. Newly installed agents appear only in new sessions (the extension scans `~/.copilot/agents/` at startup). For a clean agent switch mid-session, opening a fresh session is the safest option.
+
+```mermaid
+flowchart TD
+    START(["Open session\nin Copilot app"]) --> HINT
+    HINT["onSessionStart hook\nauto-injects Ghostwriter hint"] --> LIST
+    LIST["ghostwriter_list\nDiscover available agents"] --> DEC
+    DEC{"Angle clear?"}
+    DEC -- "No" --> BR
+    DEC -- "Yes" --> INT
+    BR["ghostwriter brainstorm\nExplore topic angles"] --> INT
+    INT["ghostwriter interview\nConduct interview in chat"] --> WR
+    WR["ghostwriter writer\nDraft in chat"] --> SAVE
+    SAVE["Save draft to\ncontent/posts/"] --> POL
+    POL["@content-ghostwriter\nPolish + validate"] --> COMMIT
+    COMMIT(["Commit & push"])
+
+    style START fill:#dbeafe,stroke:#3b82f6
+    style COMMIT fill:#dcfce7,stroke:#16a34a
+```
+
+### Phase A — Discover available agents
+
+When you open any session in the Copilot app, the `onSessionStart` hook automatically injects a hint into the context. You can also call `ghostwriter_list` at any time to see what is installed.
+
+**Example:**
+
+```
+You: What Ghostwriter agents can I use?
+
+Copilot: [calls ghostwriter_list]
+
+Ghostwriter agents available:
+
+• brainstorm — Ghostwriter Brainstormer: Facilitates brainstorming sessions to
+  explore ideas and generate actionable plans
+• context   — Ghostwriter Context: Loads the current work-in-progress content
+  to context for further commands
+• interview — Ghostwriter Interviewer: Interviews an author to produce content
+  (blog posts, articles, documentation, etc.)
+• product-moral-compass — Ghostwriter Product Moral Compass: Guides developers
+  through thoughtful decision-making before building software
+• review    — Ghostwriter Reviewer: Reviews content against editorial guidelines
+• voice     — Ghostwriter Voice: Analyzes the voice and tone of the user's
+  writing to replicate it in generated text
+• writer    — Ghostwriter Writer: Writes comprehensive, well-cited content
+  based on a draft
+```
+
+> [!TIP]
+> Run `npx @estruyf/ghostwriter --copilot` once to install the agents. Open a new session afterward — the extension scans the agents directory at startup, not dynamically.
+
+### Phase B — Brainstorm (optional)
+
+Use the `brainstorm` agent when you have a general topic but need to sharpen the angle before committing to an interview. Skip this phase when the scope is already clear.
+
+**Example** — the following phases use this topic as a throughline:
+
+```
+You: Activate the brainstorm agent. I want to write about using GitHub Copilot
+     in Power Platform ALM workflows, but I'm not sure what angle to take.
+
+Copilot: [calls ghostwriter with agent: "brainstorm"]
+[Ghostwriter: "Ghostwriter Brainstormer" activated]
+
+Great topic. Let's map the angles:
+
+1. The pragmatic guide — concrete steps: Copilot in solution export pipelines,
+   PR reviews, deployment scripts. Best for practitioners already doing ALM.
+
+2. The honest review — where Copilot genuinely helps and where it falls short
+   in the Power Platform context. High credibility signal, opinion-driven.
+
+3. The SRE lens — framing Copilot as a reliability tool: catching
+   misconfigurations, reviewing Dataverse schema changes before they ship.
+   Builds naturally on your existing SRE writing.
+
+4. The cultural shift — how AI-assisted development changes expectations for
+   low-code developers. Broader audience, less technical depth required.
+
+Which angle fits the post you have in mind? Or should we combine a couple?
+
+You: The honest review angle — I want to share what actually works and what
+     does not, based on a year of using it in real projects.
+
+Copilot: Good. That gives the post a strong credibility anchor. Let's move
+         to the interview to extract the specifics.
+```
+
+### Phase C — Interview in chat
+
+Activate the `interview` agent to conduct a structured interview. The AI will ask targeted questions to draw out your knowledge, experiences, and concrete examples — the same process as the VS Code sidebar interview, but entirely in the chat window.
+
+**Example** — continuing from the brainstorm above:
+
+```
+You: Activate the interview agent.
+
+Copilot: [calls ghostwriter with agent: "interview"]
+[Ghostwriter: "Ghostwriter Interviewer" activated]
+
+Let's dig into your honest take on GitHub Copilot in Power Platform ALM.
+First question:
+
+After a year of real-project use, what is the single most useful thing
+Copilot does for you in a Power Platform ALM workflow — the thing you
+would immediately miss if it disappeared?
+
+You: Reviewing Dataverse schema changes in pull requests. I describe what
+     I'm changing and why, and Copilot catches implications I missed —
+     like a cascade effect on a plug-in or a calculated column I forgot about.
+
+Copilot: That's a concrete, testable benefit. Follow-up: is there a scenario
+         where Copilot gave you confident-sounding but wrong advice on a
+         Power Platform artefact — something that could have gone to production?
+
+You: Yes — it once suggested a solution component dependency that doesn't
+     exist in the pac CLI schema. The suggestion looked plausible but would
+     have broken the deployment pipeline silently.
+
+[interview continues for several more exchanges...]
+```
+
+> [!NOTE]
+> The conversation window is your transcript. If you want to preserve it, copy the exchange into a `.ghostwriter/transcripts/` file before closing the session.
+
+### Phase D — Write and iterate in chat
+
+Once the interview is complete, switch to the `writer` agent to produce the first draft. Iterate conversationally until the draft feels right.
+
+**Example** — continuing from the interview above:
+
+```
+You: The interview is done. Activate the writer agent and write the article.
+     Match the conversational but technically precise tone of my existing posts.
+
+Copilot: [calls ghostwriter with agent: "writer"]
+[Ghostwriter: "Ghostwriter Writer" activated]
+
+Here is a first draft based on our conversation:
+
+---
+title: "GitHub Copilot in Power Platform ALM: an honest review after a year"
+date: 2026-05-29
+tags: [power-platform, alm, github, github-copilot, devops]
+description: "An honest assessment of where GitHub Copilot genuinely helps
+in Power Platform ALM workflows and where it still falls short — based on
+a year of real-project use."
+---
+
+A year ago I started systematically integrating GitHub Copilot into my
+Power Platform ALM workflow. Not as an experiment — as a real tool, in
+real projects, with real consequences when it got things wrong...
+
+[draft continues...]
+---
+
+You: The intro lands well. Section 2 reads too list-heavy — can you turn the
+     bullet list into flowing prose that still hits the same points?
+
+Copilot: [rewrites section 2 with prose instead of bullets]
+```
+
+> [!TIP]
+> Use the `context` agent to load an existing post into the conversation before asking the writer to adjust style: activate `ghostwriter context` and point it at a reference post.
+
+### Phase E — Save, polish, and publish
+
+Copy the final draft from the chat into `content/posts/` and hand off to `@content-ghostwriter`. This is the same finishing pipeline as [VS Code Phase 6](#phase-6--polish-with-the-content-ghostwriter-agent) and [Phase 7](#phase-7--final-review-and-publish) — follow those steps from this point onward.
+
+1. Create `content/posts/github-copilot-power-platform-alm-honest-review.md` and paste the draft.
+2. In Copilot Chat, run:
+
+```text
+@content-ghostwriter Polish content/posts/github-copilot-power-platform-alm-honest-review.md
+```
+
+3. Follow the review and publish steps described in [Phase 6](#phase-6--polish-with-the-content-ghostwriter-agent) and [Phase 7](#phase-7--final-review-and-publish).
+
+---
+
 ## Tool reference
+
+### Ghostwriter extension bridge
+
+|                    |                                                                                                                     |
+| ------------------ | ------------------------------------------------------------------------------------------------------------------- |
+| **File**           | `.github/extensions/ghostwriter/extension.mjs`                                                                      |
+| **Auto-loaded**    | Yes — the Copilot app loads all `.github/extensions/*/extension.mjs` files at session start                         |
+| **Tools**          | `ghostwriter` (activate an agent by key), `ghostwriter_list` (list all available agents)                            |
+| **Hook**           | `onSessionStart` — injects a context hint when agents are present                                                   |
+| **Agent discovery**| Scans `~/.copilot/agents/*.ghostwriter.md` at startup; new sessions pick up newly installed agents                  |
+| **Install agents** | `npx @estruyf/ghostwriter --copilot` — drops agent files into `~/.copilot/agents/`                                  |
 
 ### Content-standards skill
 
@@ -184,7 +454,7 @@ git push
 
 Both the content-ghostwriter and migration-ghostwriter agents reference this skill as their shared source of truth for content standards.
 
-### Ghostwriter extension
+### Ghostwriter for VS Code
 
 |                 |                                                                                                                                                                |
 | --------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -290,3 +560,7 @@ This means `voices/`, `interviewer/`, and `writer/` folders **are** tracked in g
 - **Writer agents:** Similarly, create writer prompts in `.ghostwriter/writer/` tuned to specific formats.
 - **Images:** See [`images.md`](./images.md) for how to add images to posts. The Ghostwriter extension can attach images during interviews/writing, but you may need to move them to the correct `public/content/posts/<slug>/` folder before publishing.
 - **Quick manual posts:** The hybrid workflow is recommended, but you can always write a post by hand in Markdown and run `@content-ghostwriter` to validate it — the agent handles any source, not just Ghostwriter output.
+- **Copilot App — save the transcript:** The Copilot App path does not auto-save transcripts. If the interview is long or you want to resume later, paste the conversation into `.ghostwriter/transcripts/` before closing the session.
+- **Copilot App — switching agents:** You can activate multiple agents in sequence within the same session (brainstorm → interview → writer). Each activation injects the new agent's instructions on top of the existing context, so activation order matters. When in doubt, open a fresh session for a clean slate.
+- **Copilot App — agent not found:** If `ghostwriter` returns "no agents installed", run `npx @estruyf/ghostwriter --copilot` to install them, then open a new session — the extension scans the agents directory at startup, not dynamically.
+- **Copilot App — voice consistency:** Activate the `voice` agent before writing if you want the LLM to analyse your existing posts and match your tone. Point it at a reference post in the conversation, then switch to the `writer` agent to produce the draft.

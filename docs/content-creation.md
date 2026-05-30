@@ -4,7 +4,7 @@ This site uses a **hybrid content creation approach** that pairs AI-assisted Gho
 
 Two paths lead to the same pipeline. The Copilot App path is the recommended starting point:
 
-- **Copilot App path** _(recommended)_ — a [Ghostwriter extension bridge](.github/extensions/ghostwriter/extension.mjs) registers writing agents as chat tools (`ghostwriter`, `ghostwriter_list`) inside the Copilot app. No sidebar, no extra window — the full workflow runs in the chat.
+- **Copilot App path** _(recommended)_ — a [Ghostwriter extension bridge](../.github/extensions/ghostwriter/extension.mjs) registers writing agents as chat tools (`ghostwriter`, `ghostwriter_list`) inside the Copilot app. No sidebar, no extra window — the full workflow runs in the chat.
 - **VS Code path** _(fallback)_ — the [Ghostwriter for VS Code](https://marketplace.visualstudio.com/items?itemName=eliostruyf.vscode-ghostwriter) extension provides a dedicated sidebar with interview, writing, and draft-iteration modes. Choose this when you need persistent transcript files or a draft revision history.
 
 Both paths converge once a draft lands in `content/posts/`: the `@content-ghostwriter` agent validates and formats it for publication.
@@ -30,6 +30,7 @@ Both paths converge once a draft lands in `content/posts/`: the `@content-ghostw
   - [Phase 7 — Final review and publish](#phase-7--final-review-and-publish)
 - [Tool reference](#tool-reference)
   - [Ghostwriter extension bridge](#ghostwriter-extension-bridge)
+  - [Ghost launcher skill](#ghost-launcher-skill)
   - [Content-standards skill](#content-standards-skill)
   - [Ghostwriter for VS Code](#ghostwriter-for-vs-code)
   - [Content-ghostwriter agent](#content-ghostwriter-agent)
@@ -113,7 +114,7 @@ flowchart LR
 
 ## Copilot App workflow
 
-The Copilot App path uses the [Ghostwriter extension bridge](.github/extensions/ghostwriter/extension.mjs) — a lightweight ES module that registers the ghostwriter-agents-ai agents as chat tools. Unlike the VS Code path, there are no transcript files or draft revisions; the conversation itself is the working artifact.
+The Copilot App path uses the [Ghostwriter extension bridge](../.github/extensions/ghostwriter/extension.mjs) — a lightweight ES module that registers the ghostwriter-agents-ai agents as chat tools. Unlike the VS Code path, there are no transcript files or draft revisions; the conversation itself is the working artifact.
 
 > [!IMPORTANT]
 > **Session-scoped behaviour:** activating an agent reprograms the LLM for the current session only. Closing the session resets to the default persona. Newly installed agents appear only in new sessions (the extension scans `~/.copilot/agents/` at startup). For a clean agent switch mid-session, opening a fresh session is the safest option.
@@ -139,7 +140,7 @@ flowchart TD
 
 ### Phase A — Discover available agents
 
-When you open any session in the Copilot app, the `onSessionStart` hook automatically injects a hint into the context. You can also call `ghostwriter_list` at any time to see what is installed.
+When you open any session in the Copilot app, the `onSessionStart` hook automatically injects a hint into the context. You can also type `/ghost` (a launcher skill in this repo) or call `ghostwriter_list` at any time to see what is installed.
 
 **Example:**
 
@@ -442,6 +443,15 @@ git push
 | **Hook**           | `onSessionStart` — injects a context hint when agents are present                                                   |
 | **Agent discovery**| Scans `~/.copilot/agents/*.ghostwriter.md` at startup; new sessions pick up newly installed agents                  |
 | **Install agents** | `npx @estruyf/ghostwriter --copilot` — drops agent files into `~/.copilot/agents/`                                  |
+
+### Ghost launcher skill
+
+|              |                                                                                                                          |
+| ------------ | ------------------------------------------------------------------------------------------------------------------------ |
+| **File**     | `.github/skills/ghost/SKILL.md`                                                                                          |
+| **Invoke**   | `/ghost` in the Copilot app composer                                                                                     |
+| **Purpose**  | Slash-command entry point for the Ghostwriter extension. Calls `ghostwriter_list` if no agent is specified, or activates a named agent directly. |
+| **Note**     | Appears in the `/` autocomplete menu; requires a new session to be discovered after first install.                       |
 
 ### Content-standards skill
 

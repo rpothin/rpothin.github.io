@@ -2,10 +2,10 @@
 
 This site uses a **hybrid content creation approach** that pairs AI-assisted Ghostwriter writing agents with a custom Copilot agent (`@content-ghostwriter`) for post-processing. The writing agents handle the creative phase (brainstorming, interviewing, drafting); the finishing agent handles the mechanical phase (validation, formatting, link checking, build verification).
 
-Two complementary paths lead to the same pipeline:
+Two paths lead to the same pipeline. The Copilot App path is the recommended starting point:
 
-- **VS Code path** — the [Ghostwriter for VS Code](https://marketplace.visualstudio.com/items?itemName=eliostruyf.vscode-ghostwriter) extension provides a dedicated sidebar with interview, writing, and draft-iteration modes. Transcripts and drafts are auto-saved as files in `.ghostwriter/`.
-- **Copilot App path** — a [Ghostwriter extension bridge](.github/extensions/ghostwriter/extension.mjs) registers the same agents as chat tools (`ghostwriter`, `ghostwriter_list`) inside the Copilot app, so the full writing workflow runs without leaving the app.
+- **Copilot App path** _(recommended)_ — a [Ghostwriter extension bridge](.github/extensions/ghostwriter/extension.mjs) registers writing agents as chat tools (`ghostwriter`, `ghostwriter_list`) inside the Copilot app. No sidebar, no extra window — the full workflow runs in the chat.
+- **VS Code path** _(fallback)_ — the [Ghostwriter for VS Code](https://marketplace.visualstudio.com/items?itemName=eliostruyf.vscode-ghostwriter) extension provides a dedicated sidebar with interview, writing, and draft-iteration modes. Choose this when you need persistent transcript files or a draft revision history.
 
 Both paths converge once a draft lands in `content/posts/`: the `@content-ghostwriter` agent validates and formats it for publication.
 
@@ -14,7 +14,13 @@ Both paths converge once a draft lands in `content/posts/`: the `@content-ghostw
 - [Philosophy](#philosophy)
 - [Prerequisites](#prerequisites)
 - [Which approach?](#which-approach)
-- [VS Code workflow](#vs-code-workflow)
+- [Copilot App workflow](#copilot-app-workflow) _(recommended)_
+  - [Phase A — Discover available agents](#phase-a--discover-available-agents)
+  - [Phase B — Brainstorm (optional)](#phase-b--brainstorm-optional)
+  - [Phase C — Interview in chat](#phase-c--interview-in-chat)
+  - [Phase D — Write and iterate in chat](#phase-d--write-and-iterate-in-chat)
+  - [Phase E — Save, polish, and publish](#phase-e--save-polish-and-publish)
+- [VS Code workflow (fallback)](#vs-code-workflow-fallback)
   - [Phase 1 — Generate a voice profile (one-time setup)](#phase-1--generate-a-voice-profile-one-time-setup)
   - [Phase 2 — Interview](#phase-2--interview)
   - [Phase 3 — Write a first draft](#phase-3--write-a-first-draft)
@@ -22,16 +28,10 @@ Both paths converge once a draft lands in `content/posts/`: the `@content-ghostw
   - [Phase 5 — Save to workspace](#phase-5--save-to-workspace)
   - [Phase 6 — Polish with the content-ghostwriter agent](#phase-6--polish-with-the-content-ghostwriter-agent)
   - [Phase 7 — Final review and publish](#phase-7--final-review-and-publish)
-- [Copilot App workflow](#copilot-app-workflow)
-  - [Phase A — Discover available agents](#phase-a--discover-available-agents)
-  - [Phase B — Brainstorm (optional)](#phase-b--brainstorm-optional)
-  - [Phase C — Interview in chat](#phase-c--interview-in-chat)
-  - [Phase D — Write and iterate in chat](#phase-d--write-and-iterate-in-chat)
-  - [Phase E — Save, polish, and publish](#phase-e--save-polish-and-publish)
 - [Tool reference](#tool-reference)
   - [Ghostwriter extension bridge](#ghostwriter-extension-bridge)
   - [Content-standards skill](#content-standards-skill)
-  - [Ghostwriter for VS Code](#ghostwriter-extension)
+  - [Ghostwriter for VS Code](#ghostwriter-for-vs-code)
   - [Content-ghostwriter agent](#content-ghostwriter-agent)
 - [Frontmatter schema](#frontmatter-schema)
 - [Ghostwriter file structure](#ghostwriter-file-structure)
@@ -82,165 +82,32 @@ Background reading: [Ghostwriter for VS Code: your AI interviewer in your editor
 
 ## Which approach?
 
-Both workflows use the same [ghostwriter-agents-ai](https://github.com/estruyf/ghostwriter-agents-ai) agents and end at the same `@content-ghostwriter` polish step. Choose based on where you are working.
+The **Copilot App path is the recommended default** — it requires no extra installation beyond running `npx @estruyf/ghostwriter --copilot` once, and the full writing workflow runs in the chat. Both paths use the same [ghostwriter-agents-ai](https://github.com/estruyf/ghostwriter-agents-ai) agents and converge at the same `@content-ghostwriter` polish step.
 
 ```mermaid
 flowchart LR
-    subgraph vsc ["VS Code path"]
-        direction TB
-        V1["Interview (sidebar)"] --> V2["Write & iterate (sidebar)"] --> V3["Export to\ncontent/posts/"]
-    end
-    subgraph cop ["Copilot App path"]
+    subgraph cop ["Copilot App path (recommended)"]
         direction TB
         C1["Interview (chat)"] --> C2["Write & iterate (chat)"] --> C3["Save to\ncontent/posts/"]
     end
-    V3 --> PO
+    subgraph vsc ["VS Code path (fallback)"]
+        direction TB
+        V1["Interview (sidebar)"] --> V2["Write & iterate (sidebar)"] --> V3["Export to\ncontent/posts/"]
+    end
     C3 --> PO
+    V3 --> PO
     PO["@content-ghostwriter\nPolish + validate"] --> PB(["Commit & push"])
 ```
 
-| Situation | Recommended path |
-| --------- | ---------------- |
-| Working in VS Code with the repo open | **VS Code** — richer sidebar UX, transcripts and drafts auto-saved to `.ghostwriter/` |
-| Working in the Copilot app without VS Code open | **Copilot App** — no context switch, everything stays in the chat |
-| You want a persistent transcript and revision history | **VS Code** — auto-saves `.ghostwriter/transcripts/*.md` and draft revisions |
+| Situation | Path |
+| --------- | ---- |
+| Default — no special requirements | **Copilot App** (recommended) |
 | Quick brainstorm or exploratory draft | **Copilot App** — fast to start, no sidebar setup needed |
+| Working exclusively in VS Code and want sidebar UX | **VS Code** (fallback) |
+| You need persistent transcript files or draft revision history | **VS Code** (fallback) — auto-saves to `.ghostwriter/` |
 
 > [!NOTE]
-> The Copilot App path does **not** provide automatic transcript files, draft revision history, or a built-in resume flow. The conversation window is your working artifact — save it manually if you want to preserve it across sessions.
-
----
-
-## VS Code workflow
-
-The VS Code workflow uses the Ghostwriter for VS Code extension and has seven phases. Phase 1 is a one-time setup; phases 2-7 repeat for each new post.
-
-```mermaid
-flowchart TD
-    VP["Phase 1: Generate voice profile\n(one-time setup)"] -.->|style reference| W
-    B(["Start new post"]) --> I
-    I["Phase 2: Interview\ntranscript auto-saved"] --> W
-    W["Phase 3: Write first draft\nfrom transcript + voice"] --> R
-    R["Phase 4: Iterate draft\nin sidebar"] --> E
-    E["Phase 5: Export to\ncontent/posts/"] --> P
-    P["Phase 6: @content-ghostwriter\nPolish + validate"] --> F
-    F["Phase 7: Review comments\nand commit & push"]
-```
-
-### Phase 1 — Generate a voice profile (one-time setup)
-
-The voice profile teaches the AI what your writing sounds like so drafts match your natural style.
-
-1. Open the Ghostwriter panel: `Ctrl+Shift+P` → `Ghostwriter: Open Ghostwriter`.
-2. Click **Generate Voice**.
-3. Select a Copilot model (e.g. GPT-4o).
-4. Click **Generate Voice Profile**.
-5. When prompted, select the `content/` folder — this gives the AI access to your published posts in `content/posts/` as writing samples.
-6. The profile is saved to `.ghostwriter/voices/voice-YYYY-MM-DD.md`.
-7. Review the generated profile and tweak anything that feels off.
-
-> Regenerate your voice profile periodically (every few months or after a noticeable style shift) so it stays current.
-
-### Phase 2 — Interview
-
-1. Open the Ghostwriter panel.
-2. Click **Start Interview**.
-3. _(Optional)_ Select or create a custom interviewer agent in `.ghostwriter/interviewer/` to shape the interview style.
-4. Select your preferred Copilot model.
-5. The AI asks for your topic — give it a concise description.
-6. A transcript file is created immediately in `.ghostwriter/transcripts/`.
-7. Answer the AI's questions conversationally. Share examples, opinions, and code snippets.
-8. Each Q&A pair is saved to the transcript in real-time (safe against crashes).
-9. The AI will detect when the interview is complete.
-
-> **Tip:** If an interview is interrupted, you can resume it: Start Interview → Resume Interview → select the existing transcript.
-
-### Phase 3 — Write a first draft
-
-1. In the Ghostwriter panel, click **Write Article**.
-2. _(Optional)_ Select or create a writer agent in `.ghostwriter/writer/`.
-3. Select the transcript from the previous step.
-4. Select your voice profile from `.ghostwriter/voices/`.
-5. Configure writing options:
-   - **Style:** Conversational _(recommended for this blog)_
-   - **Headings:** Enabled
-   - **SEO:** Enabled if desired, with relevant keywords
-   - **Frontmatter template** — use this template to match the site's schema:
-
-   ```yaml
-   ---
-   title: ""
-   date: ""
-   tags: []
-   description: ""
-   ---
-   ```
-
-6. Select your Copilot model and click **Start Writing**.
-7. Watch the draft stream in real-time.
-
-### Phase 4 — Iterate on the draft
-
-Instead of saving immediately, click **Iterate Draft** to enter Draft Iteration Mode:
-
-1. The draft is saved to `.ghostwriter/drafts/` with the interview topic as the title.
-2. Use the refinement input to improve the draft conversationally:
-   - _"Make the intro more engaging"_
-   - _"Add more technical depth to section 3"_
-   - _"This sounds too formal, make it more conversational"_
-3. Each refinement creates a new revision with full history.
-4. Navigate between revisions with prev/next controls.
-5. When satisfied, proceed to export.
-
-> **Tip:** You can return to saved drafts anytime from the **My Drafts** card on the Ghostwriter home page.
-
-### Phase 5 — Save to workspace
-
-1. Click **Export** (from Draft Iteration Mode) or **Save Article** (from Writer Mode).
-2. Save the file to `content/posts/` with a kebab-case filename (e.g. `my-new-post.md`).
-
-If you configured workspace settings for default save location and filename template, the extension can do this automatically:
-
-```json
-{
-  "vscode-ghostwriter.defaultSaveLocation": "content/posts",
-  "vscode-ghostwriter.filenameTemplate": "{{slug}}.md"
-}
-```
-
-### Phase 6 — Polish with the content-ghostwriter agent
-
-This is where the custom `@content-ghostwriter` agent takes over. In Copilot Chat:
-
-```text
-@content-ghostwriter Polish content/posts/my-new-post.md
-```
-
-The agent will:
-
-1. **Validate frontmatter** — enforce the exact 4-field schema (`title`, `date`, `tags`, `description`), normalise tags to kebab-case, synthesise a description if missing.
-2. **Remove duplicate heading** — if the body starts with a `#` heading that matches the title.
-3. **Annotate code blocks** — add language hints matching the site's Shiki configuration.
-4. **Format GitHub alerts** — convert prose-in-code-fences to `[!NOTE]`, `[!TIP]`, etc. where appropriate.
-5. **Validate links** — check every external URL, update redirects, flag dead links.
-6. **Check internal links** — verify referenced slugs exist.
-7. **Review voice consistency** — if a voice profile exists, flag tone deviations (never silently rewrites).
-8. **Build dry-run** — run `npm run build:content` and fix any errors.
-
-See [`.github/agents/content-ghostwriter.agent.md`](../.github/agents/content-ghostwriter.agent.md) for the full agent specification.
-
-### Phase 7 — Final review and publish
-
-1. Review any `<!-- TODO: review — ... -->` or `<!-- VOICE: ... -->` comments the agent left behind.
-2. Address or remove each comment.
-3. Read through the post one last time.
-4. Commit and push:
-
-```bash
-git add content/posts/my-new-post.md
-git commit -m "feat(content): add post — my new post"
-git push
-```
+> The Copilot App path does **not** provide automatic transcript files, draft revision history, or a built-in resume flow. The conversation window is your working artifact — save it manually if you want to preserve it. When transcript persistence is critical, fall back to the VS Code path.
 
 ---
 
@@ -417,7 +284,7 @@ Copilot: [rewrites section 2 with prose instead of bullets]
 
 ### Phase E — Save, polish, and publish
 
-Copy the final draft from the chat into `content/posts/` and hand off to `@content-ghostwriter`. This is the same finishing pipeline as [VS Code Phase 6](#phase-6--polish-with-the-content-ghostwriter-agent) and [Phase 7](#phase-7--final-review-and-publish) — follow those steps from this point onward.
+Copy the final draft from the chat into `content/posts/` and hand off to `@content-ghostwriter`. This is the same finishing pipeline as the [VS Code fallback phases 6 and 7](#vs-code-workflow-fallback) — follow those steps from this point onward.
 
 1. Create `content/posts/github-copilot-power-platform-alm-honest-review.md` and paste the draft.
 2. In Copilot Chat, run:
@@ -427,6 +294,139 @@ Copy the final draft from the chat into `content/posts/` and hand off to `@conte
 ```
 
 3. Follow the review and publish steps described in [Phase 6](#phase-6--polish-with-the-content-ghostwriter-agent) and [Phase 7](#phase-7--final-review-and-publish).
+
+---
+
+## VS Code workflow (fallback)
+
+The VS Code workflow uses the Ghostwriter for VS Code extension and has seven phases. Phase 1 is a one-time setup; phases 2-7 repeat for each new post.
+
+```mermaid
+flowchart TD
+    VP["Phase 1: Generate voice profile\n(one-time setup)"] -.->|style reference| W
+    B(["Start new post"]) --> I
+    I["Phase 2: Interview\ntranscript auto-saved"] --> W
+    W["Phase 3: Write first draft\nfrom transcript + voice"] --> R
+    R["Phase 4: Iterate draft\nin sidebar"] --> E
+    E["Phase 5: Export to\ncontent/posts/"] --> P
+    P["Phase 6: @content-ghostwriter\nPolish + validate"] --> F
+    F["Phase 7: Review comments\nand commit & push"]
+```
+
+### Phase 1 — Generate a voice profile (one-time setup)
+
+The voice profile teaches the AI what your writing sounds like so drafts match your natural style.
+
+1. Open the Ghostwriter panel: `Ctrl+Shift+P` → `Ghostwriter: Open Ghostwriter`.
+2. Click **Generate Voice**.
+3. Select a Copilot model (e.g. GPT-4o).
+4. Click **Generate Voice Profile**.
+5. When prompted, select the `content/` folder — this gives the AI access to your published posts in `content/posts/` as writing samples.
+6. The profile is saved to `.ghostwriter/voices/voice-YYYY-MM-DD.md`.
+7. Review the generated profile and tweak anything that feels off.
+
+> Regenerate your voice profile periodically (every few months or after a noticeable style shift) so it stays current.
+
+### Phase 2 — Interview
+
+1. Open the Ghostwriter panel.
+2. Click **Start Interview**.
+3. _(Optional)_ Select or create a custom interviewer agent in `.ghostwriter/interviewer/` to shape the interview style.
+4. Select your preferred Copilot model.
+5. The AI asks for your topic — give it a concise description.
+6. A transcript file is created immediately in `.ghostwriter/transcripts/`.
+7. Answer the AI's questions conversationally. Share examples, opinions, and code snippets.
+8. Each Q&A pair is saved to the transcript in real-time (safe against crashes).
+9. The AI will detect when the interview is complete.
+
+> **Tip:** If an interview is interrupted, you can resume it: Start Interview → Resume Interview → select the existing transcript.
+
+### Phase 3 — Write a first draft
+
+1. In the Ghostwriter panel, click **Write Article**.
+2. _(Optional)_ Select or create a writer agent in `.ghostwriter/writer/`.
+3. Select the transcript from the previous step.
+4. Select your voice profile from `.ghostwriter/voices/`.
+5. Configure writing options:
+   - **Style:** Conversational _(recommended for this blog)_
+   - **Headings:** Enabled
+   - **SEO:** Enabled if desired, with relevant keywords
+   - **Frontmatter template** — use this template to match the site's schema:
+
+   ```yaml
+   ---
+   title: ""
+   date: ""
+   tags: []
+   description: ""
+   ---
+   ```
+
+6. Select your Copilot model and click **Start Writing**.
+7. Watch the draft stream in real-time.
+
+### Phase 4 — Iterate on the draft
+
+Instead of saving immediately, click **Iterate Draft** to enter Draft Iteration Mode:
+
+1. The draft is saved to `.ghostwriter/drafts/` with the interview topic as the title.
+2. Use the refinement input to improve the draft conversationally:
+   - _"Make the intro more engaging"_
+   - _"Add more technical depth to section 3"_
+   - _"This sounds too formal, make it more conversational"_
+3. Each refinement creates a new revision with full history.
+4. Navigate between revisions with prev/next controls.
+5. When satisfied, proceed to export.
+
+> **Tip:** You can return to saved drafts anytime from the **My Drafts** card on the Ghostwriter home page.
+
+### Phase 5 — Save to workspace
+
+1. Click **Export** (from Draft Iteration Mode) or **Save Article** (from Writer Mode).
+2. Save the file to `content/posts/` with a kebab-case filename (e.g. `my-new-post.md`).
+
+If you configured workspace settings for default save location and filename template, the extension can do this automatically:
+
+```json
+{
+  "vscode-ghostwriter.defaultSaveLocation": "content/posts",
+  "vscode-ghostwriter.filenameTemplate": "{{slug}}.md"
+}
+```
+
+### Phase 6 — Polish with the content-ghostwriter agent
+
+This is where the custom `@content-ghostwriter` agent takes over. In Copilot Chat:
+
+```text
+@content-ghostwriter Polish content/posts/my-new-post.md
+```
+
+The agent will:
+
+1. **Validate frontmatter** — enforce the exact 4-field schema (`title`, `date`, `tags`, `description`), normalise tags to kebab-case, synthesise a description if missing.
+2. **Remove duplicate heading** — if the body starts with a `#` heading that matches the title.
+3. **Annotate code blocks** — add language hints matching the site's Shiki configuration.
+4. **Format GitHub alerts** — convert prose-in-code-fences to `[!NOTE]`, `[!TIP]`, etc. where appropriate.
+5. **Validate links** — check every external URL, update redirects, flag dead links.
+6. **Check internal links** — verify referenced slugs exist.
+7. **Review voice consistency** — if a voice profile exists, flag tone deviations (never silently rewrites).
+8. **Build dry-run** — run `npm run build:content` and fix any errors.
+
+See [`.github/agents/content-ghostwriter.agent.md`](../.github/agents/content-ghostwriter.agent.md) for the full agent specification.
+
+### Phase 7 — Final review and publish
+
+1. Review any `<!-- TODO: review — ... -->` or `<!-- VOICE: ... -->` comments the agent left behind.
+2. Address or remove each comment.
+3. Read through the post one last time.
+4. Commit and push:
+
+```bash
+git add content/posts/my-new-post.md
+git commit -m "feat(content): add post — my new post"
+git push
+```
 
 ---
 

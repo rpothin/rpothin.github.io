@@ -16,7 +16,7 @@
     "gray-matter": "^4.0.3",
     "lunr": "^2.3.9",
     "markdown-it": "^14.2.0",
-    "react": "^19.2.0",
+    "react": "^19.2.7",
     "react-dom": "^19.2.7",
     "react-router-dom": "^7.16.0",
     "shiki": "^4.0.2"
@@ -27,7 +27,7 @@
     "@types/lunr": "^2.3.7",
     "@types/markdown-it": "^14.1.2",
     "@types/node": "^25.5.0",
-    "@types/react": "^19.2.14",
+    "@types/react": "^19.2.17",
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^6.0.1",
     "eslint": "^10.2.0",

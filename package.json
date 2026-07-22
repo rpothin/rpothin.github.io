@@ -23,7 +23,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
-    "@tailwindcss/vite": "^4.2.2",
+    "@tailwindcss/vite": "^4.3.3",
     "@types/lunr": "^2.3.7",
     "@types/markdown-it": "^14.1.2",
     "@types/node": "^26.1.0",

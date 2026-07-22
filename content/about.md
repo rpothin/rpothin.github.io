@@ -1,13 +1,13 @@
 ---
 title: About Me
-description: About Raphael Pothin — Power Platform governance, security and developer experience focused Microsoft MVP exploring AI native software engineering
+description: About Raphael Pothin — Power Platform governance, security and developer experience focused Former 5x Microsoft MVP exploring AI native software engineering
 ---
 
 # About Me
 
 Hi, I'm Raphael Pothin 👋🏼
 
-I am a **Microsoft MVP** focused on **Power Platform governance, security, and developer experience**, slowly but surely transitioning into **AI native software engineering** and **AI Coding Agent Experience**.
+I am a **Former 5x Microsoft MVP** focused on **Power Platform governance, security, and developer experience**, slowly but surely transitioning into **AI native software engineering** and **AI Coding Agent Experience**.
 
 This site is where I document my explorations and learnings — first for myself, then to contribute back to the community and **reduce the cost of learning** for others.
 
@@ -43,7 +43,7 @@ Coming into the AI space, I bring that same lens — my experience making low-co
 
 A few proof points:
 
-- [**Microsoft MVP (Business Applications)**](https://mvp.microsoft.com/en-US/MVP/profile/f724ed87-7976-eb11-a812-000d3a8dfe0d) since March 2021
+- Microsoft MVP from March 2021 to July 2026
 - A track record of community contributions: [talks at conferences](https://github.com/rpothin/Presentations) across multiple countries, blog posts (on the [Medium](https://medium.com/rapha%C3%ABl-pothin) platform before finally creating my own space here), and open-source projects
 
 ## My path

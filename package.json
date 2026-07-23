@@ -16,7 +16,7 @@
     "gray-matter": "^4.0.3",
     "lunr": "^2.3.9",
     "markdown-it": "^14.2.0",
-    "react": "^19.2.7",
+    "react": "^19.2.8",
     "react-dom": "^19.2.7",
     "react-router-dom": "^7.16.0",
     "shiki": "^4.0.2"

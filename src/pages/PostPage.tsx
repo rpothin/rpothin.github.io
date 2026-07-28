@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import type React from "react";
-import { useParams } from "react-router-dom";
+import { useParams } from "react-router";
 import { AudioPlayer } from "../components/AudioPlayer";
 import { MarkdownRenderer } from "../components/MarkdownRenderer";
 import { REPOSITORY_DISCUSSIONS_URL } from "../config";

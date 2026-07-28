@@ -7,7 +7,7 @@ import {
   useNavigate,
   useLocation,
   useParams,
-} from "react-router-dom";
+} from "react-router";
 import { ActivityBar } from "./components/ActivityBar";
 import { Sidebar } from "./components/Sidebar";
 import { TabBar } from "./components/TabBar";
